@@ -21,6 +21,10 @@
                             <td scope="col">{{ $user->email }}</td>    
                         </tr>
                         <tr>
+                            <td scope="col">Email Verified</td>  
+                            <td scope="col">{{ $user->email_verified_at }}</td>    
+                        </tr>
+                        <tr>
                             <td scope="col">Education</td>  
                             <td scope="col">{{ $player->education->name }}</td>    
                         </tr>
