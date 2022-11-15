@@ -31,7 +31,14 @@
                             <td class="text-center">{{ explode('-',$player->id)[0] }}</td>
                             <td class="text-center">{{ $player->name }}</td>
                             <td class="text-center">{{ $player->email }}</td>
-                            <td class="text-center">{{ $player->email_verified_at }}</td>
+                            <td class="text-center">
+                                <p>
+                                @if(isset($player->email_verified_at))
+                                <span class="text-success">YES</span>
+                                @else
+                                <span class="text-danger">NO</span>
+                                @endif
+                                </p>
                             <td>
                                 <div class="container d-flex justify-content-center">
                                     @role('super_admin|admin')
