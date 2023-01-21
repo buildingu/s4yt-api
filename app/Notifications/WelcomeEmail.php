@@ -41,17 +41,8 @@ class WelcomeEmail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Thanks for registering and welcome to $4YT!')
-                    ->line('Your ANONYMOUS STUDENT ID# for the game is ' . $notifiable->getKey())
-                    ->line('AND you get 3 Dubl-U-nes to start !')
-                    ->line('Though you can’t play the game until the beginning of February (ofc we’ll remind you!) there’s still lots you can do when you Login….like:')
-                    ->line('1. Fill out your Instagram and/or LinkedIn handle(s) so we can give U more Dubl-U-nes!')
-                    ->line('2. Keep track of your Dubl-U-nes')
-                    ->line('3. Refer your friends (to earn more Dubl-U-nes)')
-                    ->line('4. Update your profile information')
-                    ->line('The LOGIN/ PROFILE page is not quite ready but is ALMOST THERE!')
-                    ->line('Please also feel free to join our Discord where you can ask questions, offer commentary, and receive event updates, as well as exclusive ways to Learn more about and Earn More Dubl-U-nes')
-                    ->line('We will also have UPDATES about the status of your PROFILE PAGE there!');
+            ->subject('Welcome to S4YT')
+            ->markdown('mail.welcome', ['uuid' => $notifiable->getKey()]);
     }
 
     /**
