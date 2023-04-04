@@ -20,6 +20,7 @@
                     <th scope="col" class="text-center">#</th>
                     <th scope="col" class="text-center">Name</th>
                     <th scope="col" class="text-center">Email</th>
+                    <th scope="col" class="text-center">Email Verified</th>
                     <th scope="col" class="text-center">Actions</th>
                 </tr>
                 </thead>
@@ -30,6 +31,14 @@
                             <td class="text-center">{{ explode('-',$player->id)[0] }}</td>
                             <td class="text-center">{{ $player->name }}</td>
                             <td class="text-center">{{ $player->email }}</td>
+                            <td class="text-center">
+                                <p>
+                                @if(isset($player->email_verified_at))
+                                <span class="text-success">YES</span>
+                                @else
+                                <span class="text-danger">NO</span>
+                                @endif
+                                </p>
                             <td>
                                 <div class="container d-flex justify-content-center">
                                     @role('super_admin|admin')

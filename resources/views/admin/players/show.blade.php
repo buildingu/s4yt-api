@@ -21,6 +21,18 @@
                             <td scope="col">{{ $user->email }}</td>    
                         </tr>
                         <tr>
+                            <td scope="col">Email Verified</td>  
+                            <td scope="col">
+                                
+                                @if(isset($player->email_verified_at))
+                                <span class="text-success">YES</span>
+                                @else
+                                <span class="text-danger">NO</span>
+                                @endif
+                            
+                            <td>
+                        </tr>
+                        <tr>
                             <td scope="col">Education</td>  
                             <td scope="col">{{ $player->education->name }}</td>    
                         </tr>
