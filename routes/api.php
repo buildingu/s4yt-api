@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 // auth
 Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
-//Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\AuthController::class, 'verify'])->name('player.verify');
 Route::post('/email/verify', [\App\Http\Controllers\Api\AuthController::class, 'resendVerify'])->name('player.resend.verify');
 

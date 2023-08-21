@@ -28,7 +28,7 @@ class RegisterRequest extends FormRequest
             'email'=> 'required|string|email|unique:users,email',
             'password' => 'required|string|confirmed|min:8',
             'education_id' => 'required|numeric|exists:education,id',
-            'institution' => 'required_if:education_id,1|string',
+            //'institution' => 'required_if:education_id,1|string',
             'grade_id' => 'required|numeric|exists:grades,id',
             'country_iso' => 'required|string|min:2|max:3',
             'state_iso' => 'required|string|min:2|max:3',
