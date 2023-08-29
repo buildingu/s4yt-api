@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -49,7 +50,7 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $user = User::where('id', $validated['id'])->first();
+        $user = User::where('email', $validated['email'])->first();
 
         if (!$user) {
             return $this->sendError('Player not registered', [], Response::HTTP_NOT_FOUND);
@@ -59,11 +60,11 @@ class AuthController extends Controller
             return $this->sendError('Player does not have validated email', [], Response::HTTP_UNAUTHORIZED);
         }
 
-        if (!auth()->attempt(['id' => $validated['id'], 'password' => $validated['password']])) {
+        if (!auth()->attempt(['email' => $validated['email'], 'password' => $validated['password']])) {
             return $this->sendError('Credentials not valid', [], Response::HTTP_UNAUTHORIZED);
         }
-
-        $token = auth()->user->createToken(env('APP_NAME'))->accessToken;
+       
+        $token = (Auth::user())->createToken(env('APP_NAME'))->accessToken;
 
         return $this->sendResponse(
             [
@@ -92,17 +93,17 @@ class AuthController extends Controller
     public function verify($user_id, Request $request) : RedirectResponse
     {
         if (!$request->hasValidSignature()) {
-            return redirect(config('app.front_url') . '/verify-resend');
+            return redirect(config('app.front_url') . '/login');
         }
 
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
-            return redirect(config('app.front_url') . '/email-verified');
+            return redirect(config('app.front_url') . '/login');
         }
 
         $user->markEmailAsVerified();
         $user->notify(new WelcomeEmail());
-        return redirect(config('app.front_url') . '/email-verify');
+        return redirect(config('app.front_url') . '/login');
     }
 
     public function resendVerify(ResendVerifyRequest $request) : JsonResponse
