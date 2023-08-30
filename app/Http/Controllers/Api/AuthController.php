@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendVerifyRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Notifications\VerifyEmail;
 use App\Notifications\WelcomeEmail;
 use App\Services\PlayerService;
@@ -18,6 +19,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -44,6 +48,30 @@ class AuthController extends Controller
             "Player registered successfully",
             Response::HTTP_CREATED
         );
+    }
+
+    public function passwordReset(ResetPasswordRequest $request){
+        if($request->has('token')){
+            $status = Password::reset(
+                $request->only('email','password','password_confirmation','token'),
+                
+                function (User $user, string $password) {
+                    $user->forceFill([
+                        'password' => Hash::make($password)
+                    ])->setRememberToken(Str::random(60));
+         
+                    $user->save();
+                }
+            );
+
+            return $status === Password::PASSWORD_RESET ? $this->sendResponse(null,"Password has been reset!") : $this->sendError('Invalid token', [], Response::HTTP_UNAUTHORIZED);
+        }else{
+            $status = Password::sendResetLink(
+                $request->only('email')
+            );    
+        }
+
+        return $this->sendResponse(null,"Password reset link sent!");
     }
 
     public function login(LoginRequest $request): JsonResponse

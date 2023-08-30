@@ -19,6 +19,7 @@ Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'regi
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\AuthController::class, 'verify'])->name('player.verify');
 Route::post('/email/verify', [\App\Http\Controllers\Api\AuthController::class, 'resendVerify'])->name('player.resend.verify');
+Route::post('/password-reset', [\App\Http\Controllers\Api\AuthController::class, 'passwordReset'])->name('password.reset');
 
 // player data endpoints
 Route::get('/location/countries', [\App\Http\Controllers\Api\RegisterController::class, 'getCountries']);
