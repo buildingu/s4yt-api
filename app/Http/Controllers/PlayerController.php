@@ -20,6 +20,7 @@ use App\Models\UserVersion;
 
 class PlayerController extends Controller
 {
+
     /**
      * Display a list of the resource user.
      *

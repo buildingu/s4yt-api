@@ -13,6 +13,7 @@ use App\Notifications\WelcomeEmail;
 use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,6 +26,22 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    /**
+     * Method to get current user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function currentUser(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        return $this->sendResponse(
+            new UserResource($user),
+            '',
+            200
+        );
+    }
+
     /**
      * Method registers new player
      * @param RegisterRequest $request
