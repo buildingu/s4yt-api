@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'password' => \Illuminate\Support\Facades\Hash::make(config('app.super_admin.password'))
         ]);
         $super_admin->assignRole(User::SUPER_ADMIN_ROLE);
+        $super_admin->markEmailAsVerified();
 
         $admin = User::create([
             'name' => config('app.admin.name'),
@@ -25,5 +26,6 @@ class UserSeeder extends Seeder
             'password' => \Illuminate\Support\Facades\Hash::make(config('app.admin.password'))
         ]);
         $admin->assignRole(User::ADMIN_ROLE);
+        $admin->markEmailAsVerified();
     }
 }
