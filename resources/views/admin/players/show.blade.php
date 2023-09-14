@@ -21,6 +21,10 @@
                             <td scope="col">{{ $user->email }}</td>    
                         </tr>
                         <tr>
+                            <td scope="col">Instagram</td>  
+                            <td scope="col">{{ $player->instagram }}</td>    
+                        </tr>
+                        <tr>
                             <td scope="col">Education</td>  
                             <td scope="col">{{ $player->education->name }}</td>    
                         </tr>

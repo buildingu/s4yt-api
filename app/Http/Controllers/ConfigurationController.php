@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Configuration;
+use App\Models\Configuration;
 use App\Http\Requests\UpdateConfigurationRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\ConfigurationVersion;
 
 class ConfigurationController extends Controller
 {
@@ -55,21 +58,38 @@ class ConfigurationController extends Controller
     {
         $validated = $request->validated();
         $configuration = Configuration::find($id);
-
+        $version = $configuration->versions;
+        
         if(!$configuration) {
             return redirect()->route('configuration.index')->with('error', 'Configuration not found.');
         }
 
-        if($configuration->data_type == 'datetime') {
+        if($configuration->type->name == 'datetime') {
             try {
-                $configuration->value = Carbon::createFromFormat('m-d-Y H:i', $validated['value']);
+                $value = Carbon::createFromFormat('m-d-Y H:i', $validated['value']);
             } catch (\Exception $e) {
                 return redirect()->route('configuration.index')->with('error', 'Could not update key ' . $validated['key'] . '. Incorrect format.');
             }
         } else {
-            $configuration->value = $validated['value'];
+            $value = $validated['value'];
         }
-        $configuration->save();
+
+        if(!$version){
+            $version_id = Cache::remember('current_version', 60*60*24*28, function() {
+                return Version::currentVersion();
+            });
+
+            ConfigurationVersion::create([
+                'value'=>$value,
+                'version_id'=>$version_id,
+                'configuration_id'=>$id,
+                'created_by'=>Auth::id()
+            ]);
+        }else{
+            $version->value = $value;
+            $version->updated_by = Auth::id();
+            $version->save();
+        }
 
         return redirect()->route('configuration.index')->with('success', 'Configuration updated successfully.');
     }

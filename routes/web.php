@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::middleware('auth')->prefix('/admin')->group(function () {
     Route::view('/', 'admin');
     Route::resource('player', 'PlayerController');
+    Route::resource('player/{player}/coin', 'CoinController')->only(['index','create','store','destroy']);
     Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
 });
 

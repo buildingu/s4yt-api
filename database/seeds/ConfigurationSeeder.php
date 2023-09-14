@@ -19,6 +19,16 @@ class ConfigurationSeeder extends Seeder
                 'data_type_id' => 1
             ],
             [
+                'key' => 'referral_coins',
+                'description' => 'Coins given for player referral and registration',
+                'data_type_id' => 1
+            ],
+            [
+                'key' => 'instagram_coins',
+                'description' => 'Coins given for interactions on instagram',
+                'data_type_id' => 1
+            ],
+            [
                 'key' => 'game_start',
                 'description' => "Date format: mm-dd-YYYY HH:ii (" . config('app.timezone') ."). Set the time of the start at the game. At this point the student will be able to interact with the game.",
                 'data_type_id' => 2

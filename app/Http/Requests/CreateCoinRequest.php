@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateConfigurationRequest extends FormRequest
+class CreateCoinRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,9 @@ class UpdateConfigurationRequest extends FormRequest
     public function rules()
     {
         return [
-            'value' => 'required'
+            "type" => "required|numeric|exists:coin_types,id",
+            "description" => "sometimes|string",
+            "amount" => "required|numeric"
         ];
     }
 }

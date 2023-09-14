@@ -3,9 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\PlayerResource;
+use Illuminate\Support\Str;
 
-class UserResource extends JsonResource
+class ReferralResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,10 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'player' => new PlayerResource($this->userable)
+            'status' => Str::ucfirst($this->status),
+            'name' => $this->name,
+            'email' => $this->email
         ];
     }
 }
