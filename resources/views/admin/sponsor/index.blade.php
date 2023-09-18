@@ -45,9 +45,6 @@
                                         <a type="submit" class="btn btn-primary ml-2 text-white ms-2" href="{{ route('sponsor.edit', $sponsor->id) }}">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
-                                        <a type="submit" class="btn btn-primary ml-2 text-white ms-2" href="{{ route('sponsor.index', $sponsor->id) }}">
-                                            <i class="fas fa-coins"></i>
-                                        </a>
                                         <form action="{{ route('sponsor.destroy', $sponsor->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Sponsor\StoreRequest;
+use App\Http\Requests\Sponsor\UpdateRequest;
 use App\Models\SponsorPartner;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -88,7 +89,7 @@ class SponsorPartnerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Store $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $sponsor = $this->getSponsor($id);
         $sponsor->update([
