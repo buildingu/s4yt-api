@@ -20,6 +20,7 @@ Route::put('/user/{user}',[\App\Http\Controllers\Api\UserController::class,'upda
 Route::get('/user/current',[\App\Http\Controllers\Api\UserController::class,'current']);
 
 //resources
+Route::resource('sponsor',Api\SponsorPartnerController::class)->only('index');
 Route::resource('referral',Api\ReferralController::class);
 Route::resource('cointype',Api\CoinTypeController::class)->only('index');
 Route::resource('configuration',Api\ConfigurationController::class)->withoutMiddleware(['auth:api'])->only('index');
