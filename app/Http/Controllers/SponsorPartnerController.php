@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SponsorPartner;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SponsorPartnerController extends Controller
@@ -13,7 +15,8 @@ class SponsorPartnerController extends Controller
      */
     public function index()
     {
-        //
+        $sponsors = SponsorPartner::query()->orderByDesc('created_at')->paginate(10);
+        return view('admin.sponsor.index',compact('sponsors'));
     }
 
     /**
