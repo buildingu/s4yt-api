@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Sponsor\StoreRequest;
 use App\Models\SponsorPartner;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,8 +36,18 @@ class SponsorPartnerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
+        $image = $request->file('image');
+        $imageName = time().'.'.$image->getClientOriginalExtension();
+        $path = 'app/public/sponsors';
+        $image->move(storage_path($path),$imageName);
+        SponsorPartner::query()->create([
+            'short_description' => $request->input('short_description'),
+            'description' => $request->input('description'),
+            'status' => $request->input('status'),
+            'image' => $imageName,
+        ]);
         return redirect()->route('sponsor.index')->with('success', 'Sponsor created successfully.');
     }
 
@@ -77,8 +88,24 @@ class SponsorPartnerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Store $request, $id)
     {
+        $sponsor = $this->getSponsor($id);
+        $sponsor->update([
+            'short_description' => $request->input('short_description'),
+            'description' => $request->input('description'),
+            'status' => $request->input('status'),
+        ]);
+        $image = $request->file('image');
+        if ($image){
+            $path = $this->removeExistImage($sponsor);
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(storage_path($path),$imageName);
+
+            $sponsor->update([
+            'image' => $imageName,
+            ]);
+        }
         return redirect()->route('sponsor.index')->with('success', 'Sponsor Updated successfully.');
     }
 
@@ -91,7 +118,21 @@ class SponsorPartnerController extends Controller
     public function destroy($id)
     {
         $sponsor = $this->getSponsor($id);
+        $this->removeExistImage($sponsor);
         $sponsor->delete();
         return redirect()->route('sponsor.index')->with('success', 'Sponsor deleted successfully.');
+    }
+
+    /**
+     * @param $sponsor
+     * @return string
+     */
+    private function removeExistImage($sponsor): string
+    {
+        $path = 'app/public/sponsors';
+        if (file_exists(storage_path($path . '/' . $sponsor->image))) {
+            unlink(storage_path($path . '/' . $sponsor->image));
+        }
+        return $path;
     }
 }
