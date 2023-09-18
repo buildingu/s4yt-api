@@ -26,7 +26,7 @@ class SponsorPartnerController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.sponsor.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class SponsorPartnerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect()->route('sponsor.index')->with('success', 'Sponsor created successfully.');
     }
 
     /**
@@ -48,7 +48,14 @@ class SponsorPartnerController extends Controller
      */
     public function show($id)
     {
-        //
+        $sponsor = $this->getSponsor($id);
+        return view('admin.sponsor.show',compact('sponsor'));
+    }
+
+    private function getSponsor($id)
+    {
+        return SponsorPartner::query()->findOrFail($id);
+
     }
 
     /**
@@ -59,7 +66,8 @@ class SponsorPartnerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $sponsor = $this->getSponsor($id);
+        return view('admin.sponsor.edit',compact('sponsor'));
     }
 
     /**
@@ -71,7 +79,7 @@ class SponsorPartnerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return redirect()->route('sponsor.index')->with('success', 'Sponsor Updated successfully.');
     }
 
     /**
@@ -82,6 +90,8 @@ class SponsorPartnerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $sponsor = $this->getSponsor($id);
+        $sponsor->delete();
+        return redirect()->route('sponsor.index')->with('success', 'Sponsor deleted successfully.');
     }
 }
