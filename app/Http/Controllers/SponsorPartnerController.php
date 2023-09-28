@@ -2,83 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Sponsor\StoreRequest;
+use App\Http\Requests\Sponsor\UpdateRequest;
+use App\Models\SponsorPartner;
+use App\Models\User;
+use App\Services\SponsorPartnerService;
 use Illuminate\Http\Request;
 
 class SponsorPartnerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $sponsors = (new SponsorPartnerService())->getAllSponsors();
+        return view('admin.sponsor.index', compact('sponsors'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('admin.sponsor.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $data = $request->all();
+        (new SponsorPartnerService())->createSponsor($data);
+        return redirect()->route('sponsor.index')->with('success', 'Sponsor created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
+        $sponsor = (new SponsorPartnerService())->getSponsorById($id);
+        return view('admin.sponsor.show', compact('sponsor'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $sponsor = (new SponsorPartnerService())->getSponsorById($id);
+        return view('admin.sponsor.edit', compact('sponsor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $sponsor = (new SponsorPartnerService())->getSponsorById($id);
+        (new SponsorPartnerService())->updateSponsor($sponsor, $data);
+        return redirect()->route('sponsor.index')->with('success', 'Sponsor Updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $sponsor = (new SponsorPartnerService())->getSponsorById($id);
+        (new SponsorPartnerService())->deleteSponsor($sponsor);
+        return redirect()->route('sponsor.index')->with('success', 'Sponsor deleted successfully.');
     }
+
 }

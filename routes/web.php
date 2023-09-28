@@ -21,7 +21,7 @@ Route::middleware('auth')->prefix('/admin')->group(function () {
     Route::view('/', 'admin');
     Route::resource('player', 'PlayerController');
     Route::resource('player/{player}/coin', 'CoinController')->only(['index','create','store','destroy']);
-    Route::resource('sponsor', 'SponsorPartnerController');
+    Route::resource('sponsor', SponsorPartnerController::class);
     Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
 });
 

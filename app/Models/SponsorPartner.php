@@ -11,5 +11,5 @@ class SponsorPartner extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['short_description','description','image','status'];
 }
