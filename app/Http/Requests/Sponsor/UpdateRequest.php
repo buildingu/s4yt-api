@@ -27,6 +27,7 @@ class UpdateRequest extends FormRequest
             'short_description' => 'required|max:220',
             'description' => 'required|max:1023',
             'status' => 'required|in:0,1',
+            'order' => 'nullable|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }

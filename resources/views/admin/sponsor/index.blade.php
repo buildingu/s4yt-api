@@ -20,6 +20,7 @@
                     <th scope="col" class="text-center">#</th>
                     <th scope="col" class="text-center">Short Description</th>
                     <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center">Order</th>
                     <th scope="col" class="text-center">Actions</th>
                 </tr>
                 </thead>
@@ -35,6 +36,9 @@
                                 @elseif($sponsor->status == 0)
                                     Deactive
                                 @endif
+                            </td>
+                            <td class="text-center">
+                                {{ $sponsor->order }}
                             </td>
                             <td>
                                 <div class="container d-flex justify-content-center">

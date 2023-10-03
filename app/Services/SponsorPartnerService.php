@@ -22,6 +22,7 @@ class SponsorPartnerService
             'short_description' => $data['short_description'],
             'description' => $data['description'],
             'status' => $data['status'],
+            'order' => $data['order'],
             'image' => $imageName,
         ]);
     }
@@ -37,6 +38,7 @@ class SponsorPartnerService
             'short_description' => $data['short_description'],
             'description' => $data['description'],
             'status' => $data['status'],
+            'order' => $data['order'],
         ]);
 
          if(array_key_exists('image', $data) && $data['image'] === null) {
