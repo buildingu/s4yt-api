@@ -8,7 +8,7 @@
             @role('super_admin|admin')
                 <a type="submit" class="btn btn-primary text-white col-3" href="{{ route('instagram.create') }}">
                     <i class="fa fa-skull-crossbones"></i>
-                    Create sponsor
+                    Create Instagram Post
                 </a>
             @endrole
             </div>
@@ -30,7 +30,7 @@
                         <tr>
                             <td class="text-center">{{ $post->id }}</td>
                             <td class="text-center">{{ $post->title }}</td>
-                            <td class="text-center">{{ $post->link }}</td>
+                            <td class="text-center"><a href="{{ $post->url }}">{{ $post->url }}</a></td>
                             <td class="text-center">{{ $post->created_at->format('Y/m/d H:i:s') }}</td>
                             <td>
                                 <div class="container d-flex justify-content-center">
@@ -41,7 +41,7 @@
                                         <a type="submit" class="btn btn-primary ml-2 text-white ms-2" href="{{ route('instagram.edit', $post->id) }}">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
-                                        <form action="{{ route('instagram.destroy', instagram->id) }}" method="POST">
+                                        <form action="{{ route('instagram.destroy', $post->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger ml-2 text-white ms-2">
@@ -55,7 +55,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="4" class="text-center">No Instagram's post found</td>
+                        <td colspan="5" class="text-center">No Instagram's post found</td>
                     </tr>
                 @endif
                 </tbody>

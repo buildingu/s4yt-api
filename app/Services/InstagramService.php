@@ -13,4 +13,17 @@ class InstagramService
             'url' => $data['url']
         ]);
     }
+
+    public function update($id,$data)
+    {
+        Instagram::query()->findOrFail($id)->update([
+            'title' => $data['title'],
+            'url' => $data['url']
+        ]);
+    }
+
+    public function destroy($id): void
+    {
+        Instagram::query()->findOrFail($id)->delete();
+    }
 }

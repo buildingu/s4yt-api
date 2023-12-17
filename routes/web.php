@@ -24,7 +24,7 @@ Route::middleware('auth')->prefix('/admin')->group(function () {
     Route::resource('player/{player}/coin', 'CoinController')->only(['index','create','store','destroy']);
     Route::resource('sponsor', 'SponsorPartnerController');
     Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
-    Route::resource('instagram', 'InstagramController', [ 'only' => ['index', 'edit', 'update']] );
+    Route::resource('instagram', 'InstagramController');
 });
 
 Route::middleware('auth')->group(function() {
