@@ -26,4 +26,9 @@ class InstagramService
     {
         Instagram::query()->findOrFail($id)->delete();
     }
+
+    public function getPosts()
+    {
+        return Instagram::query()->orderByDesc('created_at')->get();
+    }
 }

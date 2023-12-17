@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Api\InstagramController;
 use App\Http\Controllers\Api\RaffleItemController;
 use App\Http\Controllers\Api\RafflePartnerController;
 use Illuminate\Support\Facades\Route;
@@ -45,3 +46,5 @@ Route::get('/location/cities', [\App\Http\Controllers\Api\RegisterController::cl
 Route::get('/educations', [\App\Http\Controllers\Api\RegisterController::class, 'getEducations'])->withoutMiddleware(['auth:api']);
 Route::get('/grades', [\App\Http\Controllers\Api\RegisterController::class, 'getGrades'])->withoutMiddleware(['auth:api']);
 
+// instagram reward suggestions
+Route::get('/social-media/instagram',[InstagramController::class,'getPosts']);
