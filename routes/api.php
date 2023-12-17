@@ -1,6 +1,8 @@
 <?php
 
 
+use App\Http\Controllers\Api\RaffleItemController;
+use App\Http\Controllers\Api\RafflePartnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +27,11 @@ Route::resource('referral',Api\ReferralController::class);
 Route::resource('cointype',Api\CoinTypeController::class)->only('index');
 Route::resource('configuration',Api\ConfigurationController::class)->withoutMiddleware(['auth:api'])->only('index');
 
+Route::get('raffle-partners',[RafflePartnerController::class,'index']);
+Route::get('raffle-partners/{id}',[RafflePartnerController::class,'show']);
+Route::get('raffle-items',[RaffleItemController::class,'index']);
+Route::get('raffle-items/{id}',[RaffleItemController::class,'show']);
+
 // auth
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login'])->withoutMiddleware(['auth:api']);
 Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\AuthController::class, 'verify'])->name('player.verify')->withoutMiddleware(['auth:api']);
@@ -37,3 +44,4 @@ Route::get('/location/states', [\App\Http\Controllers\Api\RegisterController::cl
 Route::get('/location/cities', [\App\Http\Controllers\Api\RegisterController::class, 'getCities'])->withoutMiddleware(['auth:api'])->name('location.cities');;
 Route::get('/educations', [\App\Http\Controllers\Api\RegisterController::class, 'getEducations'])->withoutMiddleware(['auth:api']);
 Route::get('/grades', [\App\Http\Controllers\Api\RegisterController::class, 'getGrades'])->withoutMiddleware(['auth:api']);
+

@@ -11,5 +11,10 @@ class RafflePartner extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'short_description',
+        'items_confirmed',
+        'status'
+    ];
 }

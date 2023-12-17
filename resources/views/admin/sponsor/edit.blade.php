@@ -43,6 +43,17 @@
                 </div>
 
                 <div class="form-group mt-2">
+                    <label for="order">Order</label>
+                    <input type="number" class="form-control" id="order" name="order"
+                           value="{{ old('order') ? old('order') : $sponsor->order }}"
+                           aria-describedby="short_description_error">
+                    @if ($errors->has('order'))
+                        <small id="order"
+                               class="form-text text-danger">{{ $errors->first('order') }}</small>
+                    @endif
+                </div>
+
+                <div class="form-group mt-2">
                     <label for="description">Description</label>
                     <textarea class="form-control" id="description" name="description" aria-describedby="description"
                     >{{ old('description') ? old('description') : $sponsor->description }}</textarea>
