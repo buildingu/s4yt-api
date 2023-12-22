@@ -35,7 +35,7 @@ For local setup please execute the following steps:
 7. Set local DB credentials in .env file
 8. Create tables into DB (```php artisan migrate```)
 9. Create OAuth keys in /storage (```php artisan passport:keys --force```)
-10. Create Passport ID and SECRET .env file(```php artisan passport:client --personal```)
+10. Create Passport ID and SECRET and copy credentials to .env file(```php artisan passport:client --personal```)
 11. Copy ADMIN/SUPER_ADMIN credentials from config/app.php to .env file
 12. Populate testing data (```php artisan db:seed```)
 13. Run web server (```php artisan serve```)
