@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Cache;
 
 class RegisterController extends Controller
 {
+
     /**
      * Returns list of countries
      *

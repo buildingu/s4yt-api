@@ -1,6 +1,9 @@
 <?php
 
 
+use App\Http\Controllers\Api\InstagramController;
+use App\Http\Controllers\Api\RaffleItemController;
+use App\Http\Controllers\Api\RafflePartnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,21 +17,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//user
+Route::post('/user',[\App\Http\Controllers\Api\UserController::class,'store'])->withoutMiddleware(['auth:api'])->name('user.store');
+Route::put('/user/{user}',[\App\Http\Controllers\Api\UserController::class,'update']);
+Route::get('/user/current',[\App\Http\Controllers\Api\UserController::class,'current']);
+
+//resources
+Route::get('sponsor',Api\SponsorPartnerController::class)->withoutMiddleware(['auth:api']);
+Route::resource('referral',Api\ReferralController::class);
+Route::resource('cointype',Api\CoinTypeController::class)->only('index');
+Route::resource('configuration',Api\ConfigurationController::class)->withoutMiddleware(['auth:api'])->only('index');
+
+Route::get('raffle-partners',[RafflePartnerController::class,'index']);
+Route::get('raffle-partners/{id}',[RafflePartnerController::class,'show']);
+Route::get('raffle-items',[RaffleItemController::class,'index']);
+Route::get('raffle-items/{id}',[RaffleItemController::class,'show']);
+
 // auth
-Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
-//Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
-Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\AuthController::class, 'verify'])->name('player.verify');
-Route::post('/email/verify', [\App\Http\Controllers\Api\AuthController::class, 'resendVerify'])->name('player.resend.verify');
+Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login'])->withoutMiddleware(['auth:api']);
+Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\AuthController::class, 'verify'])->name('player.verify')->withoutMiddleware(['auth:api']);
+Route::post('/email/verify', [\App\Http\Controllers\Api\AuthController::class, 'resendVerify'])->name('player.resend.verify')->withoutMiddleware(['auth:api']);
+Route::post('/password-reset', [\App\Http\Controllers\Api\AuthController::class, 'passwordReset'])->name('password.reset')->withoutMiddleware(['auth:api']);
 
 // player data endpoints
-Route::get('/location/countries', [\App\Http\Controllers\Api\RegisterController::class, 'getCountries']);
-Route::get('/location/states', [\App\Http\Controllers\Api\RegisterController::class, 'getStates'])->name('location.states');
-Route::get('/location/cities', [\App\Http\Controllers\Api\RegisterController::class, 'getCities'])->name('location.cities');
-Route::get('/educations', [\App\Http\Controllers\Api\RegisterController::class, 'getEducations'])->name('education.index');
-Route::get('/grades', [\App\Http\Controllers\Api\RegisterController::class, 'getGrades'])->name('grades.index');
+Route::get('/location/countries', [\App\Http\Controllers\Api\RegisterController::class, 'getCountries'])->withoutMiddleware(['auth:api']);
+Route::get('/location/states', [\App\Http\Controllers\Api\RegisterController::class, 'getStates'])->withoutMiddleware(['auth:api'])->name('location.states');
+Route::get('/location/cities', [\App\Http\Controllers\Api\RegisterController::class, 'getCities'])->withoutMiddleware(['auth:api'])->name('location.cities');;
+Route::get('/educations', [\App\Http\Controllers\Api\RegisterController::class, 'getEducations'])->withoutMiddleware(['auth:api']);
+Route::get('/grades', [\App\Http\Controllers\Api\RegisterController::class, 'getGrades'])->withoutMiddleware(['auth:api']);
 
-/*
-Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);;
-});
-*/
+// instagram reward suggestions
+Route::get('/social-media/instagram',[InstagramController::class,'getPosts']);

@@ -67,6 +67,7 @@ class LocationService
         $location['countries'] = $countries;
         $location['states'] = $states;
         $location['cities'] = $cities;
+        
         return $location;
     }
 }

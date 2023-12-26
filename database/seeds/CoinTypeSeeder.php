@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\CoinType;
 
 class CoinTypeSeeder extends Seeder
 {
@@ -12,10 +13,10 @@ class CoinTypeSeeder extends Seeder
      */
     public function run()
     {
-        $coin_types = [
-            ['event' => 'register'],
-        ];
-
-        DB::table('coin_types')->insert($coin_types);
+        collect(['register','referral','instagram'])->map(function($name){
+            CoinType::firstOrCreate([
+                'event'=>$name
+            ]);
+        });
     }
 }

@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <script src="https://kit.fontawesome.com/dda0a07667.js" crossorigin="anonymous"></script>
+    <link href="//use.fontawesome.com/releases/v5.2.0/css/all.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-light">

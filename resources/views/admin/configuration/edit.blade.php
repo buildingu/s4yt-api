@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group mt-3">
                     <label for="value">Value</label>
-                    <input type="text" class="form-control" id="value" name="value" aria-describedby="value_error" value="{{ $config->value }}">
+                    <input type="{{ $config->type->id === 1 ? 'number' : 'datetime-local' }}" class="form-control" id="value" name="value" aria-describedby="value_error" value="{{ $config->versions ? $config->versions->value : null }}">
                     @if ($errors->has('value'))
                         <small id="value_error" class="form-text text-danger">{{ $errors->first('value') }}</small>
                     @endif
@@ -35,6 +35,7 @@
                     <textarea rows="4" readonly class="form-control" id="description" name="description">{{ $config->description }}</textarea>
                 </div>
                 <div class="form-group mt-3">
+                    <input type="hidden" name="_method" value="patch" />
                     <button type="submit" class="btn btn-primary col-lg-12 fw-bold text-white">Submit</button>
                 </div>
             </form>

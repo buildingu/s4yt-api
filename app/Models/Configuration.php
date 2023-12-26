@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 class Configuration extends Model
 {
     const REGISTER_COINS = 'register_coins';
+    const REFERRAL_COINS = 'referral_coins';
     const MAX_REVIEWERS = 'max_reviewers';
     const MAX_AMOUNT_REWARDS = 'max_amount_awards';
     const MAX_EVENT_PARTNERS = 'max_event_partners';
@@ -26,16 +27,23 @@ class Configuration extends Model
         'key'
     ];
 
-    public function versions()
+    public function type()
     {
-        return $this->belongsToMany('App\Models\Version')->withPivot('value');
+        return $this->belongsTo('App\Models\DataType','data_type_id');
     }
 
-    public static function getValueByKey(string $key)
+    public function versions()
     {
         $version_id = Cache::remember('current_version', 60*60*24*28, function() {
             return Version::currentVersion();
         });
-        return ((self::where('key', $key)->first())->versions()->where('version_id', $version_id)->select('value')->get())[0]->value;
+
+        return $this->hasOne('App\Models\ConfigurationVersion','configuration_id')->where('version_id',$version_id);
+    }
+
+    public static function getValueByKey(string $key)
+    {
+        
+        return ((self::where('key', $key)->first())->versions()->get())[0]->value;
     }
 }
