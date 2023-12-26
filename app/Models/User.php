@@ -2,28 +2,23 @@
 
 namespace App\Models;
 
-use App\Traits\Uuids;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Passport\HasApiTokens;
-use App\Notifications\PasswordResetEmail;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Uuids, HasApiTokens;
-
-    const SUPER_ADMIN_ROLE = 'super_admin';
-    const ADMIN_ROLE = 'admin';
-    const EVENT_PARTNER_ROLE = 'event_partner';
-    const RAFFLE_PARTNER_ROLE = 'raffle_partner';
-    const PLAYER_ROLE = 'player';
-    const BU_PLAYER_ROLE = 'bu_player';
+    use HasRoles, HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -32,38 +27,32 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
     /**
-     * Get the owning userable model.
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
      */
-    public function userable()
-    {
-        return $this->morphTo();
-    }
-
-    public function versions()
-    {
-        return $this->belongsToMany('App\Models\Version');
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new PasswordResetEmail($token));
-    }
+    protected $appends = [
+        'profile_photo_url',
+    ];
 }
