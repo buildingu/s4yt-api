@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\SponsorPartnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -9,24 +8,11 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
 |
 */
 
 Route::get('/', function () {
     return view('welcome');
-});
-
-Route::middleware('auth')->prefix('/admin')->group(function () {
-    Route::view('/', 'admin');
-    Route::resource('player', 'PlayerController');
-    Route::resource('player/{player}/coin', 'CoinController')->only(['index','create','store','destroy']);
-    Route::resource('sponsor', 'SponsorPartnerController');
-    Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
-    Route::resource('instagram', 'InstagramController');
-});
-
-Route::middleware('auth')->group(function() {
-    Route::get('referral', [App\Http\Controllers\Api\ProfileController::class, 'getReferral']);
 });

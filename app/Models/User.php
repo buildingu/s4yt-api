@@ -2,28 +2,20 @@
 
 namespace App\Models;
 
-use App\Traits\Uuids;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
-use Laravel\Passport\HasApiTokens;
-use App\Notifications\PasswordResetEmail;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Uuids, HasApiTokens;
-
-    const SUPER_ADMIN_ROLE = 'super_admin';
-    const ADMIN_ROLE = 'admin';
-    const EVENT_PARTNER_ROLE = 'event_partner';
-    const RAFFLE_PARTNER_ROLE = 'raffle_partner';
-    const PLAYER_ROLE = 'player';
-    const BU_PLAYER_ROLE = 'bu_player';
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -32,38 +24,22 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
-
-    /**
-     * Get the owning userable model.
-     */
-    public function userable()
-    {
-        return $this->morphTo();
-    }
-
-    public function versions()
-    {
-        return $this->belongsToMany('App\Models\Version');
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new PasswordResetEmail($token));
-    }
 }
