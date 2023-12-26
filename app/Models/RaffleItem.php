@@ -17,8 +17,12 @@ class RaffleItem extends Model implements HasMedia
      */
     protected $fillable = [
         'name',
-        'stock',
         'slug',
-        'raffle_partner_id'
+        'description',
+        'stock',
+        'active',
+        'image',
+        'raffle_partner_id',
+
     ];
 }

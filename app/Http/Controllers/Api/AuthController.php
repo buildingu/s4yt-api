@@ -7,19 +7,41 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendVerifyRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Notifications\VerifyEmail;
 use App\Notifications\WelcomeEmail;
 use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    /**
+     * Method to get current user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function currentUser(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        return $this->sendResponse(
+            new UserResource($user),
+            '',
+            200
+        );
+    }
+
     /**
      * Method registers new player
      * @param RegisterRequest $request
@@ -45,11 +67,35 @@ class AuthController extends Controller
         );
     }
 
+    public function passwordReset(ResetPasswordRequest $request){
+        if($request->has('token')){
+            $status = Password::reset(
+                $request->only('email','password','password_confirmation','token'),
+                
+                function (User $user, string $password) {
+                    $user->forceFill([
+                        'password' => Hash::make($password)
+                    ])->setRememberToken(Str::random(60));
+         
+                    $user->save();
+                }
+            );
+
+            return $status === Password::PASSWORD_RESET ? $this->sendResponse(null,"Password has been reset!") : $this->sendError('Invalid token', [], Response::HTTP_UNAUTHORIZED);
+        }else{
+            $status = Password::sendResetLink(
+                $request->only('email')
+            );    
+        }
+
+        return $this->sendResponse(null,"Password reset link sent!");
+    }
+
     public function login(LoginRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
-        $user = User::where('id', $validated['id'])->first();
+        $user = User::where('email', $validated['email'])->first();
 
         if (!$user) {
             return $this->sendError('Player not registered', [], Response::HTTP_NOT_FOUND);
@@ -59,11 +105,11 @@ class AuthController extends Controller
             return $this->sendError('Player does not have validated email', [], Response::HTTP_UNAUTHORIZED);
         }
 
-        if (!auth()->attempt(['id' => $validated['id'], 'password' => $validated['password']])) {
+        if (!auth()->attempt(['email' => $validated['email'], 'password' => $validated['password']])) {
             return $this->sendError('Credentials not valid', [], Response::HTTP_UNAUTHORIZED);
         }
-
-        $token = auth()->user->createToken(env('APP_NAME'))->accessToken;
+       
+        $token = (Auth::user())->createToken(env('APP_NAME'))->accessToken;
 
         return $this->sendResponse(
             [
@@ -92,18 +138,17 @@ class AuthController extends Controller
     public function verify($user_id, Request $request) : RedirectResponse
     {
         if (!$request->hasValidSignature()) {
-            dd($request->hasValidSignature());
-            return redirect(config('app.front_url') . '/verify-resend');
+            return redirect(config('app.front_url') . '/login');
         }
 
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
-            return redirect(config('app.front_url') . '/email-verified');
+            return redirect(config('app.front_url') . '/login');
         }
 
         $user->markEmailAsVerified();
         $user->notify(new WelcomeEmail());
-        return redirect(config('app.front_url') . '/email-verify');
+        return redirect(config('app.front_url') . '/login');
     }
 
     public function resendVerify(ResendVerifyRequest $request) : JsonResponse

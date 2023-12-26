@@ -42,11 +42,11 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group mt-2" id="institution_input">
-                    <label for="institution">Institution</label>
-                    <input type="text" class="form-control" id="institution" name="institution" value="{{ $player->school }}">
-                    @if ($errors->has('institution'))
-                        <small id="institution_error" class="form-text text-danger">{{ $errors->first('institution') }}</small>
+                <div class="form-group mt-2" id="instagram_input">
+                    <label for="instagram_input">Instagram</label>
+                    <input type="text" class="form-control" id="instagram_input" name="instagram" value="{{ $player->instagram }}">
+                    @if ($errors->has('instagram'))
+                        <small id="institution_error" class="form-text text-danger">{{ $errors->first('instagram') }}</small>
                     @endif
                 </div>
                 <div class="form-group mt-2">
@@ -74,13 +74,11 @@
                         <small id="country_error" class="form-text text-danger">{{ $errors->first('country') }}</small>
                     @endif
                 </div>
+
                 <div class="form-group mt-2">
                     <label for="state">Province/State (Required) <i class="fas fa-spinner fa-spin-pulse" id="state-spinner"></i></label>
                     <select class="form-select form-control" id="state" name="state" aria-describedby="state_error" data-iso={{ $player->state_iso }} disabled>
                         <option value="0">Select a province/state...</option>
-                        @foreach($form_data['states'] as $state)
-                            <option value="{{ $state['name'] }}" data-iso="{{ $state['iso2'] }}" selected="{{ $state['iso2'] == $player->state_iso }}"></option>
-                        @endforeach
                     </select>
                     @if ($errors->has('state'))
                         <small id="state_error" class="form-text text-danger">{{ $errors->first('state') }}</small>
@@ -90,15 +88,12 @@
                     <label for="city">City (Required) <i class="fas fa-spinner fa-spin-pulse" id="city-spinner"></i></label>
                     <select class="form-select form-control" id="city" name="city" aria-describedby="city_error" disabled data-id={{ $player->city_id }}>
                         <option value="0" selected>Select a city...</option>
-                        @foreach($form_data['cities'] as $city)
-                            <option value="{{ $city['name'] }}" data-iso="{{ $city['id'] }}" selected="{{ $city['id'] == $player->city_id }}"></option>
-                        @endforeach
                     </select>
                     @if ($errors->has('city'))
                         <small id="city_error" class="form-text text-danger">{{ $errors->first('city') }}</small>
                     @endif
                 </div>
-                <div class="form-group mt-2">
+                <!--div class="form-group mt-2">
                     <label for="role">Role (Required)</label>
                     <select class="form-select form-control" aria-label="Default select example" id="role" name="role">
                         <option value="0">Choose an option</option>
@@ -109,7 +104,7 @@
                     @if ($errors->has('role'))
                         <small id="role_error" class="form-text text-danger">{{ $errors->first('role') }}</small>
                     @endif
-                </div>
+                </div-->
                 <div class="form-group mt-3">
                     <button type="submit" class="btn btn-primary col-lg-12 text-white fw-bold">Submit</button>
                 </div>

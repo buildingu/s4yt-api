@@ -17,9 +17,11 @@ use Spatie\Permission\Models\Role;
 use App\Models\Coin;
 use App\Models\Player;
 use App\Models\UserVersion;
+use App\Services\UserService;
 
 class PlayerController extends Controller
 {
+
     /**
      * Display a list of the resource user.
      *
@@ -86,7 +88,7 @@ class PlayerController extends Controller
      * @param PlayerService $playerService
      * @return RedirectResponse
      */
-    public function update(UpdatePlayerRequest $request, $id, PlayerService $playerService): RedirectResponse
+    public function update(UpdatePlayerRequest $request, $id): RedirectResponse
     {
         $validated = $request->validated();
         $user = User::find($id);
@@ -100,8 +102,9 @@ class PlayerController extends Controller
                 'email' => 'required|string|email|unique:users',
             ]);
         }
+        
+        (new UserService())->update($request->only(['name','email','player']),$user);
 
-        $playerService->updatePlayer($validated, $user, true);
         return redirect()->route('player.index')->with('success', 'Player updated successfully.');
     }
 

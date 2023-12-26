@@ -8,6 +8,7 @@ class CoinType extends Model
 {
 
     const TYPE_REGISTER = 'register';
+    const TYPE_REFERRAL = 'referral';
 
     /**
      * The attributes that are mass assignable.

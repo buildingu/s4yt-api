@@ -27,12 +27,33 @@ class UpdatePlayerRequest extends FormRequest
             "name" => "required|string",
             "email" => "required|string|email",
             "education" => "required|numeric|exists:education,id",
-            "institution" => "required_if:education,1",
+            "instagram" => "sometimes|string",
             "grade" => "required|numeric|exists:grades,id",
             "country_iso" => "required|string",
             "state" => "required|string",
             "city" => "required|string",
-            "role" => "required|string|exists:roles,name"
+            //"role" => "required|string|exists:roles,name"
         ];
+    }
+
+    protected function passedValidation()
+    {
+        $fields = ['education','instagram','grade','country_iso','state','city','country'];
+        $data = $this->only($fields);
+
+        foreach($fields as $field){
+            $this->request->remove($field);
+        }
+
+        $this->merge([
+            'player'=>[
+                'education_id'=>$data['education'],
+                'instagram'=>$data['instagram'],
+                'grade_id'=>$data['grade'],
+                'country_iso'=>$data['country_iso'],
+                'state_iso'=>$data['state'],
+                'city_id'=>$data['city']
+            ]
+        ]);
     }
 }

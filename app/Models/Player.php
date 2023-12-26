@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\HasCoins;
 use App\Traits\Referable;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -10,7 +9,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Player extends Model implements HasMedia
 {
-    use Referable, HasCoins, InteractsWithMedia;
+    use Referable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +21,9 @@ class Player extends Model implements HasMedia
         'education_id',
         'country_iso',
         'state_iso',
-        'city_id'
+        'city_id',
+        'instagram',
+        'referred_by'
     ];
 
     /**
@@ -52,5 +53,10 @@ class Player extends Model implements HasMedia
     public function answer()
     {
         return $this->hasMany('App\Models\Answer');
+    }
+
+    public function coins()
+    {
+        return $this->hasMany('App\Models\Coin');
     }
 }

@@ -31,5 +31,21 @@
             </a>
         </li>
         @endrole
+        @role('super_admin|admin')
+        <li class="{{ str_starts_with(request()->path(), 'admin/sponsor') ? 'bg-primary' : ''  }} list-group-item bg-dark">
+            <a class="text-white text-decoration-none sidebar-li" href="{{ route('sponsor.index') }}">
+                <i class="fas fa-ribbon me-3 fa-lg"></i>
+                Sponsors
+            </a>
+        </li>
+        @endrole
+        @role('super_admin|admin')
+        <li class="{{ str_starts_with(request()->path(), 'admin/instagram') ? 'bg-primary' : ''  }} list-group-item bg-dark">
+            <a class="text-white text-decoration-none sidebar-li" href="{{ route('instagram.index') }}">
+                <i class="fa-brands fa-square-instagram me-3 fa-lg"></i>
+                Instagram
+            </a>
+        </li>
+        @endrole
     </ul>
 </nav>

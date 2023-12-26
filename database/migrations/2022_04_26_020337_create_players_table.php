@@ -20,10 +20,9 @@ class CreatePlayersTable extends Migration
             $table->string('school')->nullable();
             $table->string('country_iso',3);
             $table->string('state_iso', 3);
-            $table->string('city_id');
+            $table->integer('city_id');
             $table->foreignId('referred_by')->nullable()->constrained('players');
             $table->string('referral_code')->unique();
-            $table->integer('coins')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

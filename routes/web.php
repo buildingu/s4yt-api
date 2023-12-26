@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SponsorPartnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,7 +21,10 @@ Route::get('/', function () {
 Route::middleware('auth')->prefix('/admin')->group(function () {
     Route::view('/', 'admin');
     Route::resource('player', 'PlayerController');
+    Route::resource('player/{player}/coin', 'CoinController')->only(['index','create','store','destroy']);
+    Route::resource('sponsor', 'SponsorPartnerController');
     Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
+    Route::resource('instagram', 'InstagramController');
 });
 
 Route::middleware('auth')->group(function() {
