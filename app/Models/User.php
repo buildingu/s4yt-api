@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,10 +10,20 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\UsesUuid;
 
 class User extends Authenticatable
 {
-    use HasRoles, HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
+    use HasRoles, HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, UsesUuid;
+
+    const SUPER_ADMIN_ROLE = 'super_admin';
+    const ADMIN_ROLE = 'admin';
+    const EVENT_PARTNER_ROLE = 'event_partner';
+    const EVENT_PARTNER_GUEST_ROLE = 'event_partner_guest';
+    const RAFFLE_PARTNER_ROLE = 'raffle_partner';
+    const SPONSOR_PARTNER_ROLE = 'sponsor_partner';
+    const PLAYER_ROLE = 'player';
+    const BU_PLAYER_ROLE = 'bu_player';
 
     /**
      * The attributes that are mass assignable.
