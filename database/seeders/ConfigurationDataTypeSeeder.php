@@ -19,8 +19,8 @@ class ConfigurationDataTypeSeeder extends Seeder
         ]);
 
         ConfigurationDataType::create([
-            'data_type' => 'datetime',
-            'slug' => 'date'
+            'data_type' => 'time',
+            'slug' => 'time'
         ]);
     }
 }

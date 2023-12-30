@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Version::class, 'user_version');
     }
+
+    public static function getSuperAdminUser()
+    {
+        return self::role(self::SUPER_ADMIN_ROLE)->first();
+    }
 }

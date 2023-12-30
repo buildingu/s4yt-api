@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ConfigurationDataType extends Model
 {
     use HasFactory;
 
     const INTEGER = 'integer';
-    const DATE = 'date';
+    const DATE = 'time';
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +32,11 @@ class ConfigurationDataType extends Model
 
     public static function getIdBySlug(string $slug) : int
     {
-
         return ((self::where('slug', $slug)->first())->id);
+    }
+
+    public function configurations() : HasMany
+    {
+        return $this->hasMany(Configuration::class);
     }
 }
