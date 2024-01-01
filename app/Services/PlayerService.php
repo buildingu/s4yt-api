@@ -26,12 +26,13 @@ class PlayerService
 
         // player create
         $player = Player::create([
-            'education' => $data['education'],
-            'grade_id' => $data['grade'],
-            'city_id' => $data['city']
+            'education_id' => $data['education_id'],
+            'grade_id' => $data['grade_id'],
+            'city_id' => $data['city_id']
         ]);
         $player->school =  $data['school'] ?? null;
         $player->save();
+        $player->user()->save($user);
 
         // assign role
         if($admin) {

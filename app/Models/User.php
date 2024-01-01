@@ -77,4 +77,12 @@ class User extends Authenticatable
     {
         return self::role(self::SUPER_ADMIN_ROLE)->first();
     }
+
+    /**
+     * Get the owning userable model.
+     */
+    public function userable()
+    {
+        return $this->morphTo();
+    }
 }

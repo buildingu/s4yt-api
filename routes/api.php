@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function () {
+    Route::post('/register', [\App\Http\Controllers\Api\v1\AuthController::class, 'register']);
+    Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\v1\AuthController::class, 'verify'])->name('player.verify');
+    Route::post('/email/verify', [\App\Http\Controllers\Api\v1\AuthController::class, 'sendVerifyEmail'])->name('send.verify');
 });

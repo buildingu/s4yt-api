@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Carbon;
 
-class VerifyEmail extends Notification
+class VerifyEmail extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -37,7 +37,7 @@ class VerifyEmail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $verificationUrl = $this->verificationUrl($notifiable);
-        
+
         return (new MailMessage)
             ->subject('Verify Email Address')
             ->line('Please click the button below to verify your email address.')
@@ -55,7 +55,7 @@ class VerifyEmail extends Notification
     {
         return URL::temporarySignedRoute(
             'player.verify',
-            Carbon::now()->addMinutes(intval(config('auth.verification.expire', 60))),
+            Carbon::now()->addMinutes(intval(config('auth.verification.expire', 10))),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),
