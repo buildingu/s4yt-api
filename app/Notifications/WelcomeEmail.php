@@ -36,7 +36,7 @@ class WelcomeEmail extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->line('Thanks for registering and welcome to $4YT!')
-            ->line('Your ANONYMOUS STUDENT ID# for the game is ' . $notifiable->getKey())
+            ->line('Your ANONYMOUS PLAYER ID# for the game is ' . $notifiable->getKey())
             ->line('AND you get 3 Dubl-U-nes to start !')
             ->line('Though you can’t play the game until the beginning of February (ofc we’ll remind you!) there’s still lots you can do when you Login….like:')
             ->line('1. Fill out your Instagram and/or LinkedIn handle(s) so we can give U more Dubl-U-nes!')

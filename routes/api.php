@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/register', [\App\Http\Controllers\Api\v1\AuthController::class, 'register']);
     Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\v1\AuthController::class, 'verify'])->name('player.verify');
     Route::post('/email/verify', [\App\Http\Controllers\Api\v1\AuthController::class, 'sendVerifyEmail'])->name('send.verify');
+    Route::post('/login', [\App\Http\Controllers\Api\v1\AuthController::class, 'login']);
     //location
     Route::get('/countries',[\App\Http\Controllers\Api\v1\LocationController::class, 'getCountries'] );
     Route::post('/states',[\App\Http\Controllers\Api\v1\LocationController::class, 'getStates'] );
