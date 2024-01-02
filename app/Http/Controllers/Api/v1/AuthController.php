@@ -21,13 +21,12 @@ class AuthController extends Controller
     /**
      * Method registers new player
      * @param RegisterRequest $request
-     * @param PlayerService $playerService
      * @return JsonResponse
      */
-    public function register(RegisterRequest $request, PlayerService $playerService): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $player = $playerService->addPlayer($validated, Configuration::getCurrentValueByKey(Configuration::REGISTER_COINS));
+        $player = PlayerService::addPlayer($validated, Configuration::getCurrentValueByKey(Configuration::REGISTER_COINS));
         Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->email]);
         $player->user->notify(new VerifyEmail());
         return $this->sendResponse(

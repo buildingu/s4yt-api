@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class PlayerService
 {
-    public function addPlayer(array $data, int $coins, bool $admin = false): Player
+    public static function addPlayer(array $data, int $coins, bool $admin = false): Player
     {
         $current_version_id = Version::currentVersionId();
 
@@ -41,12 +41,12 @@ class PlayerService
             $user->assignRole(User::PLAYER_ROLE);
         }
         // add coins
-        $this->addCoinsToCurrentPlayer($coins, Coin::SOURCE_REGISTER, $user);
+        self::addCoinsToCurrentPlayer($coins, Coin::SOURCE_REGISTER, $user);
         // return player
         return $player;
     }
 
-    private function addCoinsToCurrentPlayer(int $coins, int $source, User $user) : void
+    private static function addCoinsToCurrentPlayer(int $coins, int $source, User $user) : void
     {
         Coin::factory()->count($coins)->make([
             'source' => $source,

@@ -15,7 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
+    //auth
     Route::post('/register', [\App\Http\Controllers\Api\v1\AuthController::class, 'register']);
     Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\v1\AuthController::class, 'verify'])->name('player.verify');
     Route::post('/email/verify', [\App\Http\Controllers\Api\v1\AuthController::class, 'sendVerifyEmail'])->name('send.verify');
+    //location
+    Route::get('/countries',[\App\Http\Controllers\Api\v1\LocationController::class, 'getCountries'] );
+    Route::post('/states',[\App\Http\Controllers\Api\v1\LocationController::class, 'getStates'] );
+    Route::post('/cities',[\App\Http\Controllers\Api\v1\LocationController::class, 'getCities'] );
 });
