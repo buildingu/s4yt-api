@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Country State City API Dataset
+    | Country Region City API Dataset
     |--------------------------------------------------------------------------
     |
     | This value is the URL of the country city state API reference.

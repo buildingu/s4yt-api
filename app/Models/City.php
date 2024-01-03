@@ -23,8 +23,8 @@ class City extends Model
      */
     public $timestamps = false;
 
-    public function state() : BelongsTo
+    public function region() : BelongsTo
     {
-        return $this->belongsTo(State::class);
+        return $this->belongsTo(Region::class);
     }
 }
