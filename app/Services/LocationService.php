@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\City;
 use App\Models\Country;
-use App\Models\State;
+use App\Models\Region;
 use Illuminate\Database\Eloquent\Collection;
 
 class LocationService
@@ -25,16 +25,16 @@ class LocationService
      */
     public static function getStatesByCountryId(int $country_id) : Collection
     {
-        return State::select('id', 'name')->where('country_id', $country_id)->get();
+        return Region::select('id', 'name')->where('country_id', $country_id)->get();
     }
 
     /**
      * Method return cities data of given state identifier
-     * @param int $state_id
+     * @param int $region_id
      * @return Collection
      */
-    public static function getCitiesByStateId(int $state_id) : Collection
+    public static function getCitiesByRegionId(int $region_id) : Collection
     {
-        return City::select('id', 'name')->where('state_id', $state_id)->get();
+        return City::select('id', 'name')->where('region_id', $region_id)->get();
     }
 }

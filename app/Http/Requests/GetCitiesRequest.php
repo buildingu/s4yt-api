@@ -22,7 +22,7 @@ class GetCitiesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'state_id' => 'required|integer|exists:states,id'
+            'region_id' => 'required|integer|exists:regions,id'
         ];
     }
 }

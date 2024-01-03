@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GetCitiesRequest;
+use App\Http\Requests\GetRegionsRequest;
 use App\Http\Requests\GetStatesRequest;
 use App\Services\LocationService;
 use Illuminate\Http\JsonResponse;
@@ -27,17 +28,17 @@ class LocationController extends Controller
 
     /**
      * Method returns list of states of given country
-     * @param GetStatesRequest $request
+     * @param GetRegionsRequest $request
      * @return JsonResponse
      */
-    public function getStates(GetStatesRequest $request): JsonResponse
+    public function getRegions(GetRegionsRequest $request): JsonResponse
     {
         $validated = $request->validated();
         return $this->sendResponse(
             [
-                'states' => LocationService::getStatesByCountryId($validated['country_id'])
+                'regions' => LocationService::getStatesByCountryId($validated['country_id'])
             ],
-            "List of states of given country"
+            "List of regions of given country"
         );
     }
 
@@ -51,7 +52,7 @@ class LocationController extends Controller
         $validated = $request->validated();
         return $this->sendResponse(
             [
-                'cities' => LocationService::getCitiesByStateId($validated['state_id'])
+                'cities' => LocationService::getCitiesByRegionId($validated['region_id'])
             ],
             "List of cities of given state"
         );

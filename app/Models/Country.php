@@ -25,8 +25,8 @@ class Country extends Model
      */
     public $timestamps = false;
 
-    public function states() : HasMany
+    public function regions() : HasMany
     {
-        return $this->hasMany(State::class);
+        return $this->hasMany(Region::class);
     }
 }

@@ -23,7 +23,7 @@ class CountrySeeder extends Seeder
                 'flag' => $_country['emoji']
             ]);
             foreach ($_country['states'] as $_state) {
-                $state = $country->states()->create([
+                $state = $country->regions()->create([
                     'name' => $_state['name'],
                     'state_code' => $_state['state_code'],
                     'type' => $_state['type']

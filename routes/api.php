@@ -22,6 +22,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [\App\Http\Controllers\Api\v1\AuthController::class, 'login']);
     //location
     Route::get('/countries',[\App\Http\Controllers\Api\v1\LocationController::class, 'getCountries'] );
-    Route::post('/states',[\App\Http\Controllers\Api\v1\LocationController::class, 'getStates'] );
+    Route::post('/regions',[\App\Http\Controllers\Api\v1\LocationController::class, 'getRegions'] );
     Route::post('/cities',[\App\Http\Controllers\Api\v1\LocationController::class, 'getCities'] );
+    //player
+    Route::get('/education', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getEducation']);
+    Route::get('/grades', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getGrades']);
 });
