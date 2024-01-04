@@ -22,7 +22,7 @@ class SendVerifyEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'=> 'required|string|email|exists:users,email',
+            'email'=> 'required|string|email',
         ];
     }
 }
