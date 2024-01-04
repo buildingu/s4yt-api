@@ -32,9 +32,9 @@ class PlayerController extends Controller
     {
         return $this->sendResponse(
             [
-                'education' => Grade::select('id', 'name')->get()
+                'grades' => Grade::select('id', 'name')->get()
             ],
-            "List of education"
+            "List of grades"
         );
     }
 }
