@@ -27,4 +27,8 @@ Route::prefix('v1')->group(function () {
     //player
     Route::get('/education', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getEducation']);
     Route::get('/grades', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getGrades']);
+
+    Route::middleware(['auth:api', 'verified'])->group(function () {
+        Route::get('/coins', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getCoins']);
+    });
 });
