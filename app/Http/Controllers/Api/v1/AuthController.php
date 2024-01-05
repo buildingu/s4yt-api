@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $player = PlayerService::addPlayer($validated, Configuration::getCurrentValueByKey(Configuration::REGISTER_COINS));
+        $player = PlayerService::addPlayer($validated, intval(Configuration::getCurrentValueByKey(Configuration::REGISTER_COINS)));
         Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->user->email]);
         $player->user->notify(new VerifyEmail());
         return $this->sendResponse(

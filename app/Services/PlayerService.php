@@ -6,6 +6,7 @@ use App\Models\Coin;
 use App\Models\User;
 use App\Models\Player;
 use App\Models\Version;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Hash;
 
 class PlayerService
@@ -48,10 +49,15 @@ class PlayerService
 
     private static function addCoinsToCurrentPlayer(int $coins, int $source, User $user) : void
     {
-        Coin::factory()->count($coins)->make([
+        Coin::factory()->count($coins)->create([
             'source' => $source,
             'user_version_id' => $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id
         ]);
+    }
+
+    public static function getCurrentPlayerCoins(Authenticatable $user) : int
+    {
+        return Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id)->count();
     }
 
 }
