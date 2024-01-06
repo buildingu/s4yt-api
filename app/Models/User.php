@@ -4,15 +4,18 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Traits\UsesUuid;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, UsesUuid, HasRoles;
 
     const SUPER_ADMIN_ROLE = 'super_admin';
     const ADMIN_ROLE = 'admin';
@@ -63,4 +66,22 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function versions() : BelongsToMany
+    {
+        return $this->belongsToMany(Version::class, 'user_version');
+    }
+
+    public static function getSuperAdminUser()
+    {
+        return self::role(self::SUPER_ADMIN_ROLE)->first();
+    }
+
+    /**
+     * Get the owning userable model.
+     */
+    public function userable()
+    {
+        return $this->morphTo();
+    }
 }
