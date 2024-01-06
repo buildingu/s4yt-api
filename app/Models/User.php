@@ -12,11 +12,16 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
+
+    const SUPER_ADMIN_ROLE = 'super_admin';
+    const ADMIN_ROLE = 'admin';
+    const EVENT_PARTNER_ROLE = 'event_partner';
+    const EVENT_PARTNER_GUEST_ROLE = 'event_partner_guest';
+    const RAFFLE_PARTNER_ROLE = 'raffle_partner';
+    const SPONSOR_PARTNER_ROLE = 'sponsor_partner';
+    const PLAYER_ROLE = 'player';
+    const BU_PLAYER_ROLE = 'bu_player';
 
     /**
      * The attributes that are mass assignable.
