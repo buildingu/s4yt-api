@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('instagram_handle')->nullable();
             $table->foreignId('referred_by')->nullable()->constrained('players');
             $table->string('referral_code')->unique();
-            $table->foreignId('city_id')->constrained('cities');
+            $table->foreignId('country_id')->constrained('countries');
+            $table->foreignId('region_id')->nullable()->constrained('regions');
+            $table->foreignId('city_id')->nullable()->constrained('cities');
             $table->timestamps();
         });
     }

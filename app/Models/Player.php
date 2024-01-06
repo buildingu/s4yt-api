@@ -19,6 +19,8 @@ class Player extends Model
     protected $fillable = [
         'education_id',
         'grade_id',
+        'country_id',
+        'region_id',
         'city_id'
     ];
 

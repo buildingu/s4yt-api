@@ -29,7 +29,9 @@ class PlayerService
         $player = Player::create([
             'education_id' => $data['education_id'],
             'grade_id' => $data['grade_id'],
-            'city_id' => $data['city_id']
+            'country_id' => $data['country_id'],
+            'region_id' => $data['region_id'] ?? null,
+            'city_id' => $data['city_id'] ?? null
         ]);
         $player->school =  $data['school'] ?? null;
         $player->save();

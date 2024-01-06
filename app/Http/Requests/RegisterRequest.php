@@ -29,7 +29,9 @@ class RegisterRequest extends FormRequest
             'grade_id' => 'required|integer|exists:grades,id',
             'education_id' => 'required|integer|exists:education,id',
             'school' => 'nullable|required_if:education_id,1|string',
-            'city_id' => 'required|integer|exists:cities,id'
+            'country_id' => 'required|integer|exists:cities,id',
+            'region_id' => 'nullable|integer|exists:cities,id',
+            'city_id' => 'nullable|integer|exists:cities,id'
         ];
     }
 }
