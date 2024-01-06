@@ -18,8 +18,8 @@ class CoinFactory extends Factory
     public function definition(): array
     {
         return [
-            'source' => fake()->numberBetween(1,4),
-            'user_version_id' => fake()->randomElement(UserVersion::all()->pluck('id')->toArray())
+            'source' => $this->faker->numberBetween(1,4),
+            'user_version_id' => $this->faker->randomElement(UserVersion::all()->pluck('id')->toArray())
         ];
     }
 }
