@@ -34,9 +34,15 @@ class LocationController extends Controller
     public function getRegions(GetRegionsRequest $request): JsonResponse
     {
         $validated = $request->validated();
+        $regions = LocationService::getStatesByCountryId($validated['country_id']);
+
+        if (sizeof($regions) == 0) {
+            return $this->sendError('No regions found');
+        }
+
         return $this->sendResponse(
             [
-                'regions' => LocationService::getStatesByCountryId($validated['country_id'])
+                'regions' => $regions,
             ],
             "List of regions of given country"
         );
@@ -50,9 +56,15 @@ class LocationController extends Controller
     public function getCities(GetCitiesRequest $request): JsonResponse
     {
         $validated = $request->validated();
+        $cities = LocationService::getCitiesByRegionId($validated['region_id']);
+
+        if (sizeof($cities) == 0) {
+            return $this->sendError('No cities found');
+        }
+
         return $this->sendResponse(
             [
-                'cities' => LocationService::getCitiesByRegionId($validated['region_id'])
+                'cities' => $cities
             ],
             "List of cities of given state"
         );
