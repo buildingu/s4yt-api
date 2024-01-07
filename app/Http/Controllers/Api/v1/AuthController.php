@@ -49,17 +49,17 @@ class AuthController extends Controller
     public function verify($user_id, Request $request) : RedirectResponse
     {
         if (!$request->hasValidSignature()) {
-            return redirect(config('app.front_url') . '/verify-resend');
+            return redirect(config('app.front_url') . '/register/verify-email');
         }
 
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
-            return redirect(config('app.front_url') . '/email-verified');
+            return redirect(config('app.front_url') . '/verify-email/bad-request');
         }
 
         $user->markEmailAsVerified();
         $user->notify(new WelcomeEmail());
-        return redirect(config('app.front_url') . '/email-verify');
+        return redirect(config('app.front_url') . '/verify-email/success');
     }
 
     /**
