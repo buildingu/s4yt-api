@@ -54,12 +54,12 @@ class AuthController extends Controller
 
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
-            return redirect(config('app.front_url') . '/verify-email/bad-request');
+            return redirect(config('app.front_url') . '/register/verify-email');
         }
 
         $user->markEmailAsVerified();
         $user->notify(new WelcomeEmail());
-        return redirect(config('app.front_url') . '/verify-email/success');
+        return redirect(config('app.front_url') . '/register/verify-email/success');
     }
 
     /**
