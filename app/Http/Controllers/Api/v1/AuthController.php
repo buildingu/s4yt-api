@@ -48,12 +48,13 @@ class AuthController extends Controller
      */
     public function verify($user_id, Request $request) : RedirectResponse
     {
-        if (!$request->hasValidSignature()) {
-            return redirect(config('app.front_url') . '/register/verify-email');
-        }
-
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
+            $user->notify(new WelcomeEmail());
+            return redirect(config('app.front_url') . '/register/verify-email/success');
+        }
+
+        if (!$request->hasValidSignature()) {
             return redirect(config('app.front_url') . '/register/verify-email');
         }
 
