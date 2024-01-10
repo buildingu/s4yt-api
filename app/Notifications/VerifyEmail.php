@@ -15,6 +15,8 @@ class VerifyEmail extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -24,17 +26,21 @@ class VerifyEmail extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @return array<int, string>
+     * @param  mixed  $notifiable
+     * @return array
      */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
         return ['mail'];
     }
 
     /**
      * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable)
     {
         $verificationUrl = $this->verificationUrl($notifiable);
 
