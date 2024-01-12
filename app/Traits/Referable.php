@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 trait Referable
 {
 
-    protected static function bootReferable()
+    protected static function bootReferable(): void
     {
         static::creating(function ($model) {
             if ($referredBy = Cookie::get('referral_code')) {
@@ -26,7 +26,7 @@ trait Referable
      *
      * @return string
      */
-    public function getReferralLink()
+    public function getReferralLink(): string
     {
         return url('/register').'/?ref='.$this->referral_code;
     }
@@ -48,7 +48,7 @@ trait Referable
      *
      * @return string
      */
-    protected static function generateReferral()
+    protected static function generateReferral(): string
     {
         $length = config('referral.length',10);
 

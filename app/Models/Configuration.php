@@ -2,48 +2,51 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Configuration extends Model
 {
+    use HasFactory;
+
     const REGISTER_COINS = 'register_coins';
     const REFERRAL_COINS = 'referral_coins';
-    const MAX_REVIEWERS = 'max_reviewers';
-    const MAX_AMOUNT_REWARDS = 'max_amount_awards';
-    const MAX_EVENT_PARTNERS = 'max_event_partners';
+    const INSTAGRAM_COINS = 'instagram_coins';
     const GAME_START = 'game_start';
     const GAME_END = 'game_end';
     const WINNERS_ANNOUNCED = 'winners_announced';
     const LOGIN_DISABLED = 'login_disabled';
-    const DEFAULT_PASSWORD = 'default_password';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
-        'key'
+        'key',
+        'description'
     ];
 
-    public function type()
+    public static function getConfigurationByKey(string $key) : Configuration
     {
-        return $this->belongsTo('App\Models\DataType','data_type_id');
+        return self::where('key', $key)->first();
     }
 
-    public function versions()
+    public function configurationDataType() : BelongsTo
     {
-        $version_id = Cache::remember('current_version', 60*60*24*28, function() {
-            return Version::currentVersion();
-        });
-
-        return $this->hasOne('App\Models\ConfigurationVersion','configuration_id')->where('version_id',$version_id);
+        return $this->belongsTo(ConfigurationDataType::class);
     }
 
-    public static function getValueByKey(string $key)
+    public function versions() : BelongsToMany
     {
-        
-        return ((self::where('key', $key)->first())->versions()->get())[0]->value;
+        return $this->belongsToMany(Version::class, 'configuration_version');
+    }
+
+    public static function getCurrentValueByKey(string $key)
+    {
+        return (self::getConfigurationByKey($key))->versions()->withPivot(['value'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->value;
     }
 }

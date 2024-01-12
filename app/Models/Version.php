@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Version extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -13,13 +17,13 @@ class Version extends Model
      */
     protected $guarded = [];
 
-    public static function currentVersion()
+    public static function currentVersionId()
     {
         return (self::where('active', true)->first())->id;
     }
 
-    public function users()
+    public function users() : BelongsToMany
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany(User::class, 'user_version');
     }
 }

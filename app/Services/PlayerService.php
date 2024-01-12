@@ -3,43 +3,63 @@
 namespace App\Services;
 
 use App\Models\Coin;
-use App\Models\CoinType;
-use App\Models\Configuration;
 use App\Models\User;
 use App\Models\Player;
+use App\Models\Version;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Hash;
 
 class PlayerService
 {
-
-    
-    public function create(array $data, User $user): Player
+    public static function addPlayer(array $data, int $coins, bool $admin = false): Player
     {
+        $current_version_id = Version::currentVersionId();
+
+        // user create
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $admin ? Hash::make(config('app.default_pass')) : Hash::make($data['password']),
+            'default' => false
+        ]);
+        // attach the user to the current version
+        $user->versions()->attach($current_version_id);
+
+        // player create
         $player = Player::create([
             'education_id' => $data['education_id'],
             'grade_id' => $data['grade_id'],
-            'country_iso' => $data['country_iso'],
-            'state_iso' => $data['state_iso'],
-            'city_id' => $data['city_id'],
-            'instagram' => isset($data['instagram']) ? $data['instagram'] : null,
-            'referred_by' => isset($data['referred_by']) ? $data['referred_by'] : null
+            'country_id' => $data['country_id'],
+            'region_id' => $data['region_id'] ?? null,
+            'city_id' => $data['city_id'] ?? null
         ]);
-
+        $player->school =  $data['school'] ?? null;
+        $player->save();
         $player->user()->save($user);
-        
-        factory(Coin::class,(int) Configuration::getValueByKey(Configuration::REGISTER_COINS))->create([
-            'player_id' => $player->id,
-            'coin_type_id' => CoinType::getTypeByKey(CoinType::TYPE_REGISTER)
+
+        // assign role
+        if($admin) {
+            $user->assignRole($data["role"]);
+        } else {
+            $user->assignRole(User::PLAYER_ROLE);
+        }
+        // add coins
+        self::addCoinsToCurrentPlayer($coins, Coin::SOURCE_REGISTER, $user);
+        // return player
+        return $player;
+    }
+
+    private static function addCoinsToCurrentPlayer(int $coins, int $source, User $user) : void
+    {
+        Coin::factory()->count($coins)->create([
+            'source' => $source,
+            'user_version_id' => $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id
         ]);
-
-        return $player;
     }
 
-    public function update(array $data, Player $player){
-        $player->fill(
-            $data
-        )->save();
-
-        return $player;
+    public static function getCurrentPlayerCoins(Authenticatable $user) : int
+    {
+        return Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id)->count();
     }
+
 }
