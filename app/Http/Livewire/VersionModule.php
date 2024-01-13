@@ -34,4 +34,17 @@ class VersionModule extends Component
         }
         $this->emit('showMessage');
     }
+
+    public function updateVersion($year, $active, $version_id) : void
+    {
+        $version = VersionService::updateVersion($year, $active, $version_id);
+        if(!isset($version)) {
+            $this->message = "An error has occurred. The request has not been completed.";
+            $this->message_type = "error";
+        } else {
+            $this->message = "Version has been updated successfully";
+            $this->message_type = "success";
+        }
+        $this->emit('showMessage');
+    }
 }

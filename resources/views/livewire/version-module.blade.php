@@ -54,6 +54,7 @@
                         </td>
                         <td>
                             <button
+                                wire:click='$emit("openModal", "version-modal", @json(["action" => App\Http\Livewire\VersionModal::UPDATE_ACTION, "version_id" => $version->id ]))'
                                 type="button"
                                 class="border border-blue-500 bg-blue-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"
                             >

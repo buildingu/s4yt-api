@@ -36,7 +36,7 @@ class VersionService
     }
 
     /**
-     * Method add version. Only one version at a time is allowed to be enabled.
+     * Method add version.
      * @param $year
      * @param $active
      * @return Version
@@ -46,12 +46,42 @@ class VersionService
         $version = Version::create([
             'year' => $year
         ]);
-        if($active) {
-            Version::query()->update(['active' => false]);
-        }
+        self::disableAllVersions($active);
         $version->active = $active;
         $version->save();
         return $version;
+    }
+
+    /**
+     * Method updates version data.
+     * @param $year
+     * @param $active
+     * @param $id
+     * @return Version|null
+     */
+    public static function updateVersion($year, $active, $id) : ?Version
+    {
+        $version = Version::find($id);
+        if(!$version) {
+            return null;
+        }
+        $version->year = $year;
+        self::disableAllVersions($active);
+        $version->active = $active;
+        $version->save();
+        return $version;
+    }
+
+    /**
+     * Method mass updated the Version model. Only one version enabled at a time is allowed.
+     * @param $active
+     * @return void
+     */
+    private static function disableAllVersions($active) : void
+    {
+        if($active) {
+            Version::query()->update(['active' => false]);
+        }
     }
 
 }

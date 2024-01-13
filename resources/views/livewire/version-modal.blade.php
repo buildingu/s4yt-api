@@ -30,7 +30,7 @@
                             aria-describedby="active"
                             type="checkbox"
                             class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-blue-300 h-5 w-5 rounded"
-                            value="{{ $active }}"
+                            value="{{ $active == true }}"
                             checked="{{ $active ? 'true':'false' }}"
                             wire:model="active">
                     </div>
