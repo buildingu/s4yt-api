@@ -12,11 +12,13 @@ class Version extends Model
     use HasFactory, UsesUuid;
 
     /**
-     * The attributes that aren't mass assignable.
+     * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'year',
+    ];
 
     public static function currentVersionId()
     {

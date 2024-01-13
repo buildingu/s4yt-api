@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Configuration;
+use App\Models\Version;
 use Carbon\Carbon;
 
 class VersionService
@@ -32,6 +33,25 @@ class VersionService
         } else {
             return sprintf("%02d%s%02d%s%02d", floor($seconds/3600), ":", ($seconds/60)%60, ":", $seconds%60);
         }
+    }
+
+    /**
+     * Method add version. Only one version at a time is allowed to be enabled.
+     * @param $year
+     * @param $active
+     * @return Version
+     */
+    public static function addVersion($year, $active) : Version
+    {
+        $version = Version::create([
+            'year' => $year
+        ]);
+        if($active) {
+            Version::query()->update(['active' => false]);
+        }
+        $version->active = $active;
+        $version->save();
+        return $version;
     }
 
 }

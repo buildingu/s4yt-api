@@ -4,7 +4,7 @@
     <div
         class="w-3/6 mx-auto"
         x-data="{ show: false }"
-        x-show.transition.opacity.out.duration.1500ms="show"
+        x-show.transition.opacity.out.duration.2000ms="show"
         x-init="@this.on('showMessage', () => { show = true; setTimeout( () => { show = false;}, 2000) })"
         style="display: none"
     >
@@ -20,6 +20,7 @@
         <!-- ACTION BUTTON -->
         <div>
             <button
+                wire:click='$emit("openModal", "version-modal", @json(["action" => App\Http\Livewire\VersionModal::STORE_ACTION ]))'
                 type="button"
                 class="border border-blue-400 bg-blue-400 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-500 hover:border-blue-500 focus:outline-none focus:shadow-outline"
             >
@@ -52,12 +53,6 @@
                             </span>
                         </td>
                         <td>
-                            <button
-                                type="button"
-                                class="border border-yellow-500 bg-yellow-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-yellow-600 focus:outline-none focus:shadow-outline"
-                            >
-                                <i class="text-base fa-solid fa-eye px-1"></i>
-                            </button>
                             <button
                                 type="button"
                                 class="border border-blue-500 bg-blue-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"

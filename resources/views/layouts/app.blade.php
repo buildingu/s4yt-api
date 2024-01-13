@@ -40,6 +40,7 @@
 
         @stack('modals')
 
+        @livewire('livewire-ui-modal')
         @livewireScripts
         <!-- Fontawesome -->
         <script src="https://kit.fontawesome.com/f8dc071501.js" crossorigin="anonymous"></script>
