@@ -33,7 +33,7 @@ class AuthController extends Controller
         $validated = $request->validated();
         $player = PlayerService::addPlayer($validated, intval(ConfigurationService::getCurrentValueByKey(Configuration::REGISTER_COINS)));
         Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->user->email]);
-        $player->user->notify(new VerifyEmail());
+        $player->user->notify((new VerifyEmail())->delay(now()->addMinute()));
         return $this->sendResponse(
             [
                 'uuid' => $player->user->id,
@@ -54,7 +54,7 @@ class AuthController extends Controller
     {
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
-            $user->notify(new WelcomeEmail());
+            $user->notify((new WelcomeEmail())->delay(now()->addMinute()));
             return redirect(config('app.front_url') . '/register/verify-email/success');
         }
 
@@ -63,7 +63,7 @@ class AuthController extends Controller
         }
 
         $user->markEmailAsVerified();
-        $user->notify(new WelcomeEmail());
+        $user->notify((new WelcomeEmail())->delay(now()->addMinute()));
         return redirect(config('app.front_url') . '/register/verify-email/success');
     }
 
@@ -82,7 +82,7 @@ class AuthController extends Controller
             return $this->sendError('Player not registered');
         }
 
-        $user->notify(new VerifyEmail());
+        $user->notify((new VerifyEmail())->delay(now()->addMinute()));
 
         return $this->sendResponse(
             [],
