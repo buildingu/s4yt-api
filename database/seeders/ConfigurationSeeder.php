@@ -33,23 +33,28 @@ class ConfigurationSeeder extends Seeder
                 'configuration_data_type_id' =>  ConfigurationDataType::getIdBySlug(ConfigurationDataType::INTEGER)
             ],
             [
-                'key' => 'game_start',
-                'description' => "Date format: mm-dd-YYYY HH:ii (" . config('app.timezone') ."). Set the time of the start at the game. At this point the student will be able to interact with the game.",
+                'key' => 'register_start',
+                'description' => "Date format: Y-m-d H:i (" . config('app.timezone') ."). Set the time of the start at the game. At this point the student will be able to interact with the game.",
                 'configuration_data_type_id' =>  ConfigurationDataType::getIdBySlug(ConfigurationDataType::DATE)
             ],
             [
+                'key' => 'game_start',
+                'description' => "Date format: Y-m-d H:i (" . config('app.timezone') ."). Set the time of the start at the game. At this point the student will be able to interact with the game.",
+                'configuration_data_type_id' =>  ConfigurationDataType::getIdBySlug(ConfigurationDataType::DATE)
+            ],
+            [
+                'key' => 'review_start',
+                'description' => "Date format: Y-m-d H:i (" . config('app.timezone') . "). Set the time of the start at the game. At this point the student will no longer be able to interact with the game.",
+                'configuration_data_type_id' => ConfigurationDataType::getIdBySlug(ConfigurationDataType::DATE)
+            ],
+            [
+                'key' => 'review_end',
+                'description' => "Date format: Y-m-d H:i (" . config('app.timezone') . "). Set the time of the start at the game. At this point the award and raffle items are chosen and the related mailing is sent.",
+                'configuration_data_type_id' => ConfigurationDataType::getIdBySlug(ConfigurationDataType::DATE)
+            ],
+            [
                 'key' => 'game_end',
-                'description' => "Date format: HH:ii (" . config('app.timezone') . "). Set the time of the start at the game. At this point the student will no longer be able to interact with the game.",
-                'configuration_data_type_id' => ConfigurationDataType::getIdBySlug(ConfigurationDataType::DATE)
-            ],
-            [
-                'key' => 'winners_announced',
-                'description' => "Date format: HH:ii (" . config('app.timezone') . "). Set the time of the start at the game. At this point the award and raffle items are chosen and the related mailing is sent.",
-                'configuration_data_type_id' => ConfigurationDataType::getIdBySlug(ConfigurationDataType::DATE)
-            ],
-            [
-                'key' => 'login_disabled',
-                'description' => "Date format: HH:ii (" . config('app.timezone') . "). Set the time of the start at the game. At this point the login will be disables for students, businesses and sponsors.",
+                'description' => "Date format: Y-m-d H:i (" . config('app.timezone') . "). Set the time of the start at the game. At this point the login will be disables for students, businesses and sponsors.",
                 'configuration_data_type_id' => ConfigurationDataType::getIdBySlug(ConfigurationDataType::DATE)
             ]
         ];

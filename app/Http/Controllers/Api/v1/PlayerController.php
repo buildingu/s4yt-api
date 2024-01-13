@@ -39,14 +39,4 @@ class PlayerController extends Controller
             "List of grades"
         );
     }
-
-    public function getCoins() : JsonResponse
-    {
-        return $this->sendResponse(
-            [
-                'coins' => PlayerService::getCurrentPlayerCoins(Auth::user())
-            ],
-            "Coin counter"
-        );
-    }
 }

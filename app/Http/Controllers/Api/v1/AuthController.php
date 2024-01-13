@@ -10,8 +10,12 @@ use App\Models\Configuration;
 use App\Models\User;
 use App\Notifications\VerifyEmail;
 use App\Notifications\WelcomeEmail;
+use App\Services\ConfigurationService;
 use App\Services\PlayerService;
+use App\Services\VersionService;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +31,7 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $player = PlayerService::addPlayer($validated, intval(Configuration::getCurrentValueByKey(Configuration::REGISTER_COINS)));
+        $player = PlayerService::addPlayer($validated, intval(ConfigurationService::getCurrentValueByKey(Configuration::REGISTER_COINS)));
         Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->user->email]);
         $player->user->notify(new VerifyEmail());
         return $this->sendResponse(
@@ -90,6 +94,12 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
+        $now = Carbon::now();
+        $timestamps = VersionService::getCurrentVersionTimestamps();
+        if( ($now >= $timestamps['review_start'] && $now < $timestamps['review_end']) || $now >= $timestamps['game_end']) {
+            return $this->sendError('Login disabled');
+        }
+
         $user = User::where('id', $validated['player_id'])->first();
 
         if (!$user) {
@@ -105,12 +115,30 @@ class AuthController extends Controller
         }
 
         $token = auth()->user()->createToken(env('APP_NAME'))->accessToken;
+        $countdown  =Carbon::now() < $timestamps['game_start'] ?
+            "The game has not started yet" :
+            (Carbon::now() > $timestamps['review_end'] ?
+                "The game has ended" :
+                VersionService::getCountdown($timestamps['review_start'], $timestamps['game_start'])
+                );
 
         return $this->sendResponse(
             [
                 'auth' => 'Bearer',
                 'token' => $token,
-                'roles' => $user->roles->pluck('name')->toArray()
+                'user' => [
+                    'name' =>  Auth::user()->name,
+                    'grade_id' => Auth::user()->userable->grade_id,
+                    'education_id' => Auth::user()->userable->education_id,
+                    'school' => Auth::user()->userable->school,
+                    'country_id' => Auth::user()->userable->country_id,
+                    'region_id' => Auth::user()->userable->region_id,
+                    'city_id' => Auth::user()->userable->city_id,
+                    'instagram_handle' => Auth::user()->userable->instagram_handle,
+                    'coins' => PlayerService::getCurrentPlayerCoins(Auth::user())
+                ],
+                'roles' => $user->roles->pluck('name')->toArray(),
+                'countdown' => $countdown
             ],
             "Player logged in successfully"
         );
