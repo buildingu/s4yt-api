@@ -6,10 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
 
-class VerifyEmail extends Notification implements ShouldQueue
+class ResetPasswordEmail extends Notification
 {
     use Queueable;
 
@@ -40,15 +40,15 @@ class VerifyEmail extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail(object $notifiable)
+    public function toMail($notifiable)
     {
-        $verificationUrl = $this->verificationUrl($notifiable);
+        $resetPasswordUrl = $this->resetPasswordUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Verify Email Address')
-            ->line('Please click the button below to verify your email address.')
-            ->action('Yes, this is me...duh!', $verificationUrl )
-            ->line('This link will work for ' . env('MAIL_EXPIRE') . ' minutes. If you did not create an account, no further action is required.');
+            ->subject('Forgotten Password')
+            ->line('Please click the button below to reset your password.')
+            ->action('Reset password', $resetPasswordUrl )
+            ->line('This link will work for ' . env('MAIL_EXPIRE', 10) . ' minutes. If you did not create an account, no further action is required.');
     }
 
     /**
@@ -57,10 +57,10 @@ class VerifyEmail extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return string
      */
-    protected function verificationUrl($notifiable)
+    protected function resetPasswordUrl($notifiable)
     {
         return URL::temporarySignedRoute(
-            'player.verify',
+            'player.reset',
             Carbon::now()->addMinutes(intval(config('auth.verification.expire', 10))),
             [
                 'id' => $notifiable->getKey(),

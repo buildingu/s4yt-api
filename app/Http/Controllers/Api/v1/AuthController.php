@@ -8,6 +8,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\SendVerifyEmailRequest;
 use App\Models\Configuration;
 use App\Models\User;
+use App\Notifications\ResetPasswordEmail;
 use App\Notifications\VerifyEmail;
 use App\Notifications\WelcomeEmail;
 use App\Services\ConfigurationService;
@@ -68,6 +69,23 @@ class AuthController extends Controller
     }
 
     /**
+     * Method allows user to confirm resetPassword request from the ResetPasswordEmail notification.
+     * @param $user_id
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function resetPassword($user_id, Request $request) : RedirectResponse
+    {
+        $user = User::findOrFail($user_id);
+        if (!$request->hasValidSignature()) {
+            return redirect(config('app.front_url') . '/login/forgot');
+        }
+
+        //TODO: update URI
+        return redirect(config('app.front_url') . '/register/verify-email/success?id='. $user->id);
+    }
+
+    /**
      * Method send verification email
      * @param SendVerifyEmailRequest $request
      * @return JsonResponse
@@ -86,7 +104,30 @@ class AuthController extends Controller
 
         return $this->sendResponse(
             [],
-            "Mail resend successfully"
+            "Mail sent successfully"
+        );
+    }
+
+    /**
+     * Method send ResetPasswordEmail notification
+     * @param SendVerifyEmailRequest $request
+     * @return JsonResponse
+     */
+    public function sendResetPasswordEmail(SendVerifyEmailRequest $request) : JsonResponse
+    {
+        $validated = $request->validated();
+
+        $user = User::where('email', $validated['email'])->first();
+
+        if (!$user) {
+            return $this->sendError('Player not registered');
+        }
+
+        $user->notify((new ResetPasswordEmail())->delay(now()->addMinute()));
+
+        return $this->sendResponse(
+            [],
+            "Mail sent successfully"
         );
     }
 

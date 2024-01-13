@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Models\Education;
 use App\Models\Grade;
-use App\Services\PlayerService;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PlayerController extends Controller
 {
@@ -38,5 +38,19 @@ class PlayerController extends Controller
             ],
             "List of grades"
         );
+    }
+
+    /**
+     * Method allows password reset by forgotten password process.
+     * @param ResetPasswordRequest $request
+     * @return JsonResponse
+     */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $user = User::find($validated['id']);
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+        return $this->sendResponse([], "Player password updated successfully");
     }
 }
