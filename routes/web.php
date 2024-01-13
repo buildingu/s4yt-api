@@ -25,4 +25,5 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('/versions', App\Http\Livewire\VersionModule::class)->name('versions');
 });
