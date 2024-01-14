@@ -19,10 +19,12 @@
                     <x-jet-nav-link href="{{ route('versions') }}" :active="request()->routeIs('versions')">
                         {{ __('Versions') }}
                     </x-jet-nav-link>
+                    @endhasanyrole
+                    @role('super_admin')
                     <x-jet-nav-link href="{{ route('configurations') }}" :active="request()->routeIs('configurations')">
                         {{ __('Configurations') }}
                     </x-jet-nav-link>
-                    @endhasanyrole
+                    @endrole
                 </div>
             </div>
 
