@@ -35,5 +35,6 @@ Route::prefix('v1')->group(function () {
         Route::patch('/player/password', [\App\Http\Controllers\Api\v1\PlayerController::class, 'updatePassword']);
         Route::get('/player/coins', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getCoinsDetails']);
         Route::get('/player/referrals', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getReferrals']);
+        Route::post('/player/profile', [\App\Http\Controllers\Api\v1\PlayerController::class, 'updateProfile']);
     });
 });

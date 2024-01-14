@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Education;
 use App\Models\Grade;
 use App\Models\User;
@@ -58,6 +59,11 @@ class PlayerController extends Controller
         return $this->sendResponse([], "Player password updated successfully");
     }
 
+    /**
+     * Method allow authenticated users to update their password.
+     * @param UpdatePasswordRequest $request
+     * @return JsonResponse
+     */
     public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -71,6 +77,10 @@ class PlayerController extends Controller
         return $this->sendResponse([], "Player password updated successfully");
     }
 
+    /**
+     * Method returns a summary of the coins.
+     * @return JsonResponse
+     */
     public function getCoinsDetails(): JsonResponse
     {
         return $this->sendResponse([
@@ -78,10 +88,39 @@ class PlayerController extends Controller
         ], "Coin details");
     }
 
+    /**
+     * Method returns a detail of the referrals of a given authenticated user.
+     * @return JsonResponse
+     */
     public function getReferrals(): JsonResponse
     {
         return $this->sendResponse([
             'referrals' => PlayerService::getReferrals(Auth::user()->userable->id)
         ], "Collection of referrals");
+    }
+
+    /**
+     * Method updates profile player info of the authenticated user.
+     * @param UpdateProfileRequest $request
+     * @return JsonResponse
+     */
+    public function updateProfile(UpdateProfileRequest $request) : JsonResponse
+    {
+        $validated = $request->validated();
+        $player = PlayerService::updatePlayer($validated, Auth::user());
+        return $this->sendResponse(
+            [
+                'user' => [
+                    'name' =>  Auth::user()->name,
+                    'grade_id' => $player->grade_id,
+                    'education_id' => $player->education_id,
+                    'school' => $player->school,
+                    'country_id' => $player->country_id,
+                    'region_id' => $player->region_id,
+                    'city_id' => $player->city_id,
+                ],
+            ],
+            "Player updated successfully"
+        );
     }
 }

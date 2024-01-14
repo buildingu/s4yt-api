@@ -60,6 +60,22 @@ class PlayerService
         return $player;
     }
 
+    public static function updatePlayer(array $data, Authenticatable $user) : Player
+    {
+        $user->name = $data['name'];
+        $user->save();
+
+        $user->userable->grade_id = $data['grade_id'];
+        $user->userable->education_id = $data['education_id'];
+        $user->userable->school =  $data['school'] ?? null;
+        $user->userable->country_id = $data['country_id'];
+        $user->userable->region_id = $data['region_id'] ?? null;
+        $user->userable->city_id = $data['city_id'] ?? null;
+        $user->userable->save();
+
+        return $user->userable;
+    }
+
     private static function addCoinsToCurrentPlayer(int $coins, int $source, User $user) : void
     {
         Coin::factory()->count($coins)->create([
