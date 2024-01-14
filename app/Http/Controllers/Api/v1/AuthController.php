@@ -8,6 +8,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\SendVerifyEmailRequest;
 use App\Models\Configuration;
 use App\Models\User;
+use App\Models\Version;
 use App\Notifications\ResetPasswordEmail;
 use App\Notifications\VerifyEmail;
 use App\Notifications\WelcomeEmail;
@@ -32,6 +33,9 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
+        if(isset($validated['version_id']) && $validated['version_id'] !== Version::currentVersionId()) {
+            return $this->sendError("Version not valid", [], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
         $player = PlayerService::addPlayer($validated, intval(ConfigurationService::getCurrentValueByKey(Configuration::REGISTER_COINS)));
         Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->user->email]);
         $player->user->notify((new VerifyEmail())->delay(now()->addMinute()));

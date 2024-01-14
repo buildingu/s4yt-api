@@ -47,17 +47,14 @@ class PlayerService
 
         // add coins to new player
         self::addCoinsToCurrentPlayer($coins, Coin::SOURCE_REGISTER, $user);
-
         //find referrer
-        if(isset($data['referral_code']) && isset($data['version_id']) && $data['version_id'] == $current_version_id) {
+        if(isset($data['referral_code'])) {
             $referrer = Player::where('referral_code', $data['referral_code'])->first();
             $player->referred_by = $referrer->id;
             $player->save();
-
             //add coins to referrer
             self::addCoinsToCurrentPlayer(intval(ConfigurationService::getCurrentValueByKey(Configuration::REFERRAL_COINS)), Coin::SOURCE_REFERRAL, $referrer->user);
         }
-
         // return player
         return $player;
     }
