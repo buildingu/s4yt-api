@@ -175,7 +175,8 @@ class AuthController extends Controller
                     'region_id' => Auth::user()->userable->region_id,
                     'city_id' => Auth::user()->userable->city_id,
                     'instagram_handle' => Auth::user()->userable->instagram_handle,
-                    'coins' => PlayerService::getCurrentPlayerCoins(Auth::user())
+                    'coins' => PlayerService::getCurrentPlayerCoins(Auth::user()),
+                    'referral_link' => Auth::user()->userable->getReferralLink()
                 ],
                 'roles' => $user->roles->pluck('name')->toArray(),
                 'countdown' => $countdown
