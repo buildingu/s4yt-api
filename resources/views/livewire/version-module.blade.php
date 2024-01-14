@@ -62,6 +62,7 @@
                             </button>
                             @if($version->active)
                                 <button
+                                    wire:click='$emit("openModal", "configuration-version-modal", @json(["version_id" => $version->id ]))'
                                     type="button"
                                     class="border border-indigo-500 bg-indigo-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"
                                 >

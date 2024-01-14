@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Version;
 use App\Services\VersionService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class VersionModule extends Component
@@ -19,7 +20,8 @@ class VersionModule extends Component
 
     public $listeners = [
         'addVersionEvent' => 'addVersion',
-        'updateVersionEvent' => 'updateVersion'
+        'updateVersionEvent' => 'updateVersion',
+        'setConfigurationVersionValuesEvent' => 'setConfigurationVersionValues'
     ];
 
     public function addVersion($year, $active) : void
@@ -45,6 +47,14 @@ class VersionModule extends Component
             $this->message = "Version has been updated successfully";
             $this->message_type = "success";
         }
+        $this->emit('showMessage');
+    }
+
+    public function setConfigurationVersionValues($configuration_version_values) : void
+    {
+        VersionService::setConfigurationVersionValues($configuration_version_values);
+        $this->message = "Version configurations has been updated successfully";
+        $this->message_type = "success";
         $this->emit('showMessage');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Configuration;
 use App\Models\Version;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class VersionService
 {
@@ -81,6 +82,19 @@ class VersionService
     {
         if($active) {
             Version::query()->update(['active' => false]);
+        }
+    }
+
+    /**
+     * Method updates version configuration values
+     * @param $configuration_version_values
+     * @return void
+     */
+    public static function setConfigurationVersionValues($configuration_version_values) : void
+    {
+        foreach ($configuration_version_values as $key => $value) {
+            Log::debug('test', array('key' => $key, 'value' => $value));
+            ConfigurationService::setCurrentValueByKey($key, $value['value'] ?? "");
         }
     }
 

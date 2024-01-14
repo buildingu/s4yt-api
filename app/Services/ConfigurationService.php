@@ -14,9 +14,14 @@ class ConfigurationService
         return (Configuration::getConfigurationByKey($key))->versions()->withPivot(['value'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->value ?? null;
     }
 
+    public static function getValueByKeyAndVersionId(string $key, $version_id)
+    {
+        return (Configuration::getConfigurationByKey($key))->versions()->withPivot(['value'])->wherePivot('version_id', $version_id)->first()->pivot->value ?? null;
+    }
+
     public static function setCurrentValueByKey(string $key, string $value)
     {
-        $pivot = (Configuration::getConfigurationByKey($key))->versions()->withPivot(['value'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot;
+        $pivot = (Configuration::getConfigurationByKey($key))->versions()->withPivot(['value'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot ?? null;
         if(isset($pivot)) {
             $pivot->value=$value;
             $pivot->updated_by = Auth::id() ?? (User::getSuperAdminUser())->id;
