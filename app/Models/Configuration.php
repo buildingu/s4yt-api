@@ -28,7 +28,8 @@ class Configuration extends Model
      */
     protected $fillable = [
         'key',
-        'description'
+        'description',
+        'configuration_data_type_id',
     ];
 
     public static function getConfigurationByKey(string $key) : Configuration

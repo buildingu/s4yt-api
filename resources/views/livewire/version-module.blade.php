@@ -60,6 +60,14 @@
                             >
                                 <i class="text-base fa-solid fa-pen-to-square px-1"></i>
                             </button>
+                            @if($version->active)
+                                <button
+                                    type="button"
+                                    class="border border-indigo-500 bg-indigo-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+                                >
+                                    <i class="text-base fa-solid fa-gear px-1"></i>
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

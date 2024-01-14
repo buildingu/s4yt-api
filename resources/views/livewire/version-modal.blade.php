@@ -5,7 +5,6 @@
         @else
             Edit version {{ $year }}
         @endif
-
     </x-slot>
 
     <x-slot name="content">

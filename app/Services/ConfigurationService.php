@@ -28,4 +28,26 @@ class ConfigurationService
             ]);
         }
     }
+
+    public static function addConfiguration($key, $description, $data_type) : Configuration
+    {
+        return Configuration::create([
+            'key' => $key,
+            'description' => $description,
+            'configuration_data_type_id' => $data_type,
+        ]);
+    }
+
+    public static function updateConfiguration($key, $description, $data_type, $configuration_id) : ?Configuration
+    {
+        $configuration = Configuration::find($configuration_id);
+        if(!$configuration) {
+            return null;
+        }
+        $configuration->key = $key;
+        $configuration->description = $description;
+        $configuration->configuration_data_type_id = $data_type;
+        $configuration->save();
+        return $configuration;
+    }
 }
