@@ -62,4 +62,17 @@ class PlayerService
         return Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id)->count();
     }
 
+    public static function getCurrentPlayerCoinsTable(Authenticatable $user) : array
+    {
+        $data_table = [];
+        $coins_groups = (Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id)->get())->groupBy('source');
+        foreach ($coins_groups as $key => $value) {
+            $data_table[] = [
+                'source' => $key == Coin::SOURCE_REGISTER ? 'register' : ($key == Coin::SOURCE_QUEST ? 'sponsor' : ($key == Coin::SOURCE_INSTAGRAM ? 'instagram' : 'referral')),
+                'count' => $value->count()
+            ];
+        }
+        return $data_table;
+    }
+
 }

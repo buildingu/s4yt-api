@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Models\Education;
 use App\Models\Grade;
 use App\Models\User;
+use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -68,5 +69,12 @@ class PlayerController extends Controller
         $user->password = Hash::make($validated['new_password']);
         $user->save();
         return $this->sendResponse([], "Player password updated successfully");
+    }
+
+    public function getCoinsDetails(): JsonResponse
+    {
+        return $this->sendResponse([
+            'coin_details' => PlayerService::getCurrentPlayerCoinsTable(Auth::user())
+        ], "Coin details");
     }
 }

@@ -33,5 +33,6 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::patch('/player/password', [\App\Http\Controllers\Api\v1\PlayerController::class, 'updatePassword']);
+        Route::get('/player/coins', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getCoinsDetails']);
     });
 });
