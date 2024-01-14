@@ -32,6 +32,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/grades', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getGrades']);
 
     Route::middleware(['auth:api', 'verified'])->group(function () {
-
+        Route::patch('/player/password', [\App\Http\Controllers\Api\v1\PlayerController::class, 'updatePassword']);
     });
 });
