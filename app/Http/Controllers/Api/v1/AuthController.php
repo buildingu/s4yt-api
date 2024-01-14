@@ -81,8 +81,7 @@ class AuthController extends Controller
             return redirect(config('app.front_url') . '/login/forgot');
         }
 
-        //TODO: update URI
-        return redirect(config('app.front_url') . '/register/verify-email/success?id='. $user->id);
+        return redirect(config('app.front_url') . '/password-reset?id='. $user->id);
     }
 
     /**
