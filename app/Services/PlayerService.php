@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Coin;
+use App\Models\Configuration;
 use App\Models\User;
 use App\Models\Player;
 use App\Models\Version;
@@ -43,8 +44,20 @@ class PlayerService
         } else {
             $user->assignRole(User::PLAYER_ROLE);
         }
-        // add coins
+
+        // add coins to new player
         self::addCoinsToCurrentPlayer($coins, Coin::SOURCE_REGISTER, $user);
+
+        //find referrer
+        if(isset($data['referral_code']) && isset($data['version_id']) && $data['version_id'] == $current_version_id) {
+            $referrer = Player::where('referral_code', $data['referral_code'])->first();
+            $player->referred_by = $referrer->id;
+            $player->save();
+
+            //add coins to referrer
+            self::addCoinsToCurrentPlayer(intval(ConfigurationService::getCurrentValueByKey(Configuration::REFERRAL_COINS)), Coin::SOURCE_REFERRAL, $referrer->user);
+        }
+
         // return player
         return $player;
     }
