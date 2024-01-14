@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Player;
 use App\Models\Version;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 
 class PlayerService
@@ -83,6 +84,11 @@ class PlayerService
             ];
         }
         return $data_table;
+    }
+
+    public static function getReferrals($player_id)
+    {
+        return User::whereHas('userable', function(Builder $query) use($player_id) { $query->where('referred_by', $player_id);})->select('created_at', 'name', 'email')->get();
     }
 
 }

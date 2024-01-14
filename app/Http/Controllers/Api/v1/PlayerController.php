@@ -77,4 +77,11 @@ class PlayerController extends Controller
             'coin_details' => PlayerService::getCurrentPlayerCoinsTable(Auth::user())
         ], "Coin details");
     }
+
+    public function getReferrals(): JsonResponse
+    {
+        return $this->sendResponse([
+            'referrals' => PlayerService::getReferrals(Auth::user()->userable->id)
+        ], "Collection of referrals");
+    }
 }
