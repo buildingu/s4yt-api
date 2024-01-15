@@ -163,7 +163,7 @@ class AuthController extends Controller
             "The game has not started yet" :
             (Carbon::now() > $timestamps['review_end'] ?
                 "The game has ended" :
-                VersionService::getCountdown($timestamps['review_start'], $timestamps['game_start'])
+                VersionService::getCountdown($timestamps['review_start'], Carbon::now())
                 );
 
         return $this->sendResponse(
