@@ -60,9 +60,10 @@ class PlayerService
         return $player;
     }
 
-    public static function updatePlayer(array $data, Authenticatable $user) : Player
+    public static function updatePlayer(array $data, Authenticatable $user, bool $email_update) : Player
     {
         $user->name = $data['name'];
+        $user->email = $data['email'];
         $user->save();
 
         $user->userable->grade_id = $data['grade_id'];
@@ -71,8 +72,10 @@ class PlayerService
         $user->userable->country_id = $data['country_id'];
         $user->userable->region_id = $data['region_id'] ?? null;
         $user->userable->city_id = $data['city_id'] ?? null;
+        if($email_update) {
+         $user->email_verified_at = null;
+        }
         $user->userable->save();
-
         return $user->userable;
     }
 

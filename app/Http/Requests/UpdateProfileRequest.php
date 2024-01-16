@@ -24,6 +24,7 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
+            'email'=> 'required|string|email:rfc,dns',
             'name' => 'required|string|min:2',
             'grade_id' => 'required|integer|exists:grades,id',
             'education_id' => 'required|integer|exists:education,id',

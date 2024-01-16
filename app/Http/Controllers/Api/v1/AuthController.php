@@ -171,6 +171,7 @@ class AuthController extends Controller
                 'auth' => 'Bearer',
                 'token' => $token,
                 'user' => [
+                    'email' => Auth::user()->email,
                     'name' =>  Auth::user()->name,
                     'grade_id' => Auth::user()->userable->grade_id,
                     'education_id' => Auth::user()->userable->education_id,
