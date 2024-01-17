@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\SponsorPartnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,15 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->prefix('/admin')->group(function () {
-    Route::view('/', 'admin');
-    Route::resource('player', 'PlayerController');
-    Route::resource('player/{player}/coin', 'CoinController')->only(['index','create','store','destroy']);
-    Route::resource('sponsor', 'SponsorPartnerController');
-    Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
-    Route::resource('instagram', 'InstagramController');
-});
-
-Route::middleware('auth')->group(function() {
-    Route::get('referral', [App\Http\Controllers\Api\ProfileController::class, 'getReferral']);
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    Route::get('/versions', App\Http\Livewire\VersionModule::class)->name('versions')->middleware(['role:admin|super_admin']);
+    Route::get('/configurations', App\Http\Livewire\ConfigurationModule::class)->name('configurations')->middleware(['role:super_admin']);
 });

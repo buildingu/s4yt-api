@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Services\LocationService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,9 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(LocationService::class, function(){
-            return new LocationService();
-        });
+        //
     }
 
     /**

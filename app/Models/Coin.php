@@ -2,26 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\CoinType;
-use App\Models\CoinDescription;
 
 class Coin extends Model
 {
-	protected $hidden = [
-		'created_at'
-	];
-    protected $with = [
-        'description'
-    ];
+    use HasFactory;
 
-	public function type()
-    {
-        return $this->belongsTo(CoinType::class,'coin_type_id');
-    }
-
-    public function description()
-    {
-        return $this->belongsTo(CoinDescription::class,'coin_description_id');
-    }
+    const SOURCE_REGISTER = 1;
+    const SOURCE_QUEST = 2;
+    const SOURCE_INSTAGRAM = 3;
+    const SOURCE_REFERRAL = 4;
 }
