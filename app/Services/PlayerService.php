@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\Coin;
+use App\Models\Configuration;
 use App\Models\User;
 use App\Models\Player;
 use App\Models\Version;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 
 class PlayerService
@@ -43,10 +45,38 @@ class PlayerService
         } else {
             $user->assignRole(User::PLAYER_ROLE);
         }
-        // add coins
+
+        // add coins to new player
         self::addCoinsToCurrentPlayer($coins, Coin::SOURCE_REGISTER, $user);
+        //find referrer
+        if(isset($data['referral_code'])) {
+            $referrer = Player::where('referral_code', $data['referral_code'])->first();
+            $player->referred_by = $referrer->id;
+            $player->save();
+            //add coins to referrer
+            self::addCoinsToCurrentPlayer(intval(ConfigurationService::getCurrentValueByKey(Configuration::REFERRAL_COINS)), Coin::SOURCE_REFERRAL, $referrer->user);
+        }
         // return player
         return $player;
+    }
+
+    public static function updatePlayer(array $data, Authenticatable $user, bool $email_update) : Player
+    {
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->save();
+
+        $user->userable->grade_id = $data['grade_id'];
+        $user->userable->education_id = $data['education_id'];
+        $user->userable->school =  $data['school'] ?? null;
+        $user->userable->country_id = $data['country_id'];
+        $user->userable->region_id = $data['region_id'] ?? null;
+        $user->userable->city_id = $data['city_id'] ?? null;
+        if($email_update) {
+         $user->email_verified_at = null;
+        }
+        $user->userable->save();
+        return $user->userable;
     }
 
     private static function addCoinsToCurrentPlayer(int $coins, int $source, User $user) : void
@@ -60,6 +90,24 @@ class PlayerService
     public static function getCurrentPlayerCoins(Authenticatable $user) : int
     {
         return Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id)->count();
+    }
+
+    public static function getCurrentPlayerCoinsTable(Authenticatable $user) : array
+    {
+        $data_table = [];
+        $coins_groups = (Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id)->get())->groupBy('source');
+        foreach ($coins_groups as $key => $value) {
+            $data_table[] = [
+                'source' => $key == Coin::SOURCE_REGISTER ? 'register' : ($key == Coin::SOURCE_QUEST ? 'sponsor' : ($key == Coin::SOURCE_INSTAGRAM ? 'instagram' : 'referral')),
+                'count' => $value->count()
+            ];
+        }
+        return $data_table;
+    }
+
+    public static function getReferrals($player_id)
+    {
+        return User::whereHas('userable', function(Builder $query) use($player_id) { $query->where('referred_by', $player_id);})->select('created_at', 'name', 'email')->get();
     }
 
 }

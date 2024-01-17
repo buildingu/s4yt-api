@@ -25,4 +25,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('/versions', App\Http\Livewire\VersionModule::class)->name('versions')->middleware(['role:admin|super_admin']);
+    Route::get('/configurations', App\Http\Livewire\ConfigurationModule::class)->name('configurations')->middleware(['role:super_admin']);
 });

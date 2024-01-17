@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\User;
+use App\Models\Version;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
@@ -28,7 +29,7 @@ trait Referable
      */
     public function getReferralLink(): string
     {
-        return url('/register').'/?ref='.$this->referral_code;
+        return config('app.front_url') .'/api/v1/register?referral_code='.$this->referral_code . '&version_id=' . Version::currentVersionId();
     }
 
     /**
@@ -44,13 +45,13 @@ trait Referable
     }
 
     /**
-     * Method generates a random referral code that does not exists in DB
+     * Method generates a random referral code that does not exist in DB
      *
      * @return string
      */
     protected static function generateReferral(): string
     {
-        $length = config('referral.length',10);
+        $length = config('referral.length',20);
 
         do {
             $referral_code = Str::random($length);

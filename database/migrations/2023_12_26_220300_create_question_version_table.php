@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('question_version', function (Blueprint $table) {
             $table->id();
             $table->foreignId('question_id')->constrained('questions');
-            $table->foreignId('version_id')->constrained('versions');
+            $table->foreignUuid('version_id')->constrained('versions');
             $table->boolean('active')->default(1);
         });
     }

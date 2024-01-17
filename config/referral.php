@@ -12,5 +12,5 @@ return [
     | process of generation as well comparisons for unique constraint.
     |
     */
-    'length' =>  env('REFERRAL_LENGTH', 10),
+    'length' =>  env('REFERRAL_LENGTH', 20),
 ];
