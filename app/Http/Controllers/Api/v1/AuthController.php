@@ -32,17 +32,24 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
+        // validate request
         $validated = $request->validated();
+        // check version if any
         if(isset($validated['version_id']) && $validated['version_id'] !== Version::currentVersionId()) {
             return $this->sendError("Version not valid", [], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $player = PlayerService::addPlayer($validated, intval(ConfigurationService::getCurrentValueByKey(Configuration::REGISTER_COINS)));
-        Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->user->email]);
-        $player->user->notify((new VerifyEmail())->delay(now()->addMinute()));
+        // register player in database
+        $user = PlayerService::addPlayer(
+            $validated,
+            intval(ConfigurationService::getCurrentValueByKey(Configuration::REGISTER_COINS))
+        );
+        // log process
+        Log::info('Player {$player->name} registered successfully.', ['id' => $user->id, 'email' => $user->email]);
+        // send response
         return $this->sendResponse(
             [
-                'uuid' => $player->user->id,
-                'email' => $player->user->email
+                'uuid' => $user->id,
+                'email' => $user->email
             ],
             "Player registered successfully",
             Response::HTTP_CREATED
