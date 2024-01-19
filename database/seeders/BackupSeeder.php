@@ -26,7 +26,7 @@ class BackupSeeder extends Seeder
             ['name' => 'Mihir Maringanti', 'email' => 'maringanti.mihir@gmail.com'],
             ['name' => 'Sai Kodal', 'email' => 'kodali.sai07@gmail.com'],
             ['name' => 'Andy Xu', 'email' => 'xuyuchen100@gmail.com'],
-            ['name' => 'Ameena Wang', 'email' => 'AMEENAWANG520@GMAIL.COM'],
+            ['name' => 'Ameena Wang', 'email' => 'ameenawang520@gmail.com'],
             ['name' => 'Yukta Pandiri', 'email' => 'pandiriy@bentonvilek12.org'],
             ['name' => 'Katelyn Tran', 'email' => 'kateyi.tran@gmail.co'],
             ['name' => 'Yukta Pandiri', 'email' => 'pandiriyukta@gmail.com'],
