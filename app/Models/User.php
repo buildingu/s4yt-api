@@ -35,6 +35,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_backup',
+        'profile_updated',
+        'password_updated'
     ];
 
     /**

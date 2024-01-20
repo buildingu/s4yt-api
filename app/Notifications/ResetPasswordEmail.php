@@ -46,7 +46,9 @@ class ResetPasswordEmail extends Notification
 
         return (new MailMessage)
             ->subject('Forgotten Password')
-            ->line('Please click the button below to reset your password.')
+            ->line('Hey ' . $notifiable->name)
+            ->line('Seems like you forgot your password.' .
+                ' Please click the button below to reset your password.')
             ->action('Reset password', $resetPasswordUrl )
             ->line('This link will work for ' . env('MAIL_EXPIRE', 10) . ' minutes. If you did not create an account, no further action is required.');
     }
