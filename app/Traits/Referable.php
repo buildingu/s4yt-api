@@ -29,7 +29,7 @@ trait Referable
      */
     public function getReferralLink(): string
     {
-        return config('app.front_url') .'/api/v1/register?referral_code='.$this->referral_code . '&version_id=' . Version::currentVersionId();
+        return config('app.front_url') .'/register?referral_code='.$this->referral_code . '&version_id=' . Version::currentVersionId();
     }
 
     /**
