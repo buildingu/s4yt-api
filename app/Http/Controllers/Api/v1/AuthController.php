@@ -188,7 +188,7 @@ class AuthController extends Controller
                     'city_id' => Auth::user()->userable->city_id ?? null,
                     'instagram_handle' => Auth::user()->userable->instagram_handle ?? null,
                     'coins' => PlayerService::getCurrentPlayerCoins(Auth::user()),
-                    'referral_link' => Auth::user()->userable->getReferralLink() ?? "",
+                    'referral_link' => Auth::user()->userable ? Auth::user()->userable->getReferralLink() : "",
                     'roles' => $user->roles->pluck('name')->toArray(),
                 ],
                 'countdown' => $countdown
