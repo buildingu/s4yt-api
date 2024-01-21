@@ -74,7 +74,7 @@ class PlayerController extends Controller
             return $this->sendError('Current password do not match our records.');
         }
 
-        $user->password = Hash::make($validated['new_password']);
+        $user->password = Hash::make($validated['password']);
         $user->save();
         return $this->sendResponse([], "Player password updated successfully");
     }

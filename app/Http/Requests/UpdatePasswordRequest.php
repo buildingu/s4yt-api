@@ -26,7 +26,7 @@ class UpdatePasswordRequest extends FormRequest
     {
         return [
             'old_password' => ['required','string', Password::min(8)->mixedCase()->numbers()->symbols()],
-            'new_password' => ['required','string','confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
+            'password' => ['required','string','confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
         ];
     }
 }

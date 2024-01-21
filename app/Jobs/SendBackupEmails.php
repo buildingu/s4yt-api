@@ -35,8 +35,8 @@ class SendBackupEmails implements ShouldQueue
         foreach ( User::where('is_backup', true)->get() as $user) {
             $user->notify((new BackupEmail())->delay(now()->addMinute()));
             Log::debug('Backup notification sent', array('uuid' => $user->id, 'email' => $user->email));
-            //$user->is_backup = false;
-            //$user->save();
+            $user->is_backup = false;
+            $user->save();
         }
     }
 }
