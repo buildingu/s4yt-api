@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 use App\Traits\UsesUuid;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -35,6 +35,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_backup',
+        'profile_updated',
+        'password_updated'
     ];
 
     /**
@@ -56,15 +59,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'profile_photo_url',
     ];
 
     public function versions() : BelongsToMany

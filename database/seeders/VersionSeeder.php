@@ -17,10 +17,7 @@ class VersionSeeder extends Seeder
         $is_production = env('APP_ENV') != 'production';
         $date = Carbon::now();
         Version::create([
-            'year' => $is_production ? '2023' : $date->year,
-            'month' => $is_production ? '02' : $date->month,
-            'day_start' => $is_production ? '02' : $date->day,
-            'day_end' => $is_production ? '09' : $date->day + 7,
+            'year' => $is_production ? '2024' : $date->year,
             'active' => true
         ]);
     }

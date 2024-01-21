@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             ConfigurationDataTypeSeeder::class,
             ConfigurationSeeder::class,
             EducationSeeder::class,
-            GradeSeeder::class
+            GradeSeeder::class,
+            BackupSeeder::class
         ]);
     }
 }

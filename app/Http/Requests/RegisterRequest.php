@@ -31,7 +31,9 @@ class RegisterRequest extends FormRequest
             'school' => 'nullable|required_if:education_id,1|string',
             'country_id' => 'required|integer|exists:cities,id',
             'region_id' => 'nullable|integer|exists:cities,id',
-            'city_id' => 'nullable|integer|exists:cities,id'
+            'city_id' => 'nullable|integer|exists:cities,id',
+            'version_id' => 'nullable|uuid|exists:versions,id',
+            'referral_code' => 'nullable|string|exists:players,referral_code'
         ];
     }
 }

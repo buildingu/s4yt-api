@@ -15,10 +15,11 @@ class Configuration extends Model
     const REGISTER_COINS = 'register_coins';
     const REFERRAL_COINS = 'referral_coins';
     const INSTAGRAM_COINS = 'instagram_coins';
+    const REGISTER_START = 'register_start';
     const GAME_START = 'game_start';
+    const REVIEW_START = 'review_start';
+    const REVIEW_END = 'review_end';
     const GAME_END = 'game_end';
-    const WINNERS_ANNOUNCED = 'winners_announced';
-    const LOGIN_DISABLED = 'login_disabled';
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +28,8 @@ class Configuration extends Model
      */
     protected $fillable = [
         'key',
-        'description'
+        'description',
+        'configuration_data_type_id',
     ];
 
     public static function getConfigurationByKey(string $key) : Configuration
@@ -43,10 +45,5 @@ class Configuration extends Model
     public function versions() : BelongsToMany
     {
         return $this->belongsToMany(Version::class, 'configuration_version');
-    }
-
-    public static function getCurrentValueByKey(string $key)
-    {
-        return (self::getConfigurationByKey($key))->versions()->withPivot(['value'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->value;
     }
 }

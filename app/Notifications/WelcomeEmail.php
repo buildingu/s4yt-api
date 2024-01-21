@@ -41,6 +41,8 @@ class WelcomeEmail extends Notification implements ShouldQueue
     public function toMail(object $notifiable)
     {
         return (new MailMessage)
+            ->subject('Welcome to the $4YT')
+            ->line('Hey ' . $notifiable->name)
             ->line('Thanks for registering and welcome to $4YT!')
             ->line('Your ANONYMOUS PLAYER ID# for the game is ' . $notifiable->getKey())
             ->line('AND you get 3 Dubl-U-nes to start !')

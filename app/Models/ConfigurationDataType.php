@@ -11,7 +11,7 @@ class ConfigurationDataType extends Model
     use HasFactory;
 
     const INTEGER = 'integer';
-    const DATE = 'time';
+    const DATE = 'date';
 
     /**
      * The attributes that are mass assignable.

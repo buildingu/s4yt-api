@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('raffle_item_version', function (Blueprint $table) {
             $table->id();
             $table->foreignId('raffle_item_id')->constrained('raffle_items');
-            $table->foreignId('version_id')->constrained('versions');
+            $table->foreignUuid('version_id')->constrained('versions');
             $table->integer('stock');
             $table->boolean('active')->default(1);
         });

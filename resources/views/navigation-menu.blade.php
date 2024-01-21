@@ -12,9 +12,19 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    @hasanyrole('admin|super_admin')
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('versions') }}" :active="request()->routeIs('versions')">
+                        {{ __('Versions') }}
+                    </x-jet-nav-link>
+                    @endhasanyrole
+                    @role('super_admin')
+                    <x-jet-nav-link href="{{ route('configurations') }}" :active="request()->routeIs('configurations')">
+                        {{ __('Configurations') }}
+                    </x-jet-nav-link>
+                    @endrole
                 </div>
             </div>
 

@@ -14,13 +14,13 @@ class ConfigurationDataTypeSeeder extends Seeder
     public function run(): void
     {
         ConfigurationDataType::create([
-            'data_type' => 'int',
+            'data_type' => 'integer',
             'slug' => 'integer'
         ]);
 
         ConfigurationDataType::create([
-            'data_type' => 'time',
-            'slug' => 'time'
+            'data_type' => 'date',
+            'slug' => 'date'
         ]);
     }
 }
