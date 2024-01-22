@@ -12,19 +12,24 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    @hasanyrole('admin|super_admin')
+                    @role('super_admin')
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('versions') }}" :active="request()->routeIs('versions')">
-                        {{ __('Versions') }}
-                    </x-jet-nav-link>
-                    @endhasanyrole
-                    @role('super_admin')
                     <x-jet-nav-link href="{{ route('configurations') }}" :active="request()->routeIs('configurations')">
                         {{ __('Configurations') }}
                     </x-jet-nav-link>
                     @endrole
+                    @hasanyrole('admin|super_admin')
+                    <x-jet-nav-link href="{{ route('versions') }}" :active="request()->routeIs('versions')">
+                        {{ __('Versions') }}
+                    </x-jet-nav-link>
+                    @endhasanyrole
+                    @hasanyrole('admin|super_admin|event_partner')
+                    <x-jet-nav-link href="{{ route('event.partners') }}" :active="request()->routeIs('event.partners')">
+                        {{ __('Event Partners') }}
+                    </x-jet-nav-link>
+                    @endhasanyrole
                 </div>
             </div>
 
