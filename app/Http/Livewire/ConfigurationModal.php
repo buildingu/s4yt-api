@@ -45,7 +45,8 @@ class ConfigurationModal extends ModalComponent
     protected function rules()
     {
         return [
-            'key' => 'required|string',
+            'key' => 'required|string' .
+                $this->action == self::STORE_ACTION ? '|unique:configurations,key' : '',
             'description' => 'nullable|string',
             'data_type' => 'required|integer|min:1'
         ];
