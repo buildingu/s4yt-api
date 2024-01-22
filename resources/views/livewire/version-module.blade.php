@@ -43,10 +43,9 @@
                     <tr class="hover:bg-gray-50 font-bold">
                         <td class="px-6 py-4">{{ $version->id }}</td>
                         <td class="px-6 py-4">{{ $version->year }}</td>
-
                         <td class="px-6 py-4">
                             <span
-                                class=" cursor-pointer inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold {{  $version->active ? 'bg-green-50 text-green-600' : 'bg-yellow-50 text-yellow-600' }}"
+                                class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold {{  $version->active ? 'bg-green-50 text-green-600' : 'bg-yellow-50 text-yellow-600' }}"
                             >
                                 <span class="h-1.5 w-1.5 rounded-full {{ $version->active ? 'bg-green-600' : 'bg-yellow-600' }}"></span>
                                 {{ $version->active ? 'Enabled':'Disabled' }}

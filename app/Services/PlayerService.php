@@ -10,7 +10,6 @@ use App\Models\Version;
 use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Hash;
 
 class PlayerService
 {
@@ -25,17 +24,7 @@ class PlayerService
     public static function addPlayer(array $data, int $coins, bool $partial = false, bool $admin = false): User
     {
         // user create
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $admin ? Hash::make(config('app.default_pass')) : Hash::make($data['password']),
-            'default' => false,
-            'is_backup' => $data['is_backup'] ?? false,
-            'profile_updated' => $data['profile_updated'] ?? true,
-            'password_updated' => $data['password_updated'] ?? true,
-        ]);
-        // attach the user to the current version
-        $user->versions()->attach(Version::currentVersionId());
+        $user = UserService::addUser($data, $admin);
         // partial conditional
         if(!$partial) {
             // player create
@@ -69,20 +58,25 @@ class PlayerService
     public static function updatePlayer(array $data, Authenticatable $user, bool $email_update) : Player
     {
         // update user data
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        $user->email_verified_at = $email_update ? null : $user->email_verified_at;
-        $user->save();
+        $user = UserService::updateUser($data, $user, $email_update);
+
         // update player data
-        $user->userable->grade_id = $data['grade_id'];
-        $user->userable->education_id = $data['education_id'];
-        $user->userable->school =  $data['school'] ?? null;
-        $user->userable->country_id = $data['country_id'];
-        $user->userable->region_id = $data['region_id'] ?? null;
-        $user->userable->city_id = $data['city_id'] ?? null;
-        $user->userable->save();
+        $player = $user->userable;
+        $player->grade_id = $data['grade_id'];
+        $player->education_id = $data['education_id'];
+        $player->school =  $data['school'] ?? null;
+        $player->country_id = $data['country_id'];
+        $player->region_id = $data['region_id'] ?? null;
+        $player->city_id = $data['city_id'] ?? null;
+        $player->save();
+
+        // send notify
+        if($email_update) {
+            $user->notify((new VerifyEmail())->delay(now()->addMinute()));
+        }
+
         // return player object
-        return $user->userable;
+        return $player;
     }
 
     private static function addCoinsToCurrentPlayer(int $coins, int $source, User $user) : void
