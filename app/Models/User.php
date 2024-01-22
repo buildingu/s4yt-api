@@ -2,46 +2,58 @@
 
 namespace App\Models;
 
-use App\Traits\Uuids;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Passport\HasApiTokens;
-use App\Notifications\PasswordResetEmail;
+use App\Traits\UsesUuid;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Uuids, HasApiTokens;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, UsesUuid, HasRoles;
 
     const SUPER_ADMIN_ROLE = 'super_admin';
     const ADMIN_ROLE = 'admin';
     const EVENT_PARTNER_ROLE = 'event_partner';
+    const EVENT_PARTNER_GUEST_ROLE = 'event_partner_guest';
     const RAFFLE_PARTNER_ROLE = 'raffle_partner';
+    const SPONSOR_PARTNER_ROLE = 'sponsor_partner';
     const PLAYER_ROLE = 'player';
     const BU_PLAYER_ROLE = 'bu_player';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'is_backup',
+        'profile_updated',
+        'password_updated'
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
@@ -49,21 +61,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function versions() : BelongsToMany
+    {
+        return $this->belongsToMany(Version::class, 'user_version');
+    }
+
+    public static function getSuperAdminUser()
+    {
+        return self::role(self::SUPER_ADMIN_ROLE)->first();
+    }
+
     /**
      * Get the owning userable model.
      */
     public function userable()
     {
         return $this->morphTo();
-    }
-
-    public function versions()
-    {
-        return $this->belongsToMany('App\Models\Version');
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new PasswordResetEmail($token));
     }
 }

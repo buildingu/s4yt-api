@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class ResetPasswordRequest extends FormRequest
 {
@@ -23,13 +24,9 @@ class ResetPasswordRequest extends FormRequest
      */
     public function rules()
     {
-        return Request()->has('token') ? [
-            'email'=> 'required|email|email|exists:users,email',
-            'token'=> 'required|string',
-            'password' => 'required|string',
-            'password_confirmation' => 'required|string',
-        ] : [
-            'email'=> 'required|email|email|exists:users,email',
+        return [
+            'id' => 'required|string|exists:users,id',
+            'password' => ['required','string','confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
         ];
     }
 }

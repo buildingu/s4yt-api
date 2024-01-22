@@ -1,13 +1,25 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Models\Coin;
-use Faker\Generator as Faker;
+use App\Models\UserVersion;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Coin::class, function (Faker $faker) {
-    return [
-        'player_id' => (App\Models\Player::inRandomOrder()->first())->id,
-        'coin_type_id' => (App\Models\CoinType::getTypeByKey(\App\Models\CoinType::TYPE_REGISTER))
-    ];
-});
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Coin>
+ */
+class CoinFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'source' => $this->faker->numberBetween(1,4),
+            'user_version_id' => $this->faker->randomElement(UserVersion::all()->pluck('id')->toArray())
+        ];
+    }
+}

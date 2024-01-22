@@ -6,9 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Carbon;
 
 class VerifyEmail extends Notification implements ShouldQueue
 {
@@ -39,17 +38,18 @@ class VerifyEmail extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return MailMessage
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
+    public function toMail(object $notifiable)
     {
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
             ->subject('Verify Email Address')
+            ->line('Hey ' . $notifiable->name)
             ->line('Please click the button below to verify your email address.')
             ->action('Yes, this is me...duh!', $verificationUrl )
-            ->line('If you did not create an account, no further action is required.');
+            ->line('This link will work for ' . env('MAIL_EXPIRE') . ' minutes. If you did not create an account, no further action is required.');
     }
 
     /**
@@ -62,7 +62,7 @@ class VerifyEmail extends Notification implements ShouldQueue
     {
         return URL::temporarySignedRoute(
             'player.verify',
-            Carbon::now()->addMinutes(intval(config('auth.verification.expire', 60))),
+            Carbon::now()->addMinutes(intval(config('auth.verification.expire', 10))),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),

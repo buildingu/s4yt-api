@@ -24,13 +24,14 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|min:3',
-            'education_id' => 'required|integer|max:3',
-            'grade_id' => 'required_unless:education_id,3|integer|max:4',
-            'school' => 'required_if:education_id,1|string',
-            'country' => 'required|string|max:50',
-            'state' => 'required|string|max:3',
-            'city_id' => 'required|integer'
+            'email'=> 'required|string|email:rfc,dns',
+            'name' => 'required|string|min:2',
+            'grade_id' => 'required|integer|exists:grades,id',
+            'education_id' => 'required|integer|exists:education,id',
+            'school' => 'nullable|required_if:education_id,1|string',
+            'country_id' => 'required|integer|exists:cities,id',
+            'region_id' => 'nullable|integer|exists:cities,id',
+            'city_id' => 'nullable|integer|exists:cities,id',
         ];
     }
 }

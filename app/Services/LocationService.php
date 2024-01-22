@@ -1,73 +1,40 @@
 <?php
 
-
 namespace App\Services;
 
-
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\Region;
+use Illuminate\Database\Eloquent\Collection;
 
 class LocationService
 {
-    private static $client;
-
-    public function __construct()
+    /**
+     * Method returns countries data
+     * @return Collection
+     */
+    public static function getCountries() : Collection
     {
-        static::$client = Http::withoutVerifying()
-        ->withHeaders([
-            'X-CSCAPI-KEY' => config('cities_api.api_key'),
-        ]);
+        return Country::select('id', 'name')->get();
     }
 
-    public static function getCountries()
+    /**
+     * Method return states data of given country identifier
+     * @param int $country_id
+     * @return Collection
+     */
+    public static function getStatesByCountryId(int $country_id) : Collection
     {
-        return static::$client->get(config('cities_api.base_url') . 'countries');
+        return Region::select('id', 'name')->where('country_id', $country_id)->get();
     }
 
-    public static function getStates(string $ciso)
+    /**
+     * Method return cities data of given state identifier
+     * @param int $region_id
+     * @return Collection
+     */
+    public static function getCitiesByRegionId(int $region_id) : Collection
     {
-        return static::$client->get(config('cities_api.base_url') . 'countries/' . $ciso . '/states');
-    }
-
-    public static function getCities(string $ciso, string $siso)
-    {
-        return static::$client->get(config('cities_api.base_url') . 'countries/' . $ciso . '/states' . '/' . $siso . '/cities');
-    }
-
-    public static function getLocationData(array $location_data) : array
-    {
-        $location = [];
-        $countries = (self::getCountries())->json();
-        $states = null;
-        $cities = null;
-
-        foreach($countries as $country) {
-            if($country['iso2'] == $location_data['country_iso']){
-                $location['country_name'] = $country['name'];
-                $states = (self::getStates($location_data['country_iso']))->json();
-                break;
-            }
-        }
-
-        foreach($states as $state) {
-            if($state['iso2'] == $location_data['state_iso']){
-                $location['state_name'] = $state['name'];
-                $cities = (self::getCities($location_data['country_iso'], $location_data['state_iso']))->json();
-                break;
-            }
-        }
-
-        foreach($cities as $city) {
-            if($city['id'] == $location_data['city_id']) {
-                $location['city_name'] = $city['name'];
-                break;
-            }
-        }
-
-        $location['countries'] = $countries;
-        $location['states'] = $states;
-        $location['cities'] = $cities;
-        
-        return $location;
+        return City::select('id', 'name')->where('region_id', $region_id)->get();
     }
 }
