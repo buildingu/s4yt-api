@@ -16,8 +16,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping(12);
-        $schedule->command('queue:restart')->hourly();
         $schedule->job(new SendBackupEmails)->cron('0 9 22 1 *');
     }
 
