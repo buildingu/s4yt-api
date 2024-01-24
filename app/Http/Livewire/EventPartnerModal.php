@@ -71,10 +71,8 @@ class EventPartnerModal extends ModalComponent
     {
         return [
             'name' => 'required|string|min:2',
-            'email' => 'required|string|email:rfc,dns' .
-                $this->action == self::STORE_ACTION ? '|unique:users,email' : '',
-            'organization_name' => 'required|string|min:3' .
-                $this->action == self::STORE_ACTION ? '|unique:event_partners,organization_name' : '',
+            'email' =>  $this->action == self::STORE_ACTION ? 'required|string|email:rfc,dns|unique:users,email' : 'required|string|email:rfc,dns',
+            'organization_name' =>  $this->action == self::STORE_ACTION ? 'required|string|min:3|unique:event_partners,organization_name' : 'required|string|min:3',
             'description' => 'nullable|string',
             'meet_day' => 'nullable|date_format:Y-m-d',
             'meet_from' => 'nullable|date_format:H:i',
@@ -147,6 +145,6 @@ class EventPartnerModal extends ModalComponent
             EventPartnerModule::class => [ $event, [
                 $data
             ]]
-        ]);
+        ]);        
     }
 }
