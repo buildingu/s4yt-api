@@ -191,7 +191,8 @@ class AuthController extends Controller
                     'referral_link' => Auth::user()->userable ? Auth::user()->userable->getReferralLink() : "",
                     'roles' => $user->roles->pluck('name')->toArray(),
                 ],
-                'countdown' => $countdown
+                'countdown' => $countdown,
+                'timestamps' => $timestamps
             ],
             "Player logged in successfully"
         );
