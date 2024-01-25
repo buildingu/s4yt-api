@@ -25,15 +25,29 @@ class EventPartnerModule extends Component
     public function addEventPartner(array $data) : void
     {
         $event_partner = EventPartnerService::addEventPartner($data, true);
-        $this->message = "Event Partner has been created successfully with ID " . $event_partner->id;
-        $this->message_type = "success";
+        if( (isset($event_partner['logo_default']) && !$event_partner['logo_default']) ||
+            (isset($event_partner['logo_s4yt']) && !$event_partner['logo_s4yt'])) {
+            $this->message = "Event Partner has been created with media problems. Please check.";
+            $this->message_type = "info";
+        } else {
+            $this->message = "Event Partner has been created successfully";
+            $this->message_type = "success";
+        }
         $this->emit('showMessage');
+
     }
 
     public function updateEventPartner(array $data): void
     {
-        dd($data);
-        $event_partner = EventPartner::find($data['id']);
-
+        $event_partner = EventPartnerService::updateEventPartner($data);
+        if( (isset($event_partner['logo_default']) && !$event_partner['logo_default']) ||
+            (isset($event_partner['logo_s4yt']) && !$event_partner['logo_s4yt'])) {
+            $this->message = "Event Partner has been updated with media problems. Please check.";
+            $this->message_type = "info";
+        } else {
+            $this->message = "Event Partner has been updated successfully";
+            $this->message_type = "success";
+        }
+        $this->emit('showMessage');
     }
 }

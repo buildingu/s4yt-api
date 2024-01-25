@@ -25,9 +25,12 @@
                         {{ __('Versions') }}
                     </x-jet-nav-link>
                     @endhasanyrole
-                    @hasanyrole('admin|super_admin|event_partner')
+                    @hasanyrole('admin|super_admin')
                     <x-jet-nav-link href="{{ route('event.partners') }}" :active="request()->routeIs('event.partners')">
                         {{ __('Event Partners') }}
+                    </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('raffle.partners') }}" :active="request()->routeIs('raffle.partners')">
+                        {{ __('Raffle Partners') }}
                     </x-jet-nav-link>
                     @endhasanyrole
                 </div>
