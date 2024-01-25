@@ -68,9 +68,13 @@ class EventPartnerService
 
         Log::debug('updateEventPartner', array('event_partner' => json_encode($event_partner), 'user' => json_encode($event_partner->user)));
 
-
         // media process
         $media_process = self::processMedia($event_partner, $data, true);
+
+        // send notification
+        if($data['email_update']) {
+            $event_partner->user->notify((new VerifyEmail())->delay(now()->addMinute()));
+        }
 
         return [
             'event_partner' => $event_partner,
