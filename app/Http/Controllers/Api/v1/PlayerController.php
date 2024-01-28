@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Token;
 
 class PlayerController extends Controller
@@ -58,6 +59,7 @@ class PlayerController extends Controller
         $user = User::find($validated['id']);
         $user->password = Hash::make($validated['password']);
         $user->save();
+        Log::info('Player {$player->name} password reset successfully.', ['id' => $user->id, 'email' => $user->email]);
         return $this->sendResponse([], "Player password updated successfully");
     }
 
@@ -76,6 +78,7 @@ class PlayerController extends Controller
 
         $user->password = Hash::make($validated['password']);
         $user->save();
+        Log::info('Player {$player->name} password updated successfully.', ['id' => $user->id, 'email' => $user->email]);
         return $this->sendResponse([], "Player password updated successfully");
     }
 
@@ -122,6 +125,7 @@ class PlayerController extends Controller
            $player->user->notify((new VerifyEmail())->delay(now()->addMinute()));
             Token::where('user_id', Auth::id())->update(['revoked' => true]);
         }
+        Log::info('Player {$player->name} profile updated successfully.', ['id' => Auth::id(), 'email' => Auth::user()->email]);
         return $this->sendResponse(
             [
                 'verify_email' => $email_update,

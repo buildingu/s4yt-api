@@ -67,6 +67,7 @@ class AuthController extends Controller
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
             $user->notify((new WelcomeEmail())->delay(now()->addMinute()));
+            Log::info('Player {$player->name} verify email sent successfully.', ['id' => $user->id, 'email' => $user->email]);
             return redirect(config('app.front_url') . '/register/verify-email/success');
         }
 
@@ -76,6 +77,7 @@ class AuthController extends Controller
 
         $user->markEmailAsVerified();
         $user->notify((new WelcomeEmail())->delay(now()->addMinute()));
+        Log::info('Player {$player->name} verify email sent successfully.', ['id' => $user->id, 'email' => $user->email]);
         return redirect(config('app.front_url') . '/register/verify-email/success');
     }
 
@@ -111,6 +113,7 @@ class AuthController extends Controller
         }
 
         $user->notify((new VerifyEmail())->delay(now()->addMinute()));
+        Log::info('Player {$player->name} verify email sent successfully.', ['id' => $user->id, 'email' => $user->email]);
 
         return $this->sendResponse(
             [],
@@ -134,6 +137,7 @@ class AuthController extends Controller
         }
 
         $user->notify((new ResetPasswordEmail())->delay(now()->addMinute()));
+        Log::info('Player {$player->name} reset password sent successfully.', ['id' => $user->id, 'email' => $user->email]);
 
         return $this->sendResponse(
             [],
@@ -165,13 +169,11 @@ class AuthController extends Controller
             return $this->sendError('Credentials not valid', [], Response::HTTP_UNAUTHORIZED);
         }
 
+        Log::info('Player {$player->name} logged in successfully.', ['id' => $user->id, 'email' => $user->email]);
         $token = auth()->user()->createToken(env('APP_NAME'))->accessToken;
-        $countdown  =Carbon::now() < $timestamps['game_start'] ?
+        $countdown  = Carbon::now() < $timestamps['game_start'] ?
             "The game has not started yet" :
-            (Carbon::now() > $timestamps['review_end'] ?
-                "The game has ended" :
-                VersionService::getCountdown($timestamps['review_start'], Carbon::now())
-                );
+            $timestamps;
 
         return $this->sendResponse(
             [
@@ -191,8 +193,7 @@ class AuthController extends Controller
                     'referral_link' => Auth::user()->userable ? Auth::user()->userable->getReferralLink() : "",
                     'roles' => $user->roles->pluck('name')->toArray(),
                 ],
-                'countdown' => $countdown,
-                'timestamps' => $timestamps
+                'timestamps' => $countdown,
             ],
             "Player logged in successfully"
         );
