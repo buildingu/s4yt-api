@@ -123,7 +123,7 @@ class EventPartnerModal extends ModalComponent
             'name' => $this->name,
             'email' => $this->email,
             'organization_name' => $this->organization_name,
-            'description' =>strlen($this->description) > 0 ? $this->description : null,
+            'description' => strlen($this->description) > 0 ? $this->description : null,
             'meet_day' => strlen($this->meet_day) > 0 ? $this->meet_day : null,
             'meet_from' => strlen($this->meet_from) > 0 ? $this->meet_from : null,
             'meet_to' => strlen($this->meet_to) > 0 ? $this->meet_to : null,

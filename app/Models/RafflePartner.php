@@ -21,6 +21,8 @@ class RafflePartner extends Model implements HasMedia
     protected $fillable = [
         'organization_name',
         'description',
+        'resource_link',
+        'active',
     ];
 
     public function registerMediaCollections(): void

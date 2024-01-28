@@ -17,7 +17,7 @@ class RafflePartnerModule extends Component
         $current_version_id = Version::currentVersionId();
         $raffle_partners = RafflePartner::whereHas('user.versions', function($q) use ($current_version_id){
             if(isset($current_version_id)) {
-                $q->where('version_id', Version::currentVersionId());
+                $q->where('version_id', $current_version_id);
             }
         })->get();
         return view('livewire.raffle-partner-module', [ 'raffle_partners' => $raffle_partners ]);

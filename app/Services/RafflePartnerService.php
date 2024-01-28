@@ -24,6 +24,8 @@ class RafflePartnerService
         $raffle_partner = RafflePartner::create([
             'organization_name' => $data['organization_name'],
             'description' => $data['description'],
+            'resource_link' => $data['resource_link'],
+            'active' => $data['active']
         ]);
         $raffle_partner->user()->save($user);
         Log::debug('addRafflePartner', array('event_partner' => json_encode($raffle_partner), 'user' => json_encode($user)));
@@ -55,8 +57,9 @@ class RafflePartnerService
 
         UserService::updateUser($data, $raffle_partner->user, $data['email_update']);
         $raffle_partner->organization_name = $data['organization_name'];
-        $raffle_partner->slug = Str::slug($data['organization_name'], '-');
         $raffle_partner->description = $data['description'];
+        $raffle_partner->resource_link = $data['resource_link'];
+        $raffle_partner->active = $data['active'];
         $raffle_partner->save();
 
         Log::debug('updateRafflePartner', array('event_partner' => json_encode($raffle_partner), 'user' => json_encode($raffle_partner->user)));
