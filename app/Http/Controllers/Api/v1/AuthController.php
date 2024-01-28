@@ -171,12 +171,9 @@ class AuthController extends Controller
 
         Log::info('Player {$player->name} logged in successfully.', ['id' => $user->id, 'email' => $user->email]);
         $token = auth()->user()->createToken(env('APP_NAME'))->accessToken;
-        $countdown  =Carbon::now() < $timestamps['game_start'] ?
+        $countdown  = Carbon::now() < $timestamps['game_start'] ?
             "The game has not started yet" :
-            (Carbon::now() > $timestamps['review_end'] ?
-                "The game has ended" :
-                VersionService::getCountdown($timestamps['review_start'], Carbon::now())
-                );
+            $timestamps;
 
         return $this->sendResponse(
             [
@@ -196,8 +193,7 @@ class AuthController extends Controller
                     'referral_link' => Auth::user()->userable ? Auth::user()->userable->getReferralLink() : "",
                     'roles' => $user->roles->pluck('name')->toArray(),
                 ],
-                'countdown' => $countdown,
-                'timestamps' => $timestamps
+                'timestamps' => $countdown,
             ],
             "Player logged in successfully"
         );

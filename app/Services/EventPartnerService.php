@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\EventPartner;
+use App\Models\User;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -15,6 +16,7 @@ class EventPartnerService
     {
         // user create
         $user = UserService::addUser($data, $admin);
+        $user->assignRole(User::EVENT_PARTNER_ROLE);
 
         // event partner create
         $event_partner = EventPartner::create([
@@ -28,10 +30,12 @@ class EventPartnerService
             'youtube_link' => $data['youtube_link'],
         ]);
         $event_partner->user()->save($user);
+
         Log::debug('addEventPartner', array('event_partner' => json_encode($event_partner), 'user' => json_encode($user)));
 
         // media process
-        $media_process = self::processMedia($event_partner, $data);
+        $media_files = ['logo_default', 'logo_s4yt'];
+        $media_process = MediaService::processMedia($event_partner, $media_files, $data);
 
         // send notification
         $user->notify((new VerifyEmail())->delay(now()->addMinute()));
@@ -69,11 +73,13 @@ class EventPartnerService
         Log::debug('updateEventPartner', array('event_partner' => json_encode($event_partner), 'user' => json_encode($event_partner->user)));
 
         // media process
-        $media_process = self::processMedia($event_partner, $data, true);
+        $media_files = ['logo_default', 'logo_s4yt'];
+        $media_process = MediaService::processMedia($event_partner, $media_files, $data, true);
 
         // send notification
         if($data['email_update']) {
             $event_partner->user->notify((new VerifyEmail())->delay(now()->addMinute()));
+            Log::info('Raffle partner {$event_partner->organization_name} verify email sent successfully.', ['id' => $event_partner->user->id, 'email' => $event_partner->user->email]);
         }
 
         return [
@@ -83,59 +89,5 @@ class EventPartnerService
         ];
     }
 
-    /**
-     * Methods add or updates media collections for this object
-     * @param EventPartner $event_partner
-     * @param array $data
-     * @param bool $is_update
-     * @return array
-     */
-    private static function processMedia(EventPartner $event_partner, array $data, bool $is_update = false) : array
-    {
-        // process logo default
-        $logo_default = null;
-        if(isset($data['logo_default']['path']) && strlen($data['logo_default']['filename']) > 0) {
-            $logo_default = self::addMedia($event_partner, $data['logo_default']['path'], $data['logo_default']['filename'], 'logo_default', $is_update );
-        }
 
-        // process logo s4yt
-        $logo_s4yt = null;
-        if(isset($data['logo_s4yt']['path']) && strlen($data['logo_s4yt']['filename']) > 0) {
-            $logo_s4yt = self::addMedia($event_partner, $data['logo_s4yt']['path'], $data['logo_s4yt']['filename'], 'logo_s4yt', $is_update );
-        }
-
-        return [
-            'logo_default' => $logo_default,
-            'logo_s4yt' => $logo_s4yt,
-        ];
-    }
-
-    /**
-     * Method add media relationship to the object referred. Only to use in single media file collection.
-     * @param EventPartner $event_partner
-     * @param string $path
-     * @param string $filename
-     * @param string $collection
-     * @param bool $is_update
-     * @return bool
-     */
-    private static function addMedia(EventPartner $event_partner, string $path, string $filename, string $collection, bool $is_update = false) : bool
-    {
-        $flag = true;
-        if($is_update) {
-            $event_partner->clearMediaCollection($collection);
-        }
-
-        try {
-            $event_partner
-                ->addMediaFromDisk('livewire-tmp/'. $path)
-                ->usingFileName($filename)
-                ->toMediaCollection($collection);
-            Log::debug('addMediaEventPartner', array('event_partner' => $event_partner->id, 'collection' => $collection, 'update' => $is_update));
-        }catch (FileDoesNotExist|FileIsTooBig $e) {
-            $flag = false;
-            Log::debug('addMediaEventPartner', array('exception' => $e->getMessage(), 'event_partner' => $event_partner->id, 'collection' => $collection, 'update' => $is_update));
-        }
-        return $flag;
-    }
 }

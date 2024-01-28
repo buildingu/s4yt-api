@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\EventPartner;
+use App\Models\Version;
 use App\Services\EventPartnerService;
 use Livewire\Component;
 
@@ -13,7 +14,12 @@ class EventPartnerModule extends Component
 
     public function render()
     {
-        $event_partners = EventPartner::with('user')->get();
+        $current_version_id = Version::currentVersionId();
+        $event_partners = EventPartner::whereHas('user.versions', function($q){
+            if(isset($current_version_id)) {
+                $q->where('version_id', Version::currentVersionId());
+            }
+        })->get();
         return view('livewire.event-partner-module', ['event_partners' => $event_partners]);
     }
 

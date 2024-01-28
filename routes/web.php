@@ -27,6 +27,7 @@ Route::middleware([
     })->name('dashboard');
     Route::get('/versions', App\Http\Livewire\VersionModule::class)->name('versions')->middleware(['role:admin|super_admin']);
     Route::get('/configurations', App\Http\Livewire\ConfigurationModule::class)->name('configurations')->middleware(['role:super_admin']);
-    Route::get('/event-partners', App\Http\Livewire\EventPartnerModule::class)->name('event.partners')->middleware(['role:super_admin|admin|event_partner']);
-    Route::get('/raffle-partners', App\Http\Livewire\EventPartnerModule::class)->name('raffle.partners')->middleware(['role:super_admin|admin|event_partner']);
+    Route::get('/event-partners', App\Http\Livewire\EventPartnerModule::class)->name('event.partners')->middleware(['role:super_admin|admin']);
+    Route::get('/raffle-partners', App\Http\Livewire\RafflePartnerModule::class)->name('raffle.partners')->middleware(['role:super_admin|admin']);
+    Route::get('/raffle-partners/{id}', App\Http\Livewire\RaffleAreaModule::class)->name('raffle.area')->middleware(['role:super_admin|admin|raffle_partner']);
 });
