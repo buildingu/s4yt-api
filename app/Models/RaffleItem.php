@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -32,5 +33,10 @@ class RaffleItem extends Model implements HasMedia
     public function versions() : BelongsToMany
     {
         return $this->belongsToMany(Version::class, 'raffle_item_version');
+    }
+
+    public function rafflePartner() : BelongsTo
+    {
+        return $this->belongsTo(RafflePartner::class);
     }
 }

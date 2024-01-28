@@ -23,6 +23,8 @@ class RafflePartnerModal extends ModalComponent
     public $organization_name = "";
     public $logo_default = null;
     public $description = null;
+    public $resource_link = null;
+    public $active = false;
     public $raffle_partner_id;
     public $raffle_partner = null;
 
@@ -47,6 +49,8 @@ class RafflePartnerModal extends ModalComponent
             $this->logo_default = null;
             $this->raffle_partner_id = $raffle_partner->id;
             $this->raffle_partner = $raffle_partner;
+            $this->resource_link = $raffle_partner->resource_link;
+            $this->active = $raffle_partner->active;
         }
         return null;
     }
@@ -59,6 +63,8 @@ class RafflePartnerModal extends ModalComponent
             'organization_name' =>  $this->action == self::STORE_ACTION ? 'required|string|min:3|unique:raffle_partners,organization_name' : 'required|string|min:3',
             'description' => 'nullable|string',
             'logo_default' => 'nullable|max:4096|mimes:png,jpeg',
+            'resource_link' => 'nullable|string|url',
+            'active' => 'required|boolean'
         ];
     }
 
@@ -87,7 +93,9 @@ class RafflePartnerModal extends ModalComponent
             'name' => $this->name,
             'email' => $this->email,
             'organization_name' => $this->organization_name,
-            'description' => $this->description,
+            'description' => strlen($this->description) > 0 ? $this->description : null,
+            'resource_link' => strlen($this->resource_link) > 0 ? $this->resource_link : null,
+            'active' => $this->active,
             'logo_default' => [
                 'path' => $this->logo_default ? $this->logo_default->getFilename() : null,
                 'filename' => $logo_default_filename,

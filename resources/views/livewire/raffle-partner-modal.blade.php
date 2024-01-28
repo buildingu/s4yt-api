@@ -43,6 +43,17 @@
                         wire:model.debounce.200ms="organization_name">
                     @error('organization_name')<small class="text-red-500 text-xs">{{ $message }}</small>@enderror
                 </div>
+                <!-- RESOURCE LINK -->
+                <div class="flex flex-col">
+                    <label class="leading-loose" for="resource_link">Resource link </label>
+                    <input
+                        type="text"
+                        id="resource_link"
+                        name="resource_link"
+                        class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                        wire:model.debounce.200ms="resource_link">
+                    @error('resource_link')<small class="text-red-500 text-xs">{{ $message }}</small>@enderror
+                </div>
                 <!-- DESCRIPTION -->
                 <div class="flex flex-col">
                     <label class="leading-loose" for="description">Description</label>
@@ -72,6 +83,22 @@
                     @elseif($action == \App\Http\Livewire\RafflePartnerModal::UPDATE_ACTION  && $raffle_partner->getFirstMediaUrl('logo_default'))
                         <img alt="logo_default" src="{{  $raffle_partner->getFirstMediaUrl('logo_default') }}" class="w-16 mt-4 ml-8"/>
                     @endif
+                </div>
+                <!-- ACTIVE -->
+                <div class="flex items-center mt-4">
+                    <div class="flex items-center">
+                        <input
+                            id="active"
+                            aria-describedby="active"
+                            type="checkbox"
+                            class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-blue-300 h-5 w-5 rounded"
+                            value="{{ $active == true }}"
+                            checked="{{ $active ? 'true':'false' }}"
+                            wire:model="active">
+                    </div>
+                    <div class="ml-3">
+                        <label for="active" class="text-gray-900">Active?</label>
+                    </div>
                 </div>
             </div>
         </div>
