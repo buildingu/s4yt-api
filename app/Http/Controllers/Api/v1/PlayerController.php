@@ -56,7 +56,7 @@ class PlayerController extends Controller
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $user = User::find($validated['id']);
+        $user = User::find(Auth::id());
         $user->password = Hash::make($validated['password']);
         $user->save();
         Log::info('Player {$player->name} password reset successfully.', ['id' => $user->id, 'email' => $user->email]);
