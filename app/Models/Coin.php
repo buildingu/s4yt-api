@@ -13,4 +13,13 @@ class Coin extends Model
     const SOURCE_QUEST = 2;
     const SOURCE_INSTAGRAM = 3;
     const SOURCE_REFERRAL = 4;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'raffle_item_version_id',
+    ];
 }
