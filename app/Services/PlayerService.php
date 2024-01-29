@@ -4,12 +4,14 @@ namespace App\Services;
 
 use App\Models\Coin;
 use App\Models\Configuration;
+use App\Models\RaffleItem;
 use App\Models\User;
 use App\Models\Player;
 use App\Models\Version;
 use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class PlayerService
 {
@@ -87,9 +89,13 @@ class PlayerService
         ]);
     }
 
-    public static function getCurrentPlayerCoins(Authenticatable $user) : int
+    public static function getCurrentPlayerCoins(Authenticatable $user, $total = true) : int
     {
-        return Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id)->count();
+        $coins = Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id);
+        if($total) {
+            $coins = $coins->where('available', true);
+        }
+        return $coins->count();
     }
 
     public static function getCurrentPlayerCoinsTable(Authenticatable $user) : array
@@ -108,6 +114,21 @@ class PlayerService
     public static function getReferrals($player_id)
     {
         return User::whereHas('userable', function(Builder $query) use($player_id) { $query->where('referred_by', $player_id);})->select('created_at', 'name', 'email')->get();
+    }
+
+    public static function assignRaffleCoins(array $data, Authenticatable $user) : void
+    {
+        $user_version = $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id;
+        Coin::where('user_version_id', $user_version)->update(['available' => true, 'raffle_item_version_id' => null]);
+        foreach ($data as $datum) {
+            $raffle_item = RaffleItem::find($datum['raffle_item_id']);
+            $raffle_item_version =  $raffle_item->versions()->withPivot(['id'])->wherePivot('version_id', Version::currentVersionId())->first();
+            Log::debug('raffleCoins', array("user_id" => $user->id, "raffle_item_id" => $raffle_item->id, "coins" => $datum['coins']));
+            Coin::where([
+                ['user_version_id', $user_version],
+                ['available', true]
+            ])->take($datum['coins'])->update(["raffle_item_version_id" => $raffle_item_version->pivot->id, "available" => false]);
+        }
     }
 
 }
