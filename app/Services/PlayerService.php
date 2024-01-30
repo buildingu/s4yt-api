@@ -113,7 +113,7 @@ class PlayerService
 
     public static function getReferrals($player_id)
     {
-        return User::whereHas('userable', function(Builder $query) use($player_id) { $query->where('referred_by', $player_id);})->select('created_at', 'name', 'email')->get();
+        return User::whereHasMorph('userable', [Player::class] ,function(Builder $query) use($player_id) { $query->where('referred_by', $player_id);})->select('created_at', 'name', 'email')->get();
     }
 
     public static function assignRaffleCoins(array $data, Authenticatable $user) : void
