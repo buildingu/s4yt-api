@@ -8,6 +8,7 @@ use App\Models\RaffleItem;
 use App\Models\User;
 use App\Models\Player;
 use App\Models\Version;
+use App\Notifications\UpdateCoinCounter;
 use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -129,6 +130,7 @@ class PlayerService
                 ['available', true]
             ])->take($datum['coins'])->update(["raffle_item_version_id" => $raffle_item_version->pivot->id, "available" => false]);
         }
+        $user->notify(new UpdateCoinCounter());
     }
 
 }
