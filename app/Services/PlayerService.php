@@ -8,6 +8,7 @@ use App\Models\RaffleItem;
 use App\Models\User;
 use App\Models\Player;
 use App\Models\Version;
+use App\Notifications\UpdateCoinCounter;
 use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -113,7 +114,7 @@ class PlayerService
 
     public static function getReferrals($player_id)
     {
-        return User::whereHas('userable', function(Builder $query) use($player_id) { $query->where('referred_by', $player_id);})->select('created_at', 'name', 'email')->get();
+        return User::whereHasMorph('userable', [Player::class] ,function(Builder $query) use($player_id) { $query->where('referred_by', $player_id);})->select('created_at', 'name', 'email')->get();
     }
 
     public static function assignRaffleCoins(array $data, Authenticatable $user) : void
@@ -129,6 +130,7 @@ class PlayerService
                 ['available', true]
             ])->take($datum['coins'])->update(["raffle_item_version_id" => $raffle_item_version->pivot->id, "available" => false]);
         }
+        $user->notify(new UpdateCoinCounter());
     }
 
 }
