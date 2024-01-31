@@ -16,18 +16,20 @@
         </div>
     </div>
 
-    <div class="w-3/6 flex justify-end">
-        <!-- ACTION BUTTON -->
-        <div>
-            <button
-                wire:click='$emit("openModal", "raffle-area-modal", @json(["action" => App\Http\Livewire\RaffleAreaModal::STORE_ACTION, "raffle_partner_id" => $raffle_partner_id ]))'
-                type="button"
-                class="border border-blue-400 bg-blue-400 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-500 hover:border-blue-500 focus:outline-none focus:shadow-outline"
-            >
-                <i class="fa-solid fa-note-sticky"></i>
-            </button>
+    @if(\Carbon\Carbon::now() < \App\Services\VersionService::getCurrentVersionTimestamps()['game_start'])
+        <div class="w-3/6 flex justify-end">
+            <!-- ACTION BUTTON -->
+            <div>
+                <button
+                    wire:click='$emit("openModal", "raffle-area-modal", @json(["action" => App\Http\Livewire\RaffleAreaModal::STORE_ACTION, "raffle_partner_id" => $raffle_partner_id ]))'
+                    type="button"
+                    class="border border-blue-400 bg-blue-400 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-500 hover:border-blue-500 focus:outline-none focus:shadow-outline"
+                >
+                    <i class="fa-solid fa-note-sticky"></i>
+                </button>
+            </div>
         </div>
-    </div>
+    @endif
 
     <table class="w-3/6 border-collapse text-center text-sm text-gray-500 mb-8 shadow-md">
         <thead class="bg-gray-50">
@@ -62,21 +64,23 @@
                             </span>
                     </td>
                     <td>
-                        <button
-                            wire:click='$emit("openModal", "raffle-area-modal", @json(["action" => App\Http\Livewire\RaffleAreaModal::UPDATE_ACTION, "raffle_partner_id" => $raffle_partner_id, "raffle_item_id" => $raffle_item->id ]))'
-                            type="button"
-                            class="border border-blue-500 bg-blue-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"
-                        >
-                            <i class="text-base fa-solid fa-pen-to-square px-1"></i>
-                        </button>
-                        @if(\App\Models\Version::currentVersionId() !== null && $raffle_item->active)
-                        <button
-                            wire:click='$emit("openModal", "raffle-version-modal", @json(["action" => $raffle_item->in_version ? App\Http\Livewire\RaffleVersionModal::UPDATE_ACTION : \App\Http\Livewire\RaffleVersionModal::STORE_ACTION, "raffle_partner_id" => $raffle_partner_id, "raffle_item_id" => $raffle_item->id ]))'
-                            type="button"
-                            class="border border-teal-500 bg-teal-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-teal-600 focus:outline-none focus:shadow-outline"
-                        >
-                            <i class="text-base fa-solid fa-store px-1"></i>
-                        </button>
+                        @if(\Carbon\Carbon::now() < \App\Services\VersionService::getCurrentVersionTimestamps()['game_start'])
+                            <button
+                                wire:click='$emit("openModal", "raffle-area-modal", @json(["action" => App\Http\Livewire\RaffleAreaModal::UPDATE_ACTION, "raffle_partner_id" => $raffle_partner_id, "raffle_item_id" => $raffle_item->id ]))'
+                                type="button"
+                                class="border border-blue-500 bg-blue-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+                            >
+                                <i class="text-base fa-solid fa-pen-to-square px-1"></i>
+                            </button>
+                            @if(\App\Models\Version::currentVersionId() !== null && $raffle_item->active)
+                            <button
+                                wire:click='$emit("openModal", "raffle-version-modal", @json(["action" => $raffle_item->in_version ? App\Http\Livewire\RaffleVersionModal::UPDATE_ACTION : \App\Http\Livewire\RaffleVersionModal::STORE_ACTION, "raffle_partner_id" => $raffle_partner_id, "raffle_item_id" => $raffle_item->id ]))'
+                                type="button"
+                                class="border border-teal-500 bg-teal-500 text-white rounded-md px-2 py-2 m-2 transition duration-500 ease select-none hover:bg-teal-600 focus:outline-none focus:shadow-outline"
+                            >
+                                <i class="text-base fa-solid fa-store px-1"></i>
+                            </button>
+                            @endif
                         @endif
                     </td>
                 </tr>
