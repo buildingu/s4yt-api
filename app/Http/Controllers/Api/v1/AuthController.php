@@ -192,7 +192,7 @@ class AuthController extends Controller
                     'coins' => PlayerService::getCurrentPlayerCoins(Auth::user()),
                     'referral_link' => Auth::user()->userable ? Auth::user()->userable->getReferralLink() : "",
                     'roles' => $user->roles->pluck('name')->toArray(),
-                    'quiz_submitted' => Auth::user()->userable->submitted,
+                    'quiz_submitted' => Auth::user()->userable->quiz_submitted,
                 ],
                 'timestamps' => $countdown,
             ],

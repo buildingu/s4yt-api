@@ -143,7 +143,6 @@ class PlayerService
         // update submitted
         $user->userable->quiz_submitted = true;
         $user->userable->save();
-        $user->notify(new UpdateCoinCounter());
         return $user->userable;
     }
 
