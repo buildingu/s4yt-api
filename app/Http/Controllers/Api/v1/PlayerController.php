@@ -163,7 +163,7 @@ class PlayerController extends Controller
         $player = PlayerService::addSponsorCoins($user, $validated['coins']);
 
         return $this->sendResponse([
-            'submitted' => $player->submitted
+            'submitted' => $player->quiz_submitted
         ], 'Coins added successfully');
 
     }
