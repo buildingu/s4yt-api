@@ -24,7 +24,7 @@ class AddSponsorCoinsRequest extends FormRequest
     public function rules()
     {
         return [
-            'coins' => 'required|integer|min:1|max:15'
+            'coins' => 'required|integer|min:0|max:15'
         ];
     }
 }

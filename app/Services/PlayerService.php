@@ -136,11 +136,14 @@ class PlayerService
     public static function addSponsorCoins(User $user, $coins) : Player
     {
         // add coins
-        self::addCoinsToCurrentPlayer($coins, Coin::SOURCE_QUEST, $user);
+        if($coins > 0) {
+            self::addCoinsToCurrentPlayer($coins, Coin::SOURCE_QUEST, $user);
+        }
+
         // update submitted
         $user->userable->quiz_submitted = true;
         $user->userable->save();
-
+        $user->notify(new UpdateCoinCounter());
         return $user->userable;
     }
 
