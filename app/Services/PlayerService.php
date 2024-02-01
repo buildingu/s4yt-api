@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\RaffleUpdate;
 use App\Models\Coin;
 use App\Models\Configuration;
 use App\Models\RaffleItem;
@@ -47,6 +48,7 @@ class PlayerService
                 $player->referred_by = $referrer->id;
                 $player->save();
                 self::addCoinsToCurrentPlayer(intval(ConfigurationService::getCurrentValueByKey(Configuration::REFERRAL_COINS)), Coin::SOURCE_REFERRAL, $referrer->user);
+                $referrer->user->notify(new UpdateCoinCounter());
             }
         }
         // assign roles
@@ -131,6 +133,7 @@ class PlayerService
             ])->take($datum['coins'])->update(["raffle_item_version_id" => $raffle_item_version->pivot->id, "available" => false]);
         }
         $user->notify(new UpdateCoinCounter());
+        event(new RaffleUpdate(RaffleService::getRaffleItems(Version::currentVersionId(), true)));
     }
 
     public static function addSponsorCoins(User $user, $coins) : Player
