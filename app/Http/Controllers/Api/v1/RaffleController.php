@@ -58,7 +58,6 @@ class RaffleController extends Controller
         }
 
         PlayerService::assignRaffleCoins($validated['raffle'],$user);
-        event(new RaffleUpdate(RaffleService::getRaffleItems(Version::currentVersionId(), true)));
 
         return $this->sendResponse([], "Coins assigned successfully");
     }
