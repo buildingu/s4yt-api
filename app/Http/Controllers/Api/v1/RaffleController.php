@@ -32,7 +32,7 @@ class RaffleController extends Controller
         $validated = $request->validated();
 
         $user = Auth::user();
-        $available_coins = PlayerService::getCurrentPlayerCoins($user, false);
+        $available_coins = PlayerService::getCurrentPlayerCoins($user);
 
         // additional validation
         $raffle_flag = [];

@@ -189,7 +189,7 @@ class AuthController extends Controller
                     'region_id' => Auth::user()->userable->region_id ?? null,
                     'city_id' => Auth::user()->userable->city_id ?? null,
                     'instagram_handle' => Auth::user()->userable->instagram_handle ?? null,
-                    'coins' => PlayerService::getCurrentPlayerCoins(Auth::user()),
+                    'coins' => PlayerService::getCurrentPlayerCoins(Auth::user(), true),
                     'referral_link' => Auth::user()->userable ? Auth::user()->userable->getReferralLink() : "",
                     'roles' => $user->roles->pluck('name')->toArray(),
                     'quiz_submitted' => Auth::user()->userable->quiz_submitted,

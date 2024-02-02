@@ -92,10 +92,10 @@ class PlayerService
         ]);
     }
 
-    public static function getCurrentPlayerCoins(Authenticatable $user, $total = true) : int
+    public static function getCurrentPlayerCoins(Authenticatable $user, $available = false) : int
     {
         $coins = Coin::where('user_version_id', $user->versions()->withPivot(['id'])->wherePivot('version_id',Version::currentVersionId())->first()->pivot->id);
-        if($total) {
+        if($available) {
             $coins = $coins->where('available', true);
         }
         return $coins->count();
