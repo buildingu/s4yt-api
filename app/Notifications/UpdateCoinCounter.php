@@ -34,6 +34,7 @@ class UpdateCoinCounter extends Notification implements ShouldBroadcast
     {
         return new BroadcastMessage([
             'coins' => PlayerService::getCurrentPlayerCoins($notifiable, true),
+            'referrer_id' => $notifiable->id
         ]);
     }
 }
