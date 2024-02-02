@@ -20,9 +20,10 @@ class Version extends Model
         'year',
     ];
 
-    public static function currentVersionId()
+    public static function currentVersionId(): ?string
     {
-        return (self::where('active', true)->first())->id;
+        $active = self::where('active', true)->first();
+        return isset($active) ? $active->id : null;
     }
 
     public function users() : BelongsToMany

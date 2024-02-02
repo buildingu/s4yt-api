@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddSponsorCoinsRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Education;
 use App\Models\Grade;
+use App\Models\Player;
 use App\Models\User;
 use App\Notifications\VerifyEmail;
 use App\Services\PlayerService;
@@ -15,6 +17,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Token;
 
 class PlayerController extends Controller
@@ -55,9 +58,10 @@ class PlayerController extends Controller
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $user = User::find($validated['id']);
+        $user = User::find(Auth::id());
         $user->password = Hash::make($validated['password']);
         $user->save();
+        Log::info('Player {$player->name} password reset successfully.', ['id' => $user->id, 'email' => $user->email]);
         return $this->sendResponse([], "Player password updated successfully");
     }
 
@@ -76,6 +80,7 @@ class PlayerController extends Controller
 
         $user->password = Hash::make($validated['password']);
         $user->save();
+        Log::info('Player {$player->name} password updated successfully.', ['id' => $user->id, 'email' => $user->email]);
         return $this->sendResponse([], "Player password updated successfully");
     }
 
@@ -122,6 +127,7 @@ class PlayerController extends Controller
            $player->user->notify((new VerifyEmail())->delay(now()->addMinute()));
             Token::where('user_id', Auth::id())->update(['revoked' => true]);
         }
+        Log::info('Player {$player->name} profile updated successfully.', ['id' => Auth::id(), 'email' => Auth::user()->email]);
         return $this->sendResponse(
             [
                 'verify_email' => $email_update,
@@ -138,5 +144,27 @@ class PlayerController extends Controller
             ],
             "Player updated successfully"
         );
+    }
+
+    /**
+     * Method for the sponsor island quiz
+     * @param AddSponsorCoinsRequest $request
+     * @return JsonResponse
+     */
+    public function addSponsorCoins(AddSponsorCoinsRequest $request) : JsonResponse
+    {
+        $validated = $request->validated();
+
+        $user = User::find(Auth::id());
+        if($user->userable->quiz_submitted) {
+            return $this->sendError('Quiz already submitted', [], Response::HTTP_CONFLICT);
+        }
+
+        $player = PlayerService::addSponsorCoins($user, $validated['coins']);
+
+        return $this->sendResponse([
+            'submitted' => $player->quiz_submitted
+        ], 'Coins added successfully');
+
     }
 }

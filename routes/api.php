@@ -34,7 +34,10 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::patch('/player/password', [\App\Http\Controllers\Api\v1\PlayerController::class, 'updatePassword']);
         Route::get('/player/coins', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getCoinsDetails']);
+        Route::post('/player/coins/sponsor', [\App\Http\Controllers\Api\v1\PlayerController::class, 'addSponsorCoins']);
         Route::get('/player/referrals', [\App\Http\Controllers\Api\v1\PlayerController::class, 'getReferrals']);
         Route::post('/player/profile', [\App\Http\Controllers\Api\v1\PlayerController::class, 'updateProfile']);
+        Route::get('/raffle', [\App\Http\Controllers\Api\v1\RaffleController::class, 'getRaffleItems']);
+        Route::post('/raffle/coins', [\App\Http\Controllers\Api\v1\RaffleController::class, 'setRaffleCoins']);
     });
 });

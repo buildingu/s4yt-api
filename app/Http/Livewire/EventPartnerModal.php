@@ -71,10 +71,8 @@ class EventPartnerModal extends ModalComponent
     {
         return [
             'name' => 'required|string|min:2',
-            'email' => 'required|string|email:rfc,dns' .
-                $this->action == self::STORE_ACTION ? '|unique:users,email' : '',
-            'organization_name' => 'required|string|min:3' .
-                $this->action == self::STORE_ACTION ? '|unique:event_partners,organization_name' : '',
+            'email' =>  $this->action == self::STORE_ACTION ? 'required|string|email:rfc,dns|unique:users,email' : 'required|string|email:rfc,dns',
+            'organization_name' =>  $this->action == self::STORE_ACTION ? 'required|string|min:3|unique:event_partners,organization_name' : 'required|string|min:3',
             'description' => 'nullable|string',
             'meet_day' => 'nullable|date_format:Y-m-d',
             'meet_from' => 'nullable|date_format:H:i',
@@ -125,12 +123,12 @@ class EventPartnerModal extends ModalComponent
             'name' => $this->name,
             'email' => $this->email,
             'organization_name' => $this->organization_name,
-            'description' => $this->description,
-            'meet_day' => $this->meet_day,
-            'meet_from' => $this->meet_from,
-            'meet_to' => $this->meet_to,
-            'meet_link' => $this->meet_link,
-            'youtube_link' => $this->youtube_link,
+            'description' => strlen($this->description) > 0 ? $this->description : null,
+            'meet_day' => strlen($this->meet_day) > 0 ? $this->meet_day : null,
+            'meet_from' => strlen($this->meet_from) > 0 ? $this->meet_from : null,
+            'meet_to' => strlen($this->meet_to) > 0 ? $this->meet_to : null,
+            'meet_link' => strlen($this->meet_link) > 0 ? $this->meet_link : null,
+            'youtube_link' => strlen($this->youtube_link) > 0 ? $this->youtube_link : null,
             'logo_default' => [
                 'path' => $this->logo_default ? $this->logo_default->getFilename() : null,
                 'filename' => $logo_default_filename,

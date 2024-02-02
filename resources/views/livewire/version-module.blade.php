@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-
+    @role('super_admin')
     <div class="w-3/6 flex justify-end">
         <!-- ACTION BUTTON -->
         <div>
@@ -28,6 +28,7 @@
             </button>
         </div>
     </div>
+    @endrole
     <table class="w-3/6 border-collapse text-center text-sm text-gray-500 mb-12">
         <thead class="bg-gray-50">
         <tr>
