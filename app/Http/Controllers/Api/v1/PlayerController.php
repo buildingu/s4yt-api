@@ -102,7 +102,7 @@ class PlayerController extends Controller
     public function getReferrals(): JsonResponse
     {
         return $this->sendResponse([
-            'referrals' => PlayerService::getReferrals(Auth::user()->userable->id)
+            'referrals' => isset(Auth::user()->userable) ? PlayerService::getReferrals(Auth::user()->userable->id) : []
         ], "Collection of referrals");
     }
 
