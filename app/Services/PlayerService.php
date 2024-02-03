@@ -65,15 +65,30 @@ class PlayerService
         // update user data
         $user = UserService::updateUser($data, $user, $email_update);
 
-        // update player data
-        $player = $user->userable;
-        $player->grade_id = $data['grade_id'];
-        $player->education_id = $data['education_id'];
-        $player->school =  $data['school'] ?? null;
-        $player->country_id = $data['country_id'];
-        $player->region_id = $data['region_id'] ?? null;
-        $player->city_id = $data['city_id'] ?? null;
-        $player->save();
+        if(!$user->profile_updated) {
+            $player = Player::create([
+                'education_id' => $data['education_id'],
+                'grade_id' => $data['grade_id'],
+                'country_id' => $data['country_id'],
+                'region_id' => $data['region_id'] ?? null,
+                'city_id' => $data['city_id'] ?? null
+            ]);
+            $player->school =  $data['school'] ?? null;
+            $player->save();
+            $player->user()->save($user);
+        } else {
+            // update player data
+            $player = $user->userable;
+            $player->grade_id = $data['grade_id'];
+            $player->education_id = $data['education_id'];
+            $player->school =  $data['school'] ?? null;
+            $player->country_id = $data['country_id'];
+            $player->region_id = $data['region_id'] ?? null;
+            $player->city_id = $data['city_id'] ?? null;
+            $player->save();
+        }
+        $user->profile_updated = true;
+        $user->save();
 
         // send notify
         if($email_update) {
