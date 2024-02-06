@@ -151,7 +151,7 @@ class AuthController extends Controller
 
         $now = Carbon::now();
         $timestamps = VersionService::getCurrentVersionTimestamps();
-        if( ($now >= $timestamps['review_start'] && $now < $timestamps['review_end']) || $now >= $timestamps['game_end']) {
+        if( $now >= $timestamps['game_end'] ) {
             return $this->sendError('Login disabled');
         }
 
