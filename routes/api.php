@@ -39,5 +39,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/player/profile', [\App\Http\Controllers\Api\v1\PlayerController::class, 'updateProfile']);
         Route::get('/raffle', [\App\Http\Controllers\Api\v1\RaffleController::class, 'getRaffleItems']);
         Route::post('/raffle/coins', [\App\Http\Controllers\Api\v1\RaffleController::class, 'setRaffleCoins']);
+        Route::get('/raffle/winners', [\App\Http\Controllers\Api\v1\RaffleController::class, 'getRaffleWinners']);
     });
 });

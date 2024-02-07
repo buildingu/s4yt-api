@@ -22,4 +22,14 @@ class Coin extends Model
     protected $fillable = [
         'raffle_item_version_id',
     ];
+
+    public static function getRaffleItemCoins($raffle_item_version_id, $winner_coin_ids, $user_version_id = null)
+    {
+        $raffle_item_coins = Coin::where([
+            ['raffle_item_version_id', $raffle_item_version_id],
+            ['available', false],
+        ])->whereNotIn('id', $winner_coin_ids);
+
+        return isset($user_version_id) ? $raffle_item_coins->where('user_version_id', $user_version_id)->first() : $raffle_item_coins;
+    }
 }
