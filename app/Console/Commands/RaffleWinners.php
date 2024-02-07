@@ -16,8 +16,7 @@ class RaffleWinners extends Command
      *
      * @var string
      */
-    protected $signature = 'raffle:winners
-        {--t|test} : Indicates if command should ignore inserts and output process';
+    protected $signature = 'raffle:winners';
 
     /**
      * The console command description.
@@ -43,13 +42,11 @@ class RaffleWinners extends Command
      */
     public function handle() : void
     {
-        $test = $this->option('test');
         if(RaffleWinner::count() == 0) {
 
             // global variables
             $current_version_id = Version::currentVersionId();
             $winner_coin_ids = [];
-            $winner_ids = [];
 
             // get raffle items
             $raffle_items = RaffleItem::whereHas('versions', function($q) use ($current_version_id){
@@ -58,11 +55,12 @@ class RaffleWinners extends Command
 
             // loop items
             foreach ($raffle_items as $raffle_item) {
-                if($test) {
-                    $this->line(str_repeat("*", 30));
-                    $this->line('Raffle item ID:' . $raffle_item->id);
-                    $this->line(str_repeat("=", 30));
-                }
+                $winner_ids = [];
+
+                $this->line(str_repeat("*", 30));
+                $this->line('Raffle item ID:' . $raffle_item->id);
+                $this->line(str_repeat("=", 30));
+
                 $raffle_item_version =  $raffle_item->versions()->withPivot(['id','stock', 'active'])->wherePivot('version_id', $current_version_id)->first();
                 $coins = Coin::getRaffleItemCoins($raffle_item_version->pivot->id, $winner_coin_ids);
                 $coins_count = $coins->count(); // 3
@@ -70,18 +68,18 @@ class RaffleWinners extends Command
                     // loop stock or coins assigned to the item
                     for($i = 1; $i <= $raffle_item_version->pivot->stock && $i <= $coins_count; $i++) {
                         $_coins_count =  Coin::getRaffleItemCoins($raffle_item_version->pivot->id, $winner_coin_ids)->count();
-                        if($test) {
-                            $this->line('Processing stock unit ' . $i . '/' .  $raffle_item_version->pivot->stock);
-                            $this->line('raffle item => ' . json_encode(array('raffle_item_id' => $raffle_item->id, 'count' => $_coins_count)));
-                        }
+
+                        $this->line('Processing stock unit ' . $i . '/' .  $raffle_item_version->pivot->stock);
+                        $this->line('raffle item => ' . json_encode(array('raffle_item_id' => $raffle_item->id, 'count' => $_coins_count)));
+
                         $chances = $this->getNormalizedChances($raffle_item_version->pivot->id, $winner_coin_ids, $_coins_count);
                         if(sizeof($winner_ids) >= sizeof($chances)) {
                             $winner_ids = [];
                         }
-                        if($test) {
-                            $this->line('winners check => ' . json_encode($winner_ids));
-                            $this->line('normalized chances => ' . json_encode($chances));
-                        }
+
+                        $this->line('winners check => ' . json_encode($winner_ids));
+                        $this->line('normalized chances => ' . json_encode($chances));
+
                         $selected_chance = null;
                         do{
                             $random_chance = round(rand(0,100)/100, 2);
@@ -91,32 +89,27 @@ class RaffleWinners extends Command
                                     break;
                                 }
                             }
-                            if($test) {
-                                $this->line("Random while => " . $random_chance);
-                                $this->line('selected_chance while' . json_encode($selected_chance));
-                            }
+                            $this->line("Random while => " . $random_chance);
+                            $this->line('selected_chance while' . json_encode($selected_chance));
                         }while (in_array($selected_chance['user_version_id'], $winner_ids));
-                        if($test) {
-                            $this->line('selected_chance => ' . json_encode($selected_chance));
-                        }
+
+                        $this->line('selected_chance => ' . json_encode($selected_chance));
+
                         $selected_coin = Coin::getRaffleItemCoins($raffle_item_version->pivot->id, $winner_coin_ids, $selected_chance['user_version_id']);
                         $winner_coin_ids[] = $selected_coin->id;
                         $winner_ids[] = $selected_chance['user_version_id'];
-                        if($test) {
-                            $this->line('winner_coins ' . json_encode($winner_coin_ids));
-                            $this->line('winners ' . json_encode($winner_ids));
-                            $this->line(str_repeat("=", 30));
-                        } else {
-                            RaffleWinner::create([
-                                'user_version_id' => $selected_chance['user_version_id'],
-                                'raffle_item_version_id' => $raffle_item_version->pivot->id,
-                            ]);
-                        }
+
+                        $this->line('winner_coins ' . json_encode($winner_coin_ids));
+                        $this->line('winners ' . json_encode($winner_ids));
+                        $this->line(str_repeat("=", 30));
+
+                        RaffleWinner::create([
+                            'user_version_id' => $selected_chance['user_version_id'],
+                            'raffle_item_version_id' => $raffle_item_version->pivot->id,
+                        ]);
                     }
                 }
-                if($test) {
-                    $this->line(str_repeat("*", 30));
-                }
+                $this->line(str_repeat("*", 30));
             }
         } else {
             $this->line('Raffle winners already assigned.');
@@ -133,6 +126,7 @@ class RaffleWinners extends Command
                 'chance' => round($coins_by_user->coin_count/$coins_count, 2)
             ];
         }
+        $this->line('chances => ' . json_encode($chances));
         return $chances;
     }
 
