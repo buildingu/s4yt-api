@@ -28,11 +28,16 @@ import authRouter from "./authentication/routes/authRoute";
 // import csrfRouter from "./csrf/routes/csrfRoute";
 // import gameRouter from "./game/routes/gameRoute";
 
+// Connect DB
+import connectDB from './configs/db';
+
 const app = express();
 dotenv.config();
 
+connectDB();
+
 const PORT = Number(process.env.PORT) || 4000,
-  baseUrl = "/api/v1";
+  baseUrl = "/api/v2";
 
 // (async () => {
 //   let retries = 5;

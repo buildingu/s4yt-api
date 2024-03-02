@@ -1,4 +1,3 @@
-// Something like this.
 export default interface User {
   id: string;
   city_id: number | null;
@@ -14,4 +13,8 @@ export default interface User {
   region_id: number | null;
   roles: string[];
   school: string | null;
+  isEmailVerified: boolean;
+  emailVerificationToken: string;
+  resetPasswordToken: string;
+  tokenVersion: number;
 }

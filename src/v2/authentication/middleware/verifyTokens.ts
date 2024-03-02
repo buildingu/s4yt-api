@@ -19,7 +19,7 @@ export const verifyAccessToken = async (
   try {
     const decodedClaims = jwt.verify(
       accessToken,
-      process.env.ACCESS_TOKEN_SECRET as string
+      process.env.JWT_SECRET as string
     ) as JwtPayload;
     // console.log("decodedClaims", decodedClaims);
     // Check if the token is expired, in milliseconds.
