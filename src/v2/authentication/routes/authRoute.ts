@@ -23,7 +23,7 @@ router.get("/player/referrals", verifyTokens.verifyAccessToken, authController.s
 // // *There would also be a referral socket to listen if someone used their referral and give them their coins, not sure how to structure for that, could make a sockets folder or something here.*
 
 router.post("/logout", verifyCsrfToken, authController.logout); // We didn't actually have a logout route, but it makes sense.
-// router.delete("/user/:email", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.deleteUser); // This one I just added also because why not (if they delete their account any coins they put in the raffle or challenge submission should be delete from them too).
-router.delete("/user/:email", authController.deleteUser);
+router.delete("/user/:email", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.deleteUser); // This one I just added also because why not (if they delete their account any coins they put in the raffle or challenge submission should be delete from them too).
+// router.delete("/user/:email", authController.deleteUser);
 
 export default router;
