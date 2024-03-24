@@ -86,7 +86,7 @@ export const login = async (
     return res.status(200).json({
       message: "User is successfully authenticated.",
       user,
-      token, // testing purposes
+      token
     });
   } catch (error: any) {
     res.status(401).json({ message: error.message });
@@ -136,7 +136,6 @@ export const sendResetPasswordEmail = async (
   }
 };
 
-// Reset the password
 export const resetPassword = async (
   req: Request,
   res: Response,
@@ -151,24 +150,43 @@ export const resetPassword = async (
   }
 };
 
-export const updateProfile = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
+export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    const profileUpdates = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User identifier is missing." });
     }
-  },
-  sendReferrals = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
-    }
-  };
+
+    const updatedUser = await authService.updateProfile(userId, profileUpdates);
+
+    return res.status(200).json({
+      message: "Profile updated successfully.",
+      user: updatedUser
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const sendReferrals = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId; 
+    const referrals = await authService.sendReferrals(userId);
+
+    return res.status(200).json({
+      message: "Referrals retrieved successfully.",
+      referrals
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
 
 export const logout = async (
   req: Request,

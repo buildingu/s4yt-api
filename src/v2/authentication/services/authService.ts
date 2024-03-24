@@ -77,13 +77,20 @@ export const register = async (userData: any) => {
     }
 
     const hashedPassword = await hash(userData.password, 12);
+    
+    const refererCode = crypto.randomBytes(10).toString('hex');
 
     const newUser = new UserModel({
       ...userData,
       password: hashedPassword,
+      role: userData.role || 'Player',
+      coin: userData.coin || 50,
+      referer_Code: userData.referer_Code || refererCode, 
+      used_refer_code: userData.used_refer_code || false,
       isEmailVerified: false,
       emailVerificationToken: crypto.randomBytes(20).toString("hex"),
     });
+
     await newUser.save();
 
     sendVerificationEmail(newUser.email, newUser.emailVerificationToken);
@@ -93,6 +100,7 @@ export const register = async (userData: any) => {
     throw new Error("register service error; " + error.message);
   }
 };
+
 
 export const login = async (loginData: { email: string; password: string }) => {
   try {
@@ -128,7 +136,7 @@ export const login = async (loginData: { email: string; password: string }) => {
 export const verifyEmail = async (token: string): Promise<User | null> => {
   const user = await UserModel.findOne({ emailVerificationToken: token });
   if (!user) {
-    return null; // Explicitly return null if no user is found
+    return null; 
   }
   user.isEmailVerified = true;
   user.emailVerificationToken = undefined!;
@@ -182,26 +190,55 @@ export const updatePassword = async (userId: string, newPassword: string) => {
   }
 };
 
-// export const updateProfile = async (email: Omit<User, "password">) => {
-//     try {
-//       return null;
-//     } catch (error: any) {
-//       throw new Error(
-//         "updateProfile service error; updating the user credentials:\n" +
-//           error.message
-//       );
-//     }
-//   },
-//   sendReferrals = async () => {
-//     try {
-//       return null;
-//     } catch (error: any) {
-//       throw new Error(
-//         "sendReferrals service error; sending referral history:\n" +
-//           error.message
-//       );
-//     }
-//   };
+export const updateProfile = async (userId: string, profileUpdates: any) => {
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found.");
+    }
+
+    if (profileUpdates.hasOwnProperty('name')) user.name = profileUpdates.name;
+    if (profileUpdates.hasOwnProperty('email')) user.email = profileUpdates.email;
+    if (profileUpdates.hasOwnProperty('city_id')) user.city_id = profileUpdates.city_id;
+    if (profileUpdates.hasOwnProperty('country_id')) user.country_id = profileUpdates.country_id;
+    if (profileUpdates.hasOwnProperty('education_id')) user.education_id = profileUpdates.education_id;
+    if (profileUpdates.hasOwnProperty('province_state')) user.province_state = profileUpdates.province_state;
+    if (profileUpdates.hasOwnProperty('grade_id')) user.grade_id = profileUpdates.grade_id;
+    if (profileUpdates.hasOwnProperty('instagram_handle')) user.instagram_handle = profileUpdates.instagram_handle;
+    if (profileUpdates.hasOwnProperty('school')) user.school = profileUpdates.school;
+
+    if (user.isModified('email')) {
+      // additional email validation logic here
+    }
+
+    await user.save();
+
+    const updatedUser: any = user.toObject();
+    delete updatedUser.password;
+    delete updatedUser.emailVerificationToken;
+    delete updatedUser.resetPasswordToken;
+
+    return updatedUser;
+  } catch (error: any) {
+    throw new Error("updateProfile service error; " + error.message);
+  }
+};
+
+export const sendReferrals = async (userId: string) => {
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      throw new Error("User not found.");
+    }
+
+    // const referrals = user.referrals;
+
+    return null;
+  } catch (error: any) {
+    throw new Error("sendReferrals service error; " + error.message);
+  }
+};
 
 export const deleteUser = async (email: string) => {
   try {
