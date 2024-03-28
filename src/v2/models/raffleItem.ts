@@ -1,6 +1,18 @@
 import { Document, model, Schema, Types } from 'mongoose';
 
-const raffleItemSchema = new Schema({
+interface Stake {
+  user: Types.ObjectId;
+  coin_staked: number;
+}
+
+interface IRaffleItem extends Document {
+  name_raffleitem: string;
+  image: string;
+  qty: number;
+  stake: Stake[];
+}
+
+const raffleItemSchema = new Schema<IRaffleItem>({
   name_raffleitem: { type: String, required: true },
   image: { type: String, required: true },
   qty: { type: Number, required: true },
@@ -10,6 +22,6 @@ const raffleItemSchema = new Schema({
   }]
 });
 
-const RaffleItemModel = model('RaffleItem', raffleItemSchema);
+const RaffleItemModel = model<IRaffleItem>('RaffleItem', raffleItemSchema);
 
 export default RaffleItemModel;

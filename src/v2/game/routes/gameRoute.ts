@@ -5,8 +5,11 @@ import * as gameController from "../controllers/gameController";
 
 const router = Router();
 
-// I might be forgetting one, but I think this is it.
-router.get("/sponsors", verifyTokens.verifyAccessToken, gameController.sendSponsorsInfo); // Send the info about the sponsors, so you will send us the logos too for all of this, which would be a path to the image, can be store here or some image hosting place.
+router.post('/sponsors', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addSponsor);
+router.put('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
+router.get('/sponsors', verifyTokens.verifyAccessToken, gameController.getSponsors);
+// Send the info about the sponsors, so you will send us the logos too for all of this, which would be a path to the image, can be store here or some image hosting place.
+
 router.post("/player/coins/quiz", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addQuizCoins); // This is for the coins earned from submitting the sponsor quiz (you can also delete this route and just make one route for adding coins).
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
