@@ -23,4 +23,5 @@ export default interface User {
   kicked?: boolean; 
   bannedUntil?: Date;
   coins: number;
+  showInstructions: boolean;
 }

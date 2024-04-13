@@ -30,6 +30,7 @@ const userSchema = new Schema<User & Document>({
   used_refer_code: { type: Boolean, default: false },
   kicked: { type: Boolean, default: false },
   bannedUntil: { type: Date, default: null },
+  showInstructions: { type: Boolean, default: true },
 }, {
   timestamps: true, 
 });

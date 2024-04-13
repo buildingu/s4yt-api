@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
+import { getInstructionsForUser } from "../services/gameService";
+import mongoose from "mongoose";
 
 export const addSponsor = async (req: Request, res: Response) => {
   try {
@@ -112,5 +114,41 @@ export const sendCoinsGainedHistory = async (
     return res.status(200).json({ message: "" });
   } catch (error: any) {
     next(error);
+  }
+};
+
+export const sendInstructions = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.decodedClaims?.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "User is not authenticated" });
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const instructionsData = await getInstructionsForUser(userObjectId);
+    res.status(200).json(instructionsData);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const getTreasureMap = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.decodedClaims?.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "User is not authenticated." });
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    
+    const treasureMapData = await gameService.getTreasureMapData(userObjectId);
+    res.json(treasureMapData);
+  } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      res.status(400).json({ message: "Invalid user ID format." });
+    } else {
+      next(error);
+    }
   }
 };

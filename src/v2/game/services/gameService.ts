@@ -2,11 +2,12 @@ import Sponsor from "../../models/sponsor";
 import RaffleItem from "../../models/raffleItem";
 import mongoose from "mongoose";
 import User from "../../models/user";
+import { Types } from "mongoose";
 
 export const getRaffleItemsService = async () => {
   try {
     const raffleItems = await RaffleItem.find({});
-    // Transform data as needed or populate additional information if required
+    
     return raffleItems;
   } catch (error: any) {
     throw new Error(`Error retrieving raffle items: ${error.message}`);
@@ -18,8 +19,8 @@ export const getRaffleIndicatorCoinsService = async () => {
     const raffleItems = await RaffleItem.find().populate('stake.user');
     const indicators = raffleItems.map(item => ({
       itemId: item._id,
-      goldCoin: item.stake.some(stake => stake.coin_staked > 0), // corrected to 'stake'
-      silverCoin: item.stake.every(stake => stake.coin_staked === 0) // corrected to 'stake'
+      goldCoin: item.stake.some(stake => stake.coin_staked > 0),
+      silverCoin: item.stake.every(stake => stake.coin_staked === 0)
     }));
     return indicators;
   } catch (error: any) {
@@ -51,16 +52,13 @@ export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: m
 };
 
 export const assignCoinsToUser = async (userId: string, coinCount: number) => {
-  // Find the user by ID
   const user = await User.findById(userId);
   if (!user) {
     throw new Error('User not found');
   }
 
-  // Add the coinCount to the user's total coins
-  user.coins += coinCount; // Assuming `coins` is the field name in your User model
+  user.coins += coinCount;
 
-  // Save the updated user document
   await user.save();
 
   return user;
@@ -166,3 +164,62 @@ export const sendCoinsGainedHistory = async () => {
     );
   }
 };
+
+export const getInstructionsForUser = async (userId: mongoose.Types.ObjectId): Promise<any> => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const showInstructions = user.showInstructions !== false;
+
+    const instructionsData = {
+      title: "Instructions Page",
+      content: "Visit each island to answer the questions. Click on raffle page, to use your free DUBL-U-NES.",
+      showOnLogin: showInstructions
+    };
+
+    return instructionsData;
+  } catch (error: any) {
+    throw new Error(`Error retrieving instructions: ${error.message}`);
+  }
+};
+
+export const getTreasureMapData = async (userId: Types.ObjectId) => {
+  try {
+    // Fetch user details to determine which elements to show on the treasure map
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
+
+    // Fetch raffle items and information
+    const raffleItems = await RaffleItem.find({ active: true });
+    const raffleData = raffleItems.map(item => ({
+      id: item.id,
+      name: item.name_raffleitem,
+      image: item.image,
+      quantity: item.qty
+    }));
+
+    const sponsors = await Sponsor.find({});
+    const sponsorData = sponsors.map(sponsor => ({
+      id: sponsor.id,
+      name: sponsor.name,
+      logo: sponsor.logoPath, 
+    }));
+
+    const treasureMapData = {
+      user: {
+        name: user.name,
+        coins: user.coins, 
+      },
+      raffle: raffleData,
+      sponsors: sponsorData,
+    };
+
+    return treasureMapData;
+  } catch (error: any) {
+    throw new Error(`Error retrieving treasure map data: ${error.message}`);
+  }
+};
+

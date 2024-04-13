@@ -5,6 +5,9 @@ import * as gameController from "../controllers/gameController";
 
 const router = Router();
 
+router.get("/instructions", verifyTokens.verifyAccessToken, gameController.sendInstructions);
+router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTreasureMap);
+
 router.post('/sponsors', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addSponsor);
 router.put('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
 router.get('/sponsors', verifyTokens.verifyAccessToken, gameController.getSponsors);
