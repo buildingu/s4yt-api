@@ -32,6 +32,16 @@ export const getSponsors = async (req: Request, res: Response) => {
   }
 };
 
+export const getSponsorQuestions = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {sponsorId} = req.params;
+    const sponsorQuestions = await gameService.getSponsorQuestionService(sponsorId);
+    res.json(sponsorQuestions);
+  } catch (error: any) {
+    next(error);
+  }
+}
+
 // Controller to send raffle items info
 export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {

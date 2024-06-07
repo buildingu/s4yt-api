@@ -80,6 +80,16 @@ export const getAllSponsors = async () => {
   return sponsors;
 };
 
+export const getSponsorQuestionService = async (id: String) => {
+  const sponsor = await Sponsor.findById(id);
+  if (!sponsor) {
+    throw new Error("Sponsor not found")
+  }
+
+  const sponsorQuestions = sponsor.questions;
+  return sponsorQuestions;
+};
+
 export const addQuizCoins = async () => {
   try {
     return null;
