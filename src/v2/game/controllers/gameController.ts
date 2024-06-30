@@ -13,6 +13,17 @@ export const addSponsor = async (req: Request, res: Response) => {
   }
 };
 
+export const addMultipleChoice = async (req: Request, res: Response) => {
+  try {
+    const { sponsorId } = req.params;
+    const multipleChoiceData = req.body;
+    const multipleChoice = await gameService.addMultipleChoiceToSponsor(sponsorId, multipleChoiceData);
+    res.status(201).json(multipleChoice);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 export const updateSponsorInfo = async (req: Request, res: Response) => {
   try {
     const sponsorData = req.body;
@@ -32,11 +43,22 @@ export const getSponsors = async (req: Request, res: Response) => {
   }
 };
 
-export const getSponsorQuestions = async (req: Request, res: Response, next: NextFunction) => {
+export const getMultipleChoice = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {sponsorId} = req.params;
-    const sponsorQuestions = await gameService.getSponsorQuestionService(sponsorId);
-    res.json(sponsorQuestions);
+    const sponsorMultipleChoice = await gameService.getMultipleChoiceFromSponsor(sponsorId);
+    res.json(sponsorMultipleChoice);
+  } catch (error: any) {
+    next(error);
+  }
+}
+
+export const submitSponsorQuiz = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {userId, multipleChoiceResponses} = req.body;
+    const {sponsorId} = req.params;
+    const submissions = await gameService.gradeSponsorQuiz(userId, sponsorId, multipleChoiceResponses);
+    res.status(200).json(submissions);
   } catch (error: any) {
     next(error);
   }

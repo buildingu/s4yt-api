@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as verifyTokens from "../../authentication/middleware/verifyTokens";
 import verifyCsrfToken from "../../csrf/middleware/verifyCsrfToken";
 import * as gameController from "../controllers/gameController";
+import { verify } from "crypto";
 
 const router = Router();
 
@@ -9,13 +10,17 @@ router.get("/instructions", verifyTokens.verifyAccessToken, gameController.sendI
 router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTreasureMap);
 
 router.post('/sponsors', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addSponsor);
+router.post('/sponsors/:sponsorId', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMultipleChoice)
 router.put('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
 router.get('/sponsors', verifyTokens.verifyAccessToken, gameController.getSponsors);
 // Send the info about the sponsors, so you will send us the logos too for all of this, which would be a path to the image, can be store here or some image hosting place.
 
-router.get('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getSponsorQuestions)
+router.get('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getMultipleChoice)
+router.post('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.submitSponsorQuiz)
+// only grant coins when all the multiple choice questions are submitted
 
-router.post("/player/coins/quiz", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addQuizCoins); // This is for the coins earned from submitting the sponsor quiz (you can also delete this route and just make one route for adding coins).
+// potentially overriden by submitSponsorQuestion (auto mark multiple choice)
+// router.post("/player/coins/quiz", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addQuizCoins); // This is for the coins earned from submitting the sponsor quiz (you can also delete this route and just make one route for adding coins).
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
 router.post("/businesses/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).

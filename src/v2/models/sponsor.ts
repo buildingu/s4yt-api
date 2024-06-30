@@ -1,27 +1,19 @@
 import mongoose, { Document } from 'mongoose';
 
-interface MultipleChoice {
-  prompt: string;
-  answers: string[];
-  correct_answer: string;
-}
-
 interface ISponsor extends Document {
   name: string;
   logoPath: string; // Make sure the field name matches your database
+  videoPath: string;
   websiteUrl: string;
-  questions: MultipleChoice[];
+  questions: mongoose.Types.ObjectId[];
 }
 
 const sponsorSchema = new mongoose.Schema({
   name: { type: String, required: true },
   logoPath: { type: String, required: true }, // This should match the logo field in your database
+  videoPath: { type: String, required: true},
   websiteUrl: { type: String, required: true },
-  questions: [{
-      prompt: {type: String, required: true},
-      answers: {type: Array<String>, required: true},
-      correct_answer: {type: String, required: true}
-    }],
+  questions: [{ type: mongoose.Schema.Types.ObjectId, ref:"MultipleChoice"}],
 });
 
 const Sponsor = mongoose.model<ISponsor>('Sponsor', sponsorSchema);

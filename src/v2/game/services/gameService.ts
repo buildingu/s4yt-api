@@ -1,8 +1,10 @@
 import Sponsor from "../../models/sponsor";
+import MultipleChoice from "../../models/multipleChoice";
 import RaffleItem from "../../models/raffleItem";
 import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";
+import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -70,6 +72,21 @@ export const createSponsor = async (sponsorData: any) => {
   return sponsor;
 };
 
+export const addMultipleChoiceToSponsor = async (sponsorId: string, multipleChoiceData: any) => {
+  const sponsor = await Sponsor.findById(sponsorId);
+  if (!sponsor) {
+    throw new Error('Sponsor not found');
+  }
+
+  const multipleChoice = new MultipleChoice({ ...multipleChoiceData, sponsor: sponsorId });
+  await multipleChoice.save();
+
+  sponsor.questions.push(multipleChoice._id);
+  await sponsor.save();
+
+  return multipleChoice;
+};
+
 export const updateSponsor = async (id: String, sponsorData: any) => {
   const sponsor = await Sponsor.findByIdAndUpdate(id, sponsorData, { new: true });
   return sponsor;
@@ -80,19 +97,81 @@ export const getAllSponsors = async () => {
   return sponsors;
 };
 
-export const getSponsorQuestionService = async (id: String) => {
-  const sponsor = await Sponsor.findById(id);
+export const getMultipleChoiceFromSponsor = async (sponsorId: String) => {
+  const sponsor = await Sponsor.findById(sponsorId);
   if (!sponsor) {
-    throw new Error("Sponsor not found")
+    throw new Error('Sponsor not found');
+  }
+  
+  // const multipleChoice = await MultipleChoice.findById(sponsor.questions[0])
+  let multipleChoice : any[] = []
+  for (let multipleChoiceId of sponsor.questions){ 
+    let question = await MultipleChoice.findById(multipleChoiceId)
+    multipleChoice.push(question)
   }
 
-  const sponsorQuestions = sponsor.questions;
-  return sponsorQuestions;
+  return multipleChoice
 };
 
-export const addQuizCoins = async () => {
+export const gradeSponsorQuiz = async (userId: String, sponsorId: String, responses: any) => {
+  const sponsor = await Sponsor.findById(sponsorId);
+  if (!sponsor) {
+    throw new Error('Sponsor not found');
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  let submittedQuestions : any[] = [];
+  let submissions : any[] = [];
+
+  for (let response of responses) {
+    const {answer, multipleChoiceId} = response;
+    const multipleChoice = await MultipleChoice.findById(multipleChoiceId);
+    
+    if (!multipleChoice) {
+      throw new Error("Multiple choice question not found")
+    }
+  
+    let isCorrect = answer == multipleChoice.correctAnswer;
+    submissions.push({user: userId, multipleChoice: multipleChoiceId, isCorrect: isCorrect})
+    submittedQuestions.push(multipleChoiceId)
+  }
+
+  if (JSON.stringify(submittedQuestions.sort()) != JSON.stringify(sponsor.questions.sort())) {
+    throw new Error(`Questions submitted does not completely match quiz`)
+  }
+
+  // add record to db
+  for (let submission of submissions) {
+    const multipleChoiceId = submission.multipleChoice;
+
+    const submissionRecord = await MultipleChoiceSubmission.findOneAndUpdate({"multipleChoice": multipleChoiceId}, submission, {upsert: true})
+
+    // add coins
+    if (!submissionRecord) {
+      // add 3 coins
+      if (submission.isCorrect) {
+        addQuizCoins(userId, 3);
+      } else {
+        addQuizCoins(userId, 1);
+      }
+    }
+  }
+  return submissions
+}
+
+export const addQuizCoins = async (userId: String, coinCount: number) => {
   try {
-    return null;
+    const updatedUser = await User.findById(userId);
+    if (updatedUser) {
+      updatedUser.coins += coinCount;
+      await updatedUser.save();
+    }
+
+    return updatedUser;
   } catch (error: any) {
     throw new Error(
       "addQuizCoins service error; adding coins earned from the quiz to the user:\n" +
