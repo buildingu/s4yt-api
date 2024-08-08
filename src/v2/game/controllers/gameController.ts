@@ -136,6 +136,18 @@ export const sendBusinessesInfo = async (
     }
   };
 
+export const displayEventResults = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const eventResults = await gameService.getEventResults();
+    res.status(200).json(eventResults);
+  } catch (error: any) {
+    next(error);
+  }
+};
 
 export const sendCoinsGainedHistory = async (
   req: Request,

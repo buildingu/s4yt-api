@@ -33,4 +33,6 @@ router.get("/raffle/winners", verifyTokens.verifyAccessToken, gameController.sen
 
 router.get("/player/coins", verifyTokens.verifyAccessToken, gameController.sendCoinsGainedHistory); // You have to keep track of how the coins were gained (referral, quiz, or whatever) and just send use the type(where it was from) and the coins.
 
+router.get("/results", verifyTokens.verifyAccessToken, gameController.displayEventResults);
+
 export default router;

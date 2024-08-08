@@ -1,3 +1,5 @@
+import Business from "../../models/business";
+import Question from "../../models/question";
 import Sponsor from "../../models/sponsor";
 import MultipleChoice from "../../models/multipleChoice";
 import RaffleItem from "../../models/raffleItem";
@@ -211,37 +213,44 @@ export const sendBusinessesInfo = async () => {
     }
   };
 
-export const sendRaffleInfo = async () => {
-    try {
-      return null;
-    } catch (error: any) {
-      throw new Error(
-        "sendRaffleInfo service error; getting raffle items info:\n" +
-          error.message
-      );
+  export const getEventResults = async () => {
+    const allBus = await Business.find({});
+    if (!allBus) {
+      throw new Error('Businesses not found');
     }
-  },
-  sendRaffleIndicatorCoins = async () => {
-    try {
-      return null;
-    } catch (error: any) {
-      throw new Error(
-        "addMeetUp service error; getting the raffle coins indicators:\n" +
-          error.message
-      );
+
+    let results = [];
+    for (const business of allBus) {
+      let businessResults = [];
+      const questions = business.questions;
+
+      for (const questionId of questions) {
+        const question = await Question.findById(questionId);
+
+        if (!question) continue;
+
+        for (const prize of question.prizeAllocation) {
+          const user = await User.findById(prize.winner);
+          if (!user) continue;
+
+          let award = {
+            place: prize.place,
+            amount: prize.amount,
+            winner_name: user.name,
+            winner_province_state: user.province_state,
+            winner_country: user.country_id,
+          };
+          businessResults.push(award);
+        }
+        
+      }
+      
+      results.push(businessResults)
     }
+  
+    return results;
   };
 
-export const sendRaffleWinners = async () => {
-  try {
-    return null;
-  } catch (error: any) {
-    throw new Error(
-      "sendRaffleWinners service error; setting the raffle winners:\n" +
-        error.message
-    );
-  }
-};
 
 export const sendCoinsGainedHistory = async () => {
   try {

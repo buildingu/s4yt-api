@@ -1,5 +1,5 @@
 import Business from '../../models/business';
-import Question from '../../models/business'; 
+import Question from '../../models/question'; 
 import Answer from '../../models/answer';
 
 export const addQuestionToBusiness = async (businessId: string, questionData: any) => {
