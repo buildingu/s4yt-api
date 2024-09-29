@@ -5,7 +5,7 @@ const businessSchema = new mongoose.Schema({
   logo: String,
   description: String,
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }]
-});
+}, {collection : "businesses"});
 
 const Business = mongoose.model('Business', businessSchema);
 

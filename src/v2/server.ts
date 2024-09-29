@@ -27,6 +27,7 @@ import lowercaseEmails from "./middleware/lowercaseEmails";
 import authRouter from "./authentication/routes/authRoute";
 import csrfRouter from "./csrf/routes/csrfRoute";
 import gameRouter from "./game/routes/gameRoute";
+import busRouter from "./business/routes/busRoute";
 
 // Connect DB
 import connectDB from './configs/db';
@@ -103,6 +104,7 @@ app.use(lowercaseEmails);
 app.use(`${baseUrl}/auth`, authRouter);
 app.use(`${baseUrl}/csrf`, csrfRouter);
 app.use(`${baseUrl}/game`, gameRouter);
+app.use(`${baseUrl}/bus`, busRouter);
 
 app.listen(PORT, process.env.HOST as string, () =>
   console.log(

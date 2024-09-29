@@ -5,9 +5,10 @@ const questionSchema = new mongoose.Schema({
   description: String,
   prizeAllocation: [{
     place: Number,
-    amount: Number
+    amount: Number,
+    winner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null}
   }],
-  business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' } 
+  business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' }
 });
 
 const Question = mongoose.model('Question', questionSchema);

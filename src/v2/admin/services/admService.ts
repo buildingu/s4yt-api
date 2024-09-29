@@ -1,5 +1,5 @@
 import User from '../../models/user';
-import Question from '../../models/questions';
+import Question from '../../models/question';
 
 export const retrieveAllUsers = async () => {
   const users = await User.find({});
