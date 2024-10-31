@@ -40,6 +40,25 @@ export const banUser = async (req: Request, res: Response) => {
   }
 };
 
+export const createBusiness = async (req: Request, res: Response) => {
+  try {
+    const { name, logo, description } = req.body;
+    await superAdminService.createBusiness(name, logo, description);
+    res.status(200).send('Business created successfully');
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+};
+
+export const getAllBusinesses = async (req: Request, res: Response) => {
+  try {
+    const businesses = await superAdminService.retrieveAllBusinesses();
+    res.json(businesses);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const editBusinessQuestion = async (req: Request, res: Response) => {
   try {
     const { questionId, questionData } = req.body;

@@ -24,6 +24,7 @@ import morgan from "morgan";
 
 import lowercaseEmails from "./middleware/lowercaseEmails";
 
+import adminRouter from "./admin/routes/admRoute";
 import authRouter from "./authentication/routes/authRoute";
 import csrfRouter from "./csrf/routes/csrfRoute";
 import gameRouter from "./game/routes/gameRoute";
@@ -101,10 +102,11 @@ app.use(
 app.use(lowercaseEmails);
 
 // *Router*
+app.use(`${baseUrl}/admin`, adminRouter);
 app.use(`${baseUrl}/auth`, authRouter);
 app.use(`${baseUrl}/csrf`, csrfRouter);
 app.use(`${baseUrl}/game`, gameRouter);
-app.use(`${baseUrl}/bus`, busRouter);
+app.use(`${baseUrl}/business`, busRouter);
 
 app.listen(PORT, process.env.HOST as string, () =>
   console.log(

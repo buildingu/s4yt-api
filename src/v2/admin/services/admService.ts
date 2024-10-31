@@ -1,9 +1,15 @@
 import User from '../../models/user';
 import Question from '../../models/question';
+import Business from '../../models/business';
 
 export const retrieveAllUsers = async () => {
   const users = await User.find({});
   return users;
+};
+
+export const retrieveAllBusinesses = async () => {
+  const businesses = await Business.find({});
+  return businesses;
 };
 
 export const kickOutUser = async (userId: string) => {
@@ -21,6 +27,15 @@ export const banAUser = async (userId: string, duration: number) => {
   user.bannedUntil = new Date(Date.now() + duration);
   await user.save();
 };
+
+export const createBusiness = async (name: string, logo: string, description: string) => {
+  const business = new Business({
+    name,
+    logo,
+    description
+  });
+  await business.save();
+}
 
 export const editQuestion = async (questionId: string, questionData: any) => {
   const question = await Question.findByIdAndUpdate(questionId, questionData, { new: true });
