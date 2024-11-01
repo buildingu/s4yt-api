@@ -29,6 +29,7 @@ import authRouter from "./authentication/routes/authRoute";
 import csrfRouter from "./csrf/routes/csrfRoute";
 import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
+import busIslandRouter from "./business/routes/busIslandRoute";
 
 // Connect DB
 import connectDB from './configs/db';
@@ -107,6 +108,7 @@ app.use(`${baseUrl}/auth`, authRouter);
 app.use(`${baseUrl}/csrf`, csrfRouter);
 app.use(`${baseUrl}/game`, gameRouter);
 app.use(`${baseUrl}/business`, busRouter);
+app.use(`${baseUrl}/business-island`, busIslandRouter);
 
 app.listen(PORT, process.env.HOST as string, () =>
   console.log(
