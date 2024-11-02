@@ -193,10 +193,7 @@ export const sendBusinessesInfo = async () => {
     // Count the number of submitted answers to all business questions
     const results = [];
     for (const business of allBus) {
-      let numAnswers = 0;
-      for await (const questionId of business.questions) {
-        numAnswers += await Answer.countDocuments({ question: questionId, status: 'Submitted'});
-      }
+      const numAnswers = await Answer.countDocuments({ business: business.id, status: 'Submitted'});
 
       const busInfo = {
         id: business.id,
