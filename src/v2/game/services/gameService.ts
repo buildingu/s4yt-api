@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";
 import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
+import Answer from "../../models/answer";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -183,35 +184,67 @@ export const addQuizCoins = async (userId: String, coinCount: number) => {
 };
 
 export const sendBusinessesInfo = async () => {
-    try {
-      return null;
-    } catch (error: any) {
-      throw new Error(
-        "sendBusinessesInfo service error; getting businesses info:\n" +
-          error.message
-      );
+  try {
+    const allBus = await Business.find();
+    if (!allBus) {
+      throw new Error('Businesses not found');
     }
-  },
-  addMeetUp = async () => {
-    try {
-      return null;
-    } catch (error: any) {
-      throw new Error(
-        "addMeetUp service error; adding meetup answer to the user:\n" +
-          error.message
-      );
-    }
-  },
-  sendBusinessChallengeWinners = async () => {
-    try {
-      return null;
-    } catch (error: any) {
-      throw new Error(
-        "sendBusinessChallengeWinners service error; getting business challenge winners:\n" +
-          error.message
-      );
-    }
-  };
+  
+    return allBus;
+  } catch (error: any) {
+    throw new Error(
+      "sendBusinessesInfo service error; getting businesses info:\n" +
+        error.message
+    );
+  }
+};
+ 
+export const submitAnswerToQuestion = async (questionId: string, text: string) => {
+  const question = await Question.findById(questionId);
+  if (!question) {
+    throw new Error('Question not found');
+  }
+
+  const { business } = question;
+  if (!business) {
+    throw new Error('Question is not associated with any Business');
+  }
+
+  if (!text) {
+    throw new Error('Answer text is required');
+  }
+
+  const answer = new Answer({
+    question,
+    business,
+    text
+  });
+
+  await answer.save();
+  return answer;
+};
+  
+export const addMeetUp = async () => {
+  try {
+    return null;
+  } catch (error: any) {
+    throw new Error(
+      "addMeetUp service error; adding meetup answer to the user:\n" +
+        error.message
+    );
+  }
+};
+
+export const sendBusinessChallengeWinners = async () => {
+  try {
+    return null;
+  } catch (error: any) {
+    throw new Error(
+      "sendBusinessChallengeWinners service error; getting business challenge winners:\n" +
+        error.message
+    );
+  }
+};
 
   export const getEventResults = async () => {
     const allBus = await Business.find({});

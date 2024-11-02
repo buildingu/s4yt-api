@@ -106,35 +106,46 @@ export const addQuizCoins = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const sendBusinessesInfo = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
-    }
-  },
-  addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
-    }
-  },
-  sendBusinessChallengeWinners = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
-    }
-  };
+export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const allBusinesses = await gameService.sendBusinessesInfo();
+    res.json(allBusinesses);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const submitAnswerToQuestion = async (req: Request, res: Response) => {
+  try {
+    const { questionId } = req.params;
+    const { text } = req.body;
+
+    const answer = await gameService.submitAnswerToQuestion(questionId, text);
+    res.json(answer);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    return res.status(200).json({ message: "" });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const sendBusinessChallengeWinners = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    return res.status(200).json({ message: "" });
+  } catch (error: any) {
+    next(error);
+  }
+};
 
 export const displayEventResults = async (
   req: Request,

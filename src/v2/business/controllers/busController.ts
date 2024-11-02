@@ -46,8 +46,10 @@ export const getQuestions = async (req: Request, res: Response) => {
 
 export const getAnswers = async (req: Request, res: Response) => {
   try {
-    const { businessId } = req.params;
-    const answers = await businessService.getAnswersToBusinessQuestions(businessId);
+    console.log('test');
+
+    const { questionId } = req.params;
+    const answers = await businessService.getAnswersToQuestion(questionId);
     res.json(answers);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

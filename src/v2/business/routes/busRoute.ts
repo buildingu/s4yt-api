@@ -7,7 +7,7 @@ const router = Router();
 router.post('/update-info/:businessId', verifyAccessToken, businessController.updateBusinessInfo);
 router.post('/questions/:businessId', verifyAccessToken, businessController.addQuestion);
 router.put('/questions/:questionId', verifyAccessToken, businessController.updateQuestion);
-router.get('/questions', verifyAccessToken, businessController.getQuestions);
-router.get('/answers', verifyAccessToken, businessController.getAnswers);
+router.get('/questions/:businessId', verifyAccessToken, businessController.getQuestions);
+router.get('/answers/:questionId', verifyAccessToken, businessController.getAnswers);
 
 export default router;

@@ -2,6 +2,14 @@ import Business from '../../models/business';
 import Question from '../../models/question'; 
 import Answer from '../../models/answer';
 
+export const updateBusinessInfo = async (businessId: string, businessInfo: any) => {
+  const business = await Business.findByIdAndUpdate(businessId, businessInfo, { new: true });
+  if (!business) {
+    throw new Error('Business not found');
+  }
+  return business;
+};
+
 export const addQuestionToBusiness = async (businessId: string, questionData: any) => {
   const business = await Business.findById(businessId);
   if (!business) {
@@ -33,18 +41,10 @@ export const getBusinessQuestions = async (businessId: string) => {
   return questions;
 };
 
-export const updateBusinessInfo = async (businessId: string, businessInfo: any) => {
-  const business = await Business.findByIdAndUpdate(businessId, businessInfo, { new: true });
-  if (!business) {
-    throw new Error('Business not found');
-  }
-  return business;
-};
-
-export const getAnswersToBusinessQuestions = async (businessId: string) => {
-  const answers = await Answer.find({ business: businessId });
+export const getAnswersToQuestion = async (questionId: string) => {
+  const answers = await Answer.find({ question: questionId });
   if (!answers.length) {
-    throw new Error('No answers found for this business');
+    throw new Error('No answers found for this question');
   }
   return answers;
 };
