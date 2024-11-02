@@ -189,8 +189,28 @@ export const sendBusinessesInfo = async () => {
     if (!allBus) {
       throw new Error('Businesses not found');
     }
+
+    // Count the number of submitted answers to all business questions
+    const results = [];
+    for (const business of allBus) {
+      let numAnswers = 0;
+      for await (const questionId of business.questions) {
+        numAnswers += await Answer.countDocuments({ question: questionId, status: 'Submitted'});
+      }
+
+      const busInfo = {
+        id: business.id,
+        name: business.name,
+        logoS4yt: business.logoS4yt,
+        logoNormal: business.logoNormal,
+        description: business.description,
+        numAnswers
+      };
+
+      results.push(busInfo);
+    }
   
-    return allBus;
+    return results;
   } catch (error: any) {
     throw new Error(
       "sendBusinessesInfo service error; getting businesses info:\n" +
