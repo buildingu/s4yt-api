@@ -115,12 +115,26 @@ export const sendBusinessesInfo = async (req: Request, res: Response, next: Next
   }
 };
 
-export const submitAnswerToQuestion = async (req: Request, res: Response) => {
+export const saveAnswer = async (req: Request, res: Response) => {
   try {
     const { questionId } = req.params;
-    const { text } = req.body;
+    const { userId, text, submit } = req.body;
+    const boolSubmit = submit === 'true';
 
-    const answer = await gameService.submitAnswerToQuestion(questionId, text);
+    const answer = await gameService.saveAnswer(questionId, userId, text, boolSubmit);
+    res.json(answer);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateAnswer = async (req: Request, res: Response) => {
+  try {
+    const { answerId } = req.params;
+    const { text, submit } = req.body;
+    const boolSubmit = submit === 'true';
+
+    const answer = await gameService.updateAnswer(answerId, text, boolSubmit);
     res.json(answer);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

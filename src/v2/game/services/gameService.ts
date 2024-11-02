@@ -198,8 +198,8 @@ export const sendBusinessesInfo = async () => {
     );
   }
 };
- 
-export const submitAnswerToQuestion = async (questionId: string, text: string) => {
+
+export const saveAnswer = async (questionId: string, userId: string, text: string, submit: boolean = false) => {
   const question = await Question.findById(questionId);
   if (!question) {
     throw new Error('Question not found');
@@ -210,6 +210,11 @@ export const submitAnswerToQuestion = async (questionId: string, text: string) =
     throw new Error('Question is not associated with any Business');
   }
 
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
   if (!text) {
     throw new Error('Answer text is required');
   }
@@ -217,12 +222,28 @@ export const submitAnswerToQuestion = async (questionId: string, text: string) =
   const answer = new Answer({
     question,
     business,
-    text
+    user,
+    text,
+    status: submit ? 'Submitted' : 'Draft'
   });
 
   await answer.save();
   return answer;
-};
+} 
+
+export const updateAnswer = async (answerId: string, text: string, submit: boolean = false) => {
+  const updateData = {
+    text,
+    ...(submit && { status: 'Submitted'})
+  };
+
+  const answer = await Answer.findByIdAndUpdate(answerId, updateData, { new: true });
+  if (!answer) {
+    throw new Error('Answer not found');
+  }
+
+  return answer;
+}
   
 export const addMeetUp = async () => {
   try {
