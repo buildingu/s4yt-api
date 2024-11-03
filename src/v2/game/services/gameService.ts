@@ -201,6 +201,10 @@ export const sendBusinessesInfo = async () => {
         logoS4yt: business.logoS4yt,
         logoNormal: business.logoNormal,
         description: business.description,
+        meetStartTime: business.meetStartTime,
+        meetEndTime: business.meetEndTime,
+        attachment: business.attachment,
+        videoUrls: business.videoUrls,
         numAnswers
       };
 
