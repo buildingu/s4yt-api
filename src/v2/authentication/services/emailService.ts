@@ -8,7 +8,7 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
   const verificationUrl = `http://localhost:4000/api/v2/auth/email/verify?token=${verificationToken}`;
   const msg = {
     to,
-    from: `no-reply@${process.env.EMAIL_DOMAIN}`,
+    from: process.env.FROM_EMAIL as string,
     subject: 'Please Verify Your Email Address',
     html: `<p>To verify your email address, please click the link below:</p><a href="${verificationUrl}">Verify Email</a>`,
   };
@@ -26,7 +26,7 @@ export const sendResetPasswordEmail = async (to: string, resetToken: string) => 
   const resetUrl = `http://localhost:4000/api/v2/auth/password?token=${resetToken}`;
   const msg = {
     to,
-    from: `no-reply@${process.env.EMAIL_DOMAIN}`,
+    from: process.env.FROM_EMAIL as string,
     subject: 'Reset Your Password',
     html: `<p>To reset your password, please click the link below:</p><a href="${resetUrl}">Reset Password</a>`,
   };

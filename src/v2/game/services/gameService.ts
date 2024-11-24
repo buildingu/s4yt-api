@@ -266,8 +266,24 @@ export const updateAnswer = async (answerId: string, text: string, submit: boole
   return answer;
 }
   
-export const addMeetUp = async () => {
+export const addMeetUp = async (businessId: string, userId: string, rsvpType: string) => {
   try {
+    const business = await Business.findById(businessId);
+    if (!business) {
+      throw new Error('Business not found');
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (rsvpType === 'Confirm') {
+      // TODO: "user" is giving an Error
+      //business.meetMembersConfirmed.push(user);
+      await business.save();
+    }
+
     return null;
   } catch (error: any) {
     throw new Error(

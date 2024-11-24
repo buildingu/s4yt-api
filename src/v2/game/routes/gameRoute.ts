@@ -23,7 +23,7 @@ router.post('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.veri
 // router.post("/player/coins/quiz", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addQuizCoins); // This is for the coins earned from submitting the sponsor quiz (you can also delete this route and just make one route for adding coins).
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
-router.post("/businesses/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
+router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
 
 router.post("/questions/:questionId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);

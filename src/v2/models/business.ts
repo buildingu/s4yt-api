@@ -7,6 +7,8 @@ const businessSchema = new mongoose.Schema({
   description: { type: String, default: null },
   meetStartTime: { type: Date, default: null },
   meetEndTime: { type: Date, default: null },
+  meetMembersConfirmed: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  meetMembersInterested: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   attachment: { type: String, default: null },
   videoUrls: [{ type: String, default: null }],
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }]

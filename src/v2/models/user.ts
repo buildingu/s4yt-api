@@ -5,7 +5,7 @@ const userSchema = new Schema<User & Document>({
   id: { type: String, default: null },
   city_id: { type: Number, default: null },
   country_id: { type: Number, default: null },
-  education_id: { type: Number, default: null },
+  // education_id: { type: Number, default: null },
   email: { type: String, required: true, unique: true },
   grade_id: { type: Number, default: null },
   province_state: { type: Number, default: null },

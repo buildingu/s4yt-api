@@ -85,15 +85,15 @@ export const register = async (userData: any) => {
       password: hashedPassword,
       role: userData.role || 'Player',
       coin: userData.coin || 50,
-      referer_Code: userData.referer_Code || refererCode, 
-      used_refer_code: userData.used_refer_code || false,
+      referer_Code: userData.refererCode || refererCode, 
+      used_refer_code: userData.usedReferCode || false,
       isEmailVerified: true,
       emailVerificationToken: crypto.randomBytes(20).toString("hex"),
     });
 
     await newUser.save();
 
-    // sendVerificationEmail(newUser.email, newUser.emailVerificationToken);
+    sendVerificationEmail(newUser.email, newUser.emailVerificationToken);
 
     return newUser;
   } catch (error: any) {

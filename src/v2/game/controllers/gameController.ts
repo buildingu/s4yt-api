@@ -143,7 +143,11 @@ export const updateAnswer = async (req: Request, res: Response) => {
 
 export const addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    return res.status(200).json({ message: "" });
+    const { businessId } = req.params;
+    const { userId, rsvpType } = req.body;
+
+    const addResult = await gameService.addMeetUp(businessId, userId, rsvpType);
+    return res.status(200).json({ message: "Player added to meeting" });
   } catch (error: any) {
     next(error);
   }
