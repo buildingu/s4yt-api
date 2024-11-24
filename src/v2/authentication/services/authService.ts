@@ -93,7 +93,9 @@ export const register = async (userData: any) => {
 
     await newUser.save();
 
-    sendVerificationEmail(newUser.email, newUser.emailVerificationToken);
+    if (process.env.SEND_EMAILS) {
+      sendVerificationEmail(newUser.email, newUser.emailVerificationToken);
+    }
 
     return newUser;
   } catch (error: any) {
