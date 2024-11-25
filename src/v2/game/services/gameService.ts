@@ -249,7 +249,17 @@ export const saveAnswer = async (questionId: string, userId: string, text: strin
   });
 
   await answer.save();
-  return answer;
+
+  const responseObj = {
+    _id: answer.id,
+    question: question.id,
+    business,
+    user: user._id,
+    text,
+    status: answer.status
+  }
+
+  return responseObj;
 } 
 
 export const updateAnswer = async (answerId: string, text: string, submit: boolean = false) => {
@@ -263,7 +273,12 @@ export const updateAnswer = async (answerId: string, text: string, submit: boole
     throw new Error('Answer not found');
   }
 
-  return answer;
+  const responseObj = {
+    ...answer.toObject(),
+    __v: undefined
+  }
+
+  return responseObj;
 }
   
 export const addMeetUp = async (businessId: string, userId: string, rsvpType: string) => {
