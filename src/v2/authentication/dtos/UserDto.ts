@@ -1,12 +1,15 @@
-export interface RegisterDto {
-  email: string;
-  password: string;
-  username: string;
+import { Request } from 'express';
+import User from '../../typings/User';
+
+export interface RegisterRequestDto extends Request {
+  body: User;
 }
 
-export interface LoginDto {
-  email: string;
-  password: string;
+export interface LoginRequestDto extends Request {
+  body: {
+    email: string;
+    password: string;
+  }
 }
 
 export interface EmailVerificationDto {

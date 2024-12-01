@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction,  } from "express";
-import RegisterRequestDto from "../dtos/RegisterRequestDto";
+import { RegisterRequestDto, LoginRequestDto } from "../dtos/UserDto";
 import { CustomJwtPayload } from '../../typings/express/Request';
 
 import * as authService from "../services/authService";
@@ -73,7 +73,7 @@ export const emailVerify = async (
 };
 
 export const login = async (
-  req: Request,
+  req: LoginRequestDto,
   res: Response,
   next: NextFunction
 ) => {

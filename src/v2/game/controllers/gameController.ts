@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
 import { getInstructionsForUser } from "../services/gameService";
 import mongoose from "mongoose";
+import { SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
 
 export const addSponsor = async (req: Request, res: Response) => {
   try {
@@ -115,7 +116,7 @@ export const sendBusinessesInfo = async (req: Request, res: Response, next: Next
   }
 };
 
-export const saveAnswer = async (req: Request, res: Response) => {
+export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
     const { questionId } = req.params;
     const { userId, text, submit } = req.body;
@@ -128,7 +129,7 @@ export const saveAnswer = async (req: Request, res: Response) => {
   }
 };
 
-export const updateAnswer = async (req: Request, res: Response) => {
+export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) => {
   try {
     const { answerId } = req.params;
     const { text, submit } = req.body;
