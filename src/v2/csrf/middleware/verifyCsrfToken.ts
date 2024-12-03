@@ -9,8 +9,8 @@ const verifyCsrfToken = async (
   const storedToken = req.cookies["XSRF-TOKEN"],
     receivedToken = Array.isArray(req.headers["x-xsrf-token"]) ? req.headers["x-xsrf-token"][0] : req.headers["x-xsrf-token"];
 
-  console.log("Stored CSRF token:", storedToken);
-  console.log("Received CSRF token:", receivedToken);
+  //console.log("Stored CSRF token:", storedToken);
+  //console.log("Received CSRF token:", receivedToken);
   if (!storedToken || !receivedToken) {
     return res.status(403).json({
       ERROR: "CSRF token is missing.",

@@ -1,5 +1,12 @@
 import { Request, Response, NextFunction,  } from "express";
-import { RegisterRequestDto, LoginRequestDto } from "../dtos/UserDto";
+import {
+  RegisterRequestDto,
+  LoginRequestDto,
+  EmailVerificationRequestDto,
+  UpdatePasswordRequestDto,
+  GetUserRequestDto,
+  ResetPasswordRequestDto
+} from "../dtos/AuthDto";
 import { CustomJwtPayload } from '../../typings/express/Request';
 
 import * as authService from "../services/authService";
@@ -29,7 +36,7 @@ export const getUsers = async (
 };
 
 export const getUser = async (
-  req: Request,
+  req: GetUserRequestDto,
   res: Response,
   next: NextFunction
 ) => {
@@ -59,7 +66,7 @@ export const register = async (
 };
 
 export const emailVerify = async (
-  req: Request,
+  req: EmailVerificationRequestDto,
   res: Response,
   next: NextFunction
 ) => {
@@ -96,20 +103,23 @@ export const login = async (
 };
 
 export const updatePassword = async (
-  req: Request,
+  req: UpdatePasswordRequestDto,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
+    const { oldPassword, newPassword } = req.body;
 
-    const { newPassword } = req.body;
+    if (!oldPassword) {
+      return res.status(400).json({ message: "Old password is missing." });
+    }
 
     if (!newPassword) {
       return res.status(400).json({ message: "New password is missing." });
     }
 
-    await authService.updatePassword(userId, newPassword);
+    await authService.updatePassword(userId, oldPassword, newPassword);
 
     res.status(200).json({ message: "Password updated successfully. Please log in again." });
 
@@ -139,7 +149,7 @@ export const sendResetPasswordEmail = async (
 };
 
 export const resetPassword = async (
-  req: Request,
+  req: ResetPasswordRequestDto,
   res: Response,
   next: NextFunction
 ) => {

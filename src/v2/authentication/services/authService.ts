@@ -173,18 +173,20 @@ export const resetPassword = async (token: string, newPassword: string) => {
   await user.save();
 };
 
-export const updatePassword = async (userId: string, newPassword: string) => {
+export const updatePassword = async (userId: string, oldPassword: string, newPassword: string) => {
   try {
     const user = await UserModel.findById(userId);
     if (!user) {
       throw new Error("User not found.");
     }
 
-    const hashedPassword = await hash(newPassword, 12);
-    user.password = hashedPassword;
-    
-    await user.save();
+    const isMatch = await compare(oldPassword, user.password);
+    if (!isMatch) {
+      throw new Error("Invalid credentials");
+    }
 
+    const hashedNewPassword = await hash(newPassword, 12);
+    user.password = hashedNewPassword;
     user.tokenVersion = user.tokenVersion ? user.tokenVersion + 1 : 1;
     await user.save();
 

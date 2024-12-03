@@ -16,7 +16,7 @@ router.get("/email/verify", verifyUser, authController.emailVerify); // Sends th
 router.post("/login", verifyCsrfToken, verifyUser, authController.login);
 router.post("/email/reset", verifyCsrfToken, verifyUser, authController.sendResetPasswordEmail); // Sends reset password email when they forget (the reset password email verifies if they're actually a user and the reset password email would also have a button to forward them to /password-reset on the front-end, not sure how to do this) You can also remove this if you want and just verify them with /password and I would also have to input their email with /password I don't know.
 router.patch("/password", verifyCsrfToken, verifyUser, authController.resetPassword); // Resets password if they forgot it on the password reset page.
-router.post("/player/password", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.updatePassword); // Updates their password when they're logged in (this is located in the profile and you should log them out when it's a success).
+router.patch("/player/password", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.updatePassword); // Updates their password when they're logged in (this is located in the profile and you should log them out when it's a success).
 
 router.patch("/player/profile", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.updateProfile); // Updates everything on their profile expect the password, if they update their clear their token.
 router.get("/player/referrals", verifyTokens.verifyAccessToken, authController.sendReferrals); // Gets their referral history, so anyone who used their referral.
