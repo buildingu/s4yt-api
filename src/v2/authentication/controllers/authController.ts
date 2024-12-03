@@ -66,7 +66,9 @@ export const emailVerify = async (
   try {
     const token = req.query.token;
     await authService.verifyEmail(token as string);
-    res.redirect("/login");
+    return res.status(200).json({
+      message: "Email was successfully verified."
+    });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
@@ -111,7 +113,7 @@ export const updatePassword = async (
 
     res.status(200).json({ message: "Password updated successfully. Please log in again." });
 
-    res.redirect("/logout");
+    //res.redirect("/logout");
   } catch (error: any) {
     next(error);
   }

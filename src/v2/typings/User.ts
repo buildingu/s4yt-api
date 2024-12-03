@@ -5,7 +5,7 @@ export default interface User {
   education_id?: number;
   province_state?: number | null;
   email: string;
-  grade_id?: number;
+  grade?: number;
   instagram_handle?: string | null;
   name?: string;
   password: string;

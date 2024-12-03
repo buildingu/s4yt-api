@@ -11,7 +11,7 @@ router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTr
 
 router.post('/sponsors', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addSponsor);
 router.post('/sponsors/:sponsorId', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMultipleChoice)
-router.put('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
+router.patch('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
 router.get('/sponsors', verifyTokens.verifyAccessToken, gameController.getSponsors);
 // Send the info about the sponsors, so you will send us the logos too for all of this, which would be a path to the image, can be store here or some image hosting place.
 
@@ -27,7 +27,7 @@ router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTo
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
 
 router.post("/questions/:questionId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);
-router.put("/answers/:answerId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateAnswer);
+router.patch("/answers/:answerId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateAnswer);
 
 router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleInfo); // Sends us the raffle items and stuff.
 router.get("/raffle/coins", verifyTokens.verifyAccessToken, gameController.sendRaffleIndicatorCoins); // This gives use the gold and sliver coins, which is the gold coin means someone placed a coin(s) on that raffle item and the sliver coins means none.

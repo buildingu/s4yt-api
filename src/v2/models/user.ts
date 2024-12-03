@@ -7,7 +7,7 @@ const userSchema = new Schema<User & Document>({
   country_id: { type: Number, default: null },
   // education_id: { type: Number, default: null },
   email: { type: String, required: true, unique: true },
-  grade_id: { type: Number, default: null },
+  grade: { type: Number, default: null },
   province_state: { type: Number, default: null },
   instagram_handle: { type: String, default: null },
   name: { type: String, default: null },

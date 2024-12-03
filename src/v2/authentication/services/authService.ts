@@ -87,13 +87,13 @@ export const register = async (userData: any) => {
       coin: userData.coin || 50,
       referer_Code: userData.refererCode || refererCode, 
       used_refer_code: userData.usedReferCode || false,
-      isEmailVerified: true,
+      isEmailVerified: false,
       emailVerificationToken: crypto.randomBytes(20).toString("hex"),
     });
 
     await newUser.save();
 
-    if (process.env.SEND_EMAILS) {
+    if (process.env.SEND_EMAILS === 'true') {
       sendVerificationEmail(newUser.email, newUser.emailVerificationToken);
     }
 
@@ -141,7 +141,7 @@ export const verifyEmail = async (token: string): Promise<User | null> => {
     return null; 
   }
   user.isEmailVerified = true;
-  user.emailVerificationToken = undefined!;
+  user.emailVerificationToken = '';
   await user.save();
   return user;
 };
@@ -156,7 +156,9 @@ export const initiatePasswordReset = async (email: string) => {
   user.resetPasswordToken = resetToken;
   await user.save();
 
-  await sendResetPasswordEmail(email, resetToken);
+  if (process.env.SEND_EMAILS === 'true') {
+    await sendResetPasswordEmail(email, resetToken);
+  }
 };
 
 export const resetPassword = async (token: string, newPassword: string) => {
@@ -206,7 +208,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     if (profileUpdates.hasOwnProperty('country_id')) user.country_id = profileUpdates.country_id;
     if (profileUpdates.hasOwnProperty('education_id')) user.education_id = profileUpdates.education_id;
     if (profileUpdates.hasOwnProperty('province_state')) user.province_state = profileUpdates.province_state;
-    if (profileUpdates.hasOwnProperty('grade_id')) user.grade_id = profileUpdates.grade_id;
+    if (profileUpdates.hasOwnProperty('grade')) user.grade = profileUpdates.grade;
     if (profileUpdates.hasOwnProperty('instagram_handle')) user.instagram_handle = profileUpdates.instagram_handle;
     if (profileUpdates.hasOwnProperty('school')) user.school = profileUpdates.school;
 
