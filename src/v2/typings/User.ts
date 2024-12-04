@@ -1,17 +1,26 @@
-// Something like this.
 export default interface User {
   id: string;
-  city_id: number | null;
-  country_id: number;
-  education_id: number;
+  cityId?: number | null;
+  countryId?: number;
+  provinceState?: number | null;
   email: string;
-  grade_id: number;
-  instagram_handle: string | null;
-  name: string;
+  grade?: number;
+  instagramHandle?: string | null;
+  name?: string;
   password: string;
-  quiz_submitted: number;
-  referral_link: string;
-  region_id: number | null;
-  roles: string[];
-  school: string | null;
+  quizSubmitted: number;
+  referralLink: string;
+  regionId: number | null;
+  school?: string | null;
+  isEmailVerified: boolean;
+  emailVerificationToken: string;
+  resetPasswordToken: string;
+  tokenVersion: number;
+  role: 'Admin' | 'Business' | 'Player';
+  refererCode: string;
+  usedReferCode: boolean;
+  kicked?: boolean; 
+  bannedUntil?: Date;
+  coins: number;
+  showInstructions: boolean;
 }

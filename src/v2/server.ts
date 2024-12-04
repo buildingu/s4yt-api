@@ -24,15 +24,23 @@ import morgan from "morgan";
 
 import lowercaseEmails from "./middleware/lowercaseEmails";
 
+import adminRouter from "./admin/routes/admRoute";
 import authRouter from "./authentication/routes/authRoute";
-// import csrfRouter from "./csrf/routes/csrfRoute";
-// import gameRouter from "./game/routes/gameRoute";
+import csrfRouter from "./csrf/routes/csrfRoute";
+import gameRouter from "./game/routes/gameRoute";
+import busRouter from "./business/routes/busRoute";
+
+// Connect DB
+import connectDB from './configs/db';
+import { setupLogger } from "./middleware/logger";
 
 const app = express();
 dotenv.config();
 
+connectDB();
+
 const PORT = Number(process.env.PORT) || 4000,
-  baseUrl = "/api/v1";
+  baseUrl = "/api/v2";
 
 // (async () => {
 //   let retries = 5;
@@ -84,20 +92,17 @@ app.use((req, res, next) => {
 });
 
 // Request logger.
-morgan.token("all-headers", (req) => {
-  return JSON.stringify(req.headers, null, 2);
-});
-app.use(
-  morgan(":method :url :status :response-time ms \n headers: :all-headers")
-);
+setupLogger(app);
 
 // *Custom*
 app.use(lowercaseEmails);
 
 // *Router*
+app.use(`${baseUrl}/admin`, adminRouter);
 app.use(`${baseUrl}/auth`, authRouter);
-// app.use(`${baseUrl}/csrf`, csrfRouter);
-// app.use(`${baseUrl}/game`, authRouter);
+app.use(`${baseUrl}/csrf`, csrfRouter);
+app.use(`${baseUrl}/game`, gameRouter);
+app.use(`${baseUrl}/business`, busRouter);
 
 app.listen(PORT, process.env.HOST as string, () =>
   console.log(
