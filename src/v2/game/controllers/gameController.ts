@@ -123,7 +123,7 @@ export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
     const boolSubmit = submit === 'true';
 
     const answer = await gameService.saveAnswer(questionId, userId, text, boolSubmit);
-    res.json(answer);
+    res.status(200).json(answer);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

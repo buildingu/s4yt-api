@@ -54,7 +54,7 @@ export const createBusiness = async (req: CreateBusinessRequestDto, res: Respons
 export const getAllBusinesses = async (req: Request, res: Response) => {
   try {
     const businesses = await superAdminService.retrieveAllBusinesses();
-    res.json(businesses);
+    res.status(200).json(businesses);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

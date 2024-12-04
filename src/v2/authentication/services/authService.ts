@@ -85,8 +85,8 @@ export const register = async (userData: any) => {
       password: hashedPassword,
       role: userData.role || 'Player',
       coin: userData.coin || 50,
-      referer_Code: userData.refererCode || refererCode, 
-      used_refer_code: userData.usedReferCode || false,
+      refererCode: userData.refererCode || refererCode, 
+      usedReferCode: userData.usedReferCode || false,
       isEmailVerified: false,
       emailVerificationToken: crypto.randomBytes(20).toString("hex"),
     });
@@ -141,7 +141,7 @@ export const verifyEmail = async (token: string): Promise<User | null> => {
     return null; 
   }
   user.isEmailVerified = true;
-  user.emailVerificationToken = '';
+  user.emailVerificationToken = undefined!;
   await user.save();
   return user;
 };
@@ -206,12 +206,11 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
 
     if (profileUpdates.hasOwnProperty('name')) user.name = profileUpdates.name;
     if (profileUpdates.hasOwnProperty('email')) user.email = profileUpdates.email;
-    if (profileUpdates.hasOwnProperty('city_id')) user.city_id = profileUpdates.city_id;
-    if (profileUpdates.hasOwnProperty('country_id')) user.country_id = profileUpdates.country_id;
-    if (profileUpdates.hasOwnProperty('education_id')) user.education_id = profileUpdates.education_id;
-    if (profileUpdates.hasOwnProperty('province_state')) user.province_state = profileUpdates.province_state;
+    if (profileUpdates.hasOwnProperty('cityId')) user.cityId = profileUpdates.cityId;
+    if (profileUpdates.hasOwnProperty('countryId')) user.countryId = profileUpdates.countryId;
+    if (profileUpdates.hasOwnProperty('provinceState')) user.provinceState = profileUpdates.provinceState;
     if (profileUpdates.hasOwnProperty('grade')) user.grade = profileUpdates.grade;
-    if (profileUpdates.hasOwnProperty('instagram_handle')) user.instagram_handle = profileUpdates.instagram_handle;
+    if (profileUpdates.hasOwnProperty('instagramHandle')) user.instagramHandle = profileUpdates.instagramHandle;
     if (profileUpdates.hasOwnProperty('school')) user.school = profileUpdates.school;
 
     if (user.isModified('email')) {

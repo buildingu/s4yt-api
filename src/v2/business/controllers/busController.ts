@@ -49,7 +49,7 @@ export const getAnswers = async (req: GetAnswersRequestDto, res: Response) => {
   try {
     const { questionId } = req.params;
     const answers = await businessService.getAnswersToQuestion(questionId);
-    res.json(answers);
+    res.status(200).json(answers);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
