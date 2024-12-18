@@ -66,7 +66,13 @@ export const validatePassword = (password: string) => {
 
 export const register = async (userData: any) => {
   try {
-    const existingUser = await getUser(userData.email); // TODO: Check if email is valid first
+    const emailRegEx = new RegExp("^[^\s@]+@[^\s@]+\.[^\s@]+$");
+
+    if (!emailRegEx.test(userData.email)) {
+      throw new Error("Invalid email or password."); // TODO: Handle errors without throwing
+    }
+
+    const existingUser = await getUser(userData.email);
     if (existingUser) {
       throw new Error("Invalid email or password.");
     }

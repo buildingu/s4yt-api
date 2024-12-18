@@ -8,7 +8,7 @@ const userSchema = new Schema<User & Document>({
   email: { type: String, required: true, unique: true },
   grade: { type: Number, default: null },
   province_state: { type: Number, default: null },
-  name: { type: String, default: null }, // TODO: set min and max length
+  name: { type: String, default: null, minlength: 2, maxlength: 128 },
   password: { type: String, required: true },
   quiz_submitted: { type: Number, default: null  },
   referral_link: { type: String, default: null },
@@ -30,7 +30,10 @@ const userSchema = new Schema<User & Document>({
   banned_until: { type: Date, default: null },
   show_instructions: { type: Boolean, default: true },
 }, {
-  timestamps: true, 
+  timestamps: {
+    createdAt: 'created_at', // Use `created_at` to store the created date
+    updatedAt: 'updated_at' // and `updated_at` to store the last updated date
+  }
 });
 
 const UserModel = model<User & Document>('User', userSchema);
