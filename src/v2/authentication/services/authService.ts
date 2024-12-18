@@ -66,9 +66,9 @@ export const validatePassword = (password: string) => {
 
 export const register = async (userData: any) => {
   try {
-    const existingUser = await getUser(userData.email);
+    const existingUser = await getUser(userData.email); // TODO: Check if email is valid first
     if (existingUser) {
-      throw new Error("User already exists with this email.");
+      throw new Error("Invalid email or password.");
     }
 
     const { valid, message } = validatePassword(userData.password);
@@ -94,7 +94,7 @@ export const register = async (userData: any) => {
     await newUser.save();
 
     if (process.env.SEND_EMAILS === 'true') {
-      sendVerificationEmail(newUser.email, newUser.emailVerificationToken);
+      sendVerificationEmail(newUser.email, newUser.email_verification_token);
     }
 
     return newUser;
@@ -109,7 +109,7 @@ export const login = async (loginData: { email: string; password: string }) => {
     const user = await UserModel.findOne({ email: loginData.email });
     if (!user) {
       throw new Error("User does not exist");
-    } else if (!user.isEmailVerified) {
+    } else if (!user.is_email_verified) {
       throw new Error(
         "Email is not verified. Please check your email to verify your account."
       );
@@ -125,11 +125,13 @@ export const login = async (loginData: { email: string; password: string }) => {
       password: undefined,
     };
 
-    const token = sign({ userId: user._id }, process.env.JWT_SECRET!, {
+    const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
 
-    return { user: userWithoutPassword, token };
+    const csrfToken = crypto.randomBytes(32).toString("hex");
+
+    return { user: userWithoutPassword, jwtToken, csrfToken };
   } catch (error: any) {
     throw new Error("login service error; " + error.message);
   }
@@ -140,8 +142,8 @@ export const verifyEmail = async (token: string): Promise<User | null> => {
   if (!user) {
     return null; 
   }
-  user.isEmailVerified = true;
-  user.emailVerificationToken = undefined!;
+  user.is_email_verified = true;
+  user.email_verification_token = undefined!;
   await user.save();
   return user;
 };
@@ -153,7 +155,7 @@ export const initiatePasswordReset = async (email: string) => {
   }
   
   const resetToken = crypto.randomBytes(20).toString('hex');
-  user.resetPasswordToken = resetToken;
+  user.reset_password_token = resetToken;
   await user.save();
 
   if (process.env.SEND_EMAILS === 'true') {
@@ -169,7 +171,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
 
   const hashedPassword = await hash(newPassword, 12);
   user.password = hashedPassword;
-  user.resetPasswordToken = undefined!;
+  user.reset_password_token = undefined!;
   await user.save();
 };
 
@@ -187,7 +189,7 @@ export const updatePassword = async (userId: string, oldPassword: string, newPas
 
     const hashedNewPassword = await hash(newPassword, 12);
     user.password = hashedNewPassword;
-    user.tokenVersion = user.tokenVersion ? user.tokenVersion + 1 : 1;
+    user.token_version = user.token_version ? user.token_version + 1 : 1;
     await user.save();
 
     return true;
@@ -206,11 +208,10 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
 
     if (profileUpdates.hasOwnProperty('name')) user.name = profileUpdates.name;
     if (profileUpdates.hasOwnProperty('email')) user.email = profileUpdates.email;
-    if (profileUpdates.hasOwnProperty('cityId')) user.cityId = profileUpdates.cityId;
-    if (profileUpdates.hasOwnProperty('countryId')) user.countryId = profileUpdates.countryId;
-    if (profileUpdates.hasOwnProperty('provinceState')) user.provinceState = profileUpdates.provinceState;
+    if (profileUpdates.hasOwnProperty('cityId')) user.city_id = profileUpdates.city_id;
+    if (profileUpdates.hasOwnProperty('countryId')) user.country_id = profileUpdates.country_id;
+    if (profileUpdates.hasOwnProperty('provinceState')) user.province_state = profileUpdates.province_state;
     if (profileUpdates.hasOwnProperty('grade')) user.grade = profileUpdates.grade;
-    if (profileUpdates.hasOwnProperty('instagramHandle')) user.instagramHandle = profileUpdates.instagramHandle;
     if (profileUpdates.hasOwnProperty('school')) user.school = profileUpdates.school;
 
     if (user.isModified('email')) {
