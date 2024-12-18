@@ -88,14 +88,15 @@ export const login = async (
 ) => {
   try {
     const { email, password } = req.body;
-    const { user, token } = await authService.login({ email, password });
+    const { user, jwtToken, csrfToken } = await authService.login({ email, password });
 
-    res.setHeader("Authorization", "Bearer " + token);
+    res.setHeader("Authorization", "Bearer " + jwtToken);
 
     return res.status(200).json({
       message: "User is successfully authenticated.",
       user,
-      token
+      csrfToken,
+      jwtToken
     });
   } catch (error: any) {
     res.status(401).json({ message: error.message });

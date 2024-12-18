@@ -24,7 +24,7 @@ export const banAUser = async (userId: string, duration: number) => {
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');
 
-  user.bannedUntil = new Date(Date.now() + duration);
+  user.banned_until = new Date(Date.now() + duration);
   await user.save();
 };
 

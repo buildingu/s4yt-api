@@ -1,5 +1,5 @@
 export interface BusinessInfo {
   name: string;
-  logos4yt: string;
+  logoS4yt: string;
   description: string;
 }

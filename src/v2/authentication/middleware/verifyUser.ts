@@ -48,7 +48,7 @@ const verifyUser = async (
       if (!user) {
         return res.status(404).json({ message: "User not found." });
       }
-      if (!user.isEmailVerified) {
+      if (!user.is_email_verified) {
         return res
           .status(401)
           .json({ message: "Please verify your email to log in." });
