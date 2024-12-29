@@ -3,16 +3,18 @@ import User from "../typings/User";
 
 const userSchema = new Schema<User & Document>({
   id: { type: String, default: null },
-  city_id: { type: Number, default: null },
-  country_id: { type: Number, default: null },
+  city: { type: String, default: null },
+  country: { type: String, default: null },
   email: { type: String, required: true, unique: true },
-  grade: { type: Number, default: null },
-  province_state: { type: Number, default: null },
+  education: {
+    type: String,
+    enum: ['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Other']
+  },
   name: { type: String, default: null, minlength: 2, maxlength: 128 },
   password: { type: String, required: true },
   quiz_submitted: { type: Number, default: null  },
   referral_link: { type: String, default: null },
-  region_id: { type: Number, default: null },
+  region: { type: String, default: null },
   school: { type: String, default: null },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },

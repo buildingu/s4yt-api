@@ -341,8 +341,8 @@ export const sendBusinessChallengeWinners = async () => {
             place: prize.place,
             amount: prize.amount,
             winner_name: user.name,
-            winner_province_state: user.province_state,
-            winner_country: user.country_id,
+            winner_region: user.region,
+            winner_country: user.country,
           };
           businessResults.push(award);
         }

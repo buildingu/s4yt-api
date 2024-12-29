@@ -66,15 +66,15 @@ export const validatePassword = (password: string) => {
 
 export const register = async (userData: any) => {
   try {
-    const emailRegEx = new RegExp("^[^\s@]+@[^\s@]+\.[^\s@]+$");
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegEx.test(userData.email)) {
-      throw new Error("Invalid email or password."); // TODO: Handle errors without throwing
+    if (!emailPattern.test(userData.email)) {
+      throw new Error("Invalid email or password."); 
     }
 
     const existingUser = await getUser(userData.email);
     if (existingUser) {
-      throw new Error("Invalid email or password.");
+      throw new Error("Invalid email or password."); // TODO: Handle errors without throwing
     }
 
     const { valid, message } = validatePassword(userData.password);
@@ -214,10 +214,10 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
 
     if (profileUpdates.hasOwnProperty('name')) user.name = profileUpdates.name;
     if (profileUpdates.hasOwnProperty('email')) user.email = profileUpdates.email;
-    if (profileUpdates.hasOwnProperty('cityId')) user.city_id = profileUpdates.city_id;
-    if (profileUpdates.hasOwnProperty('countryId')) user.country_id = profileUpdates.country_id;
-    if (profileUpdates.hasOwnProperty('provinceState')) user.province_state = profileUpdates.province_state;
-    if (profileUpdates.hasOwnProperty('grade')) user.grade = profileUpdates.grade;
+    if (profileUpdates.hasOwnProperty('city')) user.city = profileUpdates.city;
+    if (profileUpdates.hasOwnProperty('country')) user.country = profileUpdates.country;
+    if (profileUpdates.hasOwnProperty('region')) user.region = profileUpdates.region;
+    if (profileUpdates.hasOwnProperty('education')) user.education = profileUpdates.education;
     if (profileUpdates.hasOwnProperty('school')) user.school = profileUpdates.school;
 
     if (user.isModified('email')) {

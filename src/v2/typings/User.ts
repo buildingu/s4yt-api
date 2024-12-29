@@ -1,15 +1,14 @@
 export default interface User {
   id: string;
-  city_id?: number | null;
-  country_id?: number;
-  province_state?: number | null;
+  city?: string | null;
+  country?: string;
   email: string;
-  grade?: number;
+  education?: string;
   name?: string;
   password: string;
   quiz_submitted: number;
   referral_link: string;
-  region_id: number | null;
+  region?: string | null;
   school?: string | null;
   is_email_verified: boolean;
   email_verification_token: string;

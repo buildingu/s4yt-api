@@ -8,7 +8,16 @@ export interface GetUserRequestDto extends Request {
 }
 
 export interface RegisterRequestDto extends Request {
-  body: User;
+  body: {
+    name: string;
+    email: string;
+    password: string;
+    education: string;
+    school: string;
+    country: string;
+    region: string;
+    city: string;
+  }
 }
 
 export interface LoginRequestDto extends Request {
