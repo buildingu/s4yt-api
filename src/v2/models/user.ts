@@ -5,7 +5,12 @@ const userSchema = new Schema<User & Document>({
   id: { type: String, default: null },
   city: { type: String, default: null },
   country: { type: String, default: null },
-  email: { type: String, required: true, unique: true },
+  email: {
+    type: String,
+    lowercase: true,
+    required: true,
+    unique: true
+  },
   education: {
     type: String,
     enum: ['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Other']

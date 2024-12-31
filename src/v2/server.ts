@@ -32,7 +32,7 @@ import busRouter from "./business/routes/busRoute";
 
 // Connect DB
 import connectDB from './configs/db';
-import { setupLogger } from "./middleware/logger";
+import { setupLogger } from "./utils/logger";
 
 const app = express();
 dotenv.config();
