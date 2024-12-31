@@ -6,15 +6,7 @@ export interface GetUserRequestDto extends Request {
     email: string;
   }
 }
-
 /**
- *  // Use this to validate the email because that is what I use on the front.
- *  if (
- *   !/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
- *     email
- *   )
- * )
- * 
  * There is also be password_confirmation coming, just check if the password and password_confirmation equals.
  */
 export interface RegisterRequestDto extends Request {
