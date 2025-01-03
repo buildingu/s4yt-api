@@ -56,8 +56,7 @@ export const register = async (
   try {
     const newUser = await authService.register(req.body);
     return res.status(201).json({
-      message: "User was successfully registered.",
-      user: newUser, // TODO
+      message: "User was successfully registered. Verification email was sent successfully."
     });
   } catch (error: unknown) {
     next(error);
@@ -88,7 +87,7 @@ export const resendVerificationEmail = async (
   try {
     await authService.resendVerificationEmail();
     return res.status(200).json({
-      message: "Email was sent successfully."
+      message: "Verification email was sent successfully."
     });
   } catch (error: any) {
     next(error);

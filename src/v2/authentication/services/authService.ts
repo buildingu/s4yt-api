@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
 import { HttpError, ServiceError } from "../../middleware/errorHandler";
+import UserCredentials from "../../typings/UserCredentials";
 const { sign } = jwt;
 
 const emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -112,9 +113,18 @@ export const register = async (userData: any) => {
   }
 };
 
-export const resendVerificationEmail = () => {
-  //const user = User.findOne();
-  //sendVerificationEmail(newUser.email, newUser.email_verification_token);
+export const resendVerificationEmail = async () => {
+  try {
+    const user = await UserModel.findOne();
+    if (!user) {
+      throw new ServiceError("User does not exist.", 401);
+    } else if (!user.email_verification_token) {
+      throw new ServiceError("User is already verified.", 204);
+    }
+    sendVerificationEmail(user.email, user.email_verification_token);
+  } catch (error: any) {
+    throw new HttpError("resendVerificationEmail service error; " + error.message, error.statusCode || 500);
+  }
 }
 
 export const login = async (loginData: { email: string; password: string }) => {
@@ -134,18 +144,27 @@ export const login = async (loginData: { email: string; password: string }) => {
       throw new ServiceError("Invalid credentials.", 401);
     }
 
-    const userWithoutPassword = {
-      ...user.toObject(),
-      password: undefined,
+    const userCredentials: UserCredentials = {
+      id: user._id.toString(),
+      city: user.city || null,
+      country: user.country || '',
+      education: user.education || '',
+      email: user.email,
+      name: user.name || '',
+      quiz_submitted: user.quiz_submitted,
+      referral_link: user.referral_link,
+      region: user.region || null,
+      roles: [user.role],
+      school: user.school || null,
     };
 
     const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: "1h",
+      expiresIn: "7d",
     });
 
     const csrfToken = crypto.randomBytes(32).toString("hex");
 
-    return { user: userWithoutPassword, jwtToken, csrfToken };
+    return { user: userCredentials, jwtToken, csrfToken };
   } catch (error: any) {
     throw new HttpError("login service error; " + error.message, error.statusCode);
   }
