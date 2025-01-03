@@ -10,7 +10,6 @@ import {
 import { CustomJwtPayload } from '../../typings/express/Request';
 
 import * as authService from "../services/authService";
-import * as jwtService from "../services/jwtService";
 
 export const csrf = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -58,9 +57,9 @@ export const register = async (
     const newUser = await authService.register(req.body);
     return res.status(201).json({
       message: "User was successfully registered.",
-      user: newUser,
+      user: newUser, // TODO
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     next(error);
   }
 };
@@ -77,9 +76,24 @@ export const emailVerify = async (
       message: "Email was successfully verified."
     });
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
+
+export const resendVerificationEmail = async (
+  req: EmailVerificationRequestDto,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    await authService.resendVerificationEmail();
+    return res.status(200).json({
+      message: "Email was sent successfully."
+    });
+  } catch (error: any) {
+    next(error);
+  }
+}
 
 export const login = async (
   req: LoginRequestDto,
@@ -99,7 +113,7 @@ export const login = async (
       jwtToken
     });
   } catch (error: any) {
-    res.status(401).json({ message: error.message });
+    next(error);
   }
 };
 

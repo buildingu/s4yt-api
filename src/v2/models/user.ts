@@ -2,7 +2,6 @@ import { Document, model, Schema } from 'mongoose';
 import User from "../typings/User";
 
 const userSchema = new Schema<User & Document>({
-  id: { type: String, default: null },
   city: { type: String, default: null },
   country: { type: String, default: null },
   email: {
@@ -17,7 +16,7 @@ const userSchema = new Schema<User & Document>({
   },
   name: { type: String, default: null, minlength: 2, maxlength: 128 },
   password: { type: String, required: true },
-  quiz_submitted: { type: Number, default: null  },
+  quiz_submitted: { type: Number, default: null },
   referral_link: { type: String, default: null },
   region: { type: String, default: null },
   school: { type: String, default: null },

@@ -6,11 +6,12 @@ import * as authController from "../controllers/authController";
 
 const router = Router();
 
-router.get("/users", authController.getUsers);
-router.get("/users/:email", authController.getUser);
+router.get("/users", verifyCsrfToken, verifyUser, authController.getUsers);
+router.get("/users/:email", verifyCsrfToken, verifyUser, authController.getUser);
 
 router.post("/register", authController.register);
 router.get("/email/verify", verifyUser, authController.emailVerify); // Verifies a user's email with a provided verification token
+router.get("/email/sendVerification", verifyUser, authController.resendVerificationEmail); // Sends verification email to user's registered email address with verification token
 
 router.post("/login", verifyUser, authController.login);
 router.post("/email/reset", verifyUser, authController.sendResetPasswordEmail); // Sends reset password email when they forget (the reset password email verifies if they're actually a user and the reset password email would also have a button to forward them to /password-reset on the front-end, not sure how to do this) You can also remove this if you want and just verify them with /password and I would also have to input their email with /password I don't know.

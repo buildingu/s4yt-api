@@ -1,9 +1,29 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/logger";
 
+export class ServiceError {
+  public message: string;
+  public statusCode: number;
+ 
+  constructor(message: string, statusCode: number) {
+    this.message = message;
+    this.statusCode = statusCode || 500;
+  }
+}
+
+export class HttpError extends Error {
+  public statusCode: number;
+ 
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = "HttpError";
+  }
+}
+
 // This can be used as a middleware thought instead of called next for the catch error in the controllers, so it doesn't send the default node server error, but that is fine.
 const errorHandler = async (
-  error: Error,
+  error: HttpError | Error,
   req: Request,
   res: Response,
   next: NextFunction
@@ -12,7 +32,6 @@ const errorHandler = async (
 
   if (
     err.statusCode === 500 ||
-    err.message?.toLowerCase().includes("unexpectedly") ||
     !err.statusCode
   ) {
     logger.error(err.stack || err);

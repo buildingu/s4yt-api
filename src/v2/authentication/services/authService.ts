@@ -1,19 +1,22 @@
 import UserModel from "../../models/user";
 import User from "../../typings/User";
-import nodemailer from "nodemailer";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
+import { HttpError, ServiceError } from "../../middleware/errorHandler";
 const { sign } = jwt;
+
+const emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const csrf = async () => {
   try {
     const token = crypto.randomBytes(32).toString("hex");
     return token;
   } catch (error: any) {
-    throw new Error(
-      "CSRF service error; generating CSRF token:\n" + error.message
+    throw new HttpError(
+      "CSRF service error; " + error.message,
+      500
     );
   }
 };
@@ -23,8 +26,9 @@ export const getUsers = async () => {
     const users = await UserModel.find();
     return users;
   } catch (error: any) {
-    throw new Error(
-      "getUsers service error; fetching all users:\n" + error.message
+    throw new HttpError(
+      "getUsers service error; " + error.message,
+      500
     );
   }
 };
@@ -34,8 +38,9 @@ export const getUser = async (email: string) => {
     const user = await UserModel.findOne({ email });
     return user;
   } catch (error: any) {
-    throw new Error(
-      "getUser service error; fetching the user:\n" + error.message
+    throw new HttpError(
+      "getUser service error; " + error.message,
+      500
     );
   }
 };
@@ -66,20 +71,18 @@ export const validatePassword = (password: string) => {
 
 export const register = async (userData: any) => {
   try {
-    const emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     if (!emailPattern.test(userData.email)) {
-      throw new Error("Invalid email or password."); 
+      throw new ServiceError("X Invalid email or password.", 400);
     }
 
     const existingUser = await getUser(userData.email);
     if (existingUser) {
-      throw new Error("Invalid email or password."); // TODO: Handle errors without throwing
+      throw new ServiceError("E Invalid email or password.", 400); 
     }
 
     const { valid, message } = validatePassword(userData.password);
     if (!valid) {
-      throw new Error(message);
+      throw new ServiceError(message, 400); 
     }
 
     const hashedPassword = await hash(userData.password, 12);
@@ -91,10 +94,10 @@ export const register = async (userData: any) => {
       password: hashedPassword,
       role: userData.role || 'Player',
       coin: userData.coin || 50,
-      refererCode: userData.refererCode || refererCode, 
-      usedReferCode: userData.usedReferCode || false,
-      isEmailVerified: false,
-      emailVerificationToken: crypto.randomBytes(20).toString("hex"),
+      referer_code: userData.refererCode || refererCode, 
+      used_refer_code: userData.usedReferCode || false,
+      is_email_verified: false,
+      email_verification_token: crypto.randomBytes(20).toString("hex"),
     });
 
     await newUser.save();
@@ -105,25 +108,30 @@ export const register = async (userData: any) => {
 
     return newUser;
   } catch (error: any) {
-    throw new Error("register service error; " + error.message);
+    throw new HttpError("register service error; " + error.message, error.statusCode || 500);
   }
 };
 
+export const resendVerificationEmail = () => {
+  //const user = User.findOne();
+  //sendVerificationEmail(newUser.email, newUser.email_verification_token);
+}
 
 export const login = async (loginData: { email: string; password: string }) => {
   try {
     const user = await UserModel.findOne({ email: loginData.email });
     if (!user) {
-      throw new Error("User does not exist");
+      throw new ServiceError("User does not exist.", 401);
     } else if (!user.is_email_verified) {
-      throw new Error(
-        "Email is not verified. Please check your email to verify your account."
+      throw new ServiceError(
+        "Email is not verified. Please check your email to verify your account.",
+        401
       );
     }
 
     const isMatch = await compare(loginData.password, user.password);
     if (!isMatch) {
-      throw new Error("Invalid credentials");
+      throw new ServiceError("Invalid credentials.", 401);
     }
 
     const userWithoutPassword = {
@@ -139,58 +147,71 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     return { user: userWithoutPassword, jwtToken, csrfToken };
   } catch (error: any) {
-    throw new Error("login service error; " + error.message);
+    throw new HttpError("login service error; " + error.message, error.statusCode);
   }
 };
 
 export const verifyEmail = async (token: string): Promise<User | null> => {
-  const user = await UserModel.findOne({ emailVerificationToken: token });
-  if (!user) {
-    return null; 
+  try {
+    const user = await UserModel.findOne({ emailVerificationToken: token });
+    if (!user) {
+      throw new ServiceError("User not found.", 401);
+    }
+
+    user.is_email_verified = true;
+    user.email_verification_token = undefined!;
+    await user.save();
+    return user;
+  } catch (error: any) {
+    throw new HttpError("verifyEmail service error; " + error.message, error.statusCode);
   }
-  user.is_email_verified = true;
-  user.email_verification_token = undefined!;
-  await user.save();
-  return user;
 };
 
 export const initiatePasswordReset = async (email: string) => {
-  const user = await UserModel.findOne({ email });
-  if (!user) {
-    throw new Error("User not found.");
-  }
-  
-  const resetToken = crypto.randomBytes(20).toString('hex');
-  user.reset_password_token = resetToken;
-  await user.save();
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      throw new ServiceError("User not found.", 401);
+    }
+    
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.reset_password_token = resetToken;
+    await user.save();
 
-  if (process.env.SEND_EMAILS === 'true') {
-    await sendResetPasswordEmail(email, resetToken);
+    if (process.env.SEND_EMAILS === 'true') {
+      await sendResetPasswordEmail(email, resetToken);
+    }
+  } catch (error: any) {
+    throw new HttpError("initiatePasswordReset service error; " + error.message, error.statusCode);
   }
 };
 
 export const resetPassword = async (token: string, newPassword: string) => {
-  const user = await UserModel.findOne({ resetPasswordToken: token });
-  if (!user) {
-    throw new Error("Invalid or expired password reset token.");
-  }
+  try {
+    const user = await UserModel.findOne({ resetPasswordToken: token });
+    if (!user) {
+      throw new ServiceError("Invalid or expired password reset token.", 401);
+    }
 
-  const hashedPassword = await hash(newPassword, 12);
-  user.password = hashedPassword;
-  user.reset_password_token = undefined!;
-  await user.save();
+    const hashedPassword = await hash(newPassword, 12);
+    user.password = hashedPassword;
+    user.reset_password_token = undefined!;
+    await user.save();
+  } catch (error: any) {
+    throw new HttpError("resetPassword service error; " + error.message, error.statusCode);
+  }
 };
 
 export const updatePassword = async (userId: string, oldPassword: string, newPassword: string) => {
   try {
     const user = await UserModel.findById(userId);
     if (!user) {
-      throw new Error("User not found.");
+      throw new ServiceError("User not found.", 401);
     }
 
     const isMatch = await compare(oldPassword, user.password);
     if (!isMatch) {
-      throw new Error("Invalid credentials");
+      throw new ServiceError("Invalid credentials.", 401);
     }
 
     const hashedNewPassword = await hash(newPassword, 12);
@@ -200,7 +221,7 @@ export const updatePassword = async (userId: string, oldPassword: string, newPas
 
     return true;
   } catch (error: any) {
-    throw new Error("updatePassword service error; " + error.message);
+    throw new HttpError("updatePassword service error; " + error.message, error.statusCode);
   }
 };
 
@@ -209,7 +230,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     const user = await UserModel.findById(userId);
 
     if (!user) {
-      throw new Error("User not found.");
+      throw new ServiceError("User not found.", 401);
     }
 
     if (profileUpdates.hasOwnProperty('name')) user.name = profileUpdates.name;
@@ -220,8 +241,8 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     if (profileUpdates.hasOwnProperty('education')) user.education = profileUpdates.education;
     if (profileUpdates.hasOwnProperty('school')) user.school = profileUpdates.school;
 
-    if (user.isModified('email')) {
-      // additional email validation logic here
+    if (user.isModified('email') && !emailPattern.test(user.email)) {
+      throw new ServiceError("Invalid email.", 400);
     }
 
     await user.save();
@@ -233,7 +254,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
 
     return updatedUser;
   } catch (error: any) {
-    throw new Error("updateProfile service error; " + error.message);
+    throw new HttpError("updateProfile service error; " + error.message, error.statusCode);
   }
 };
 
@@ -241,14 +262,14 @@ export const sendReferrals = async (userId: string) => {
   try {
     const user = await UserModel.findById(userId);
     if (!user) {
-      throw new Error("User not found.");
+      throw new ServiceError("User not found.", 401);
     }
 
     // const referrals = user.referrals;
 
     return null;
   } catch (error: any) {
-    throw new Error("sendReferrals service error; " + error.message);
+    throw new HttpError("sendReferrals service error; " + error.message, error.statusCode);
   }
 };
 
@@ -256,12 +277,13 @@ export const deleteUser = async (email: string) => {
   try {
     const user = await UserModel.findOneAndDelete({ email });
     if (!user) {
-      throw new Error(`No user found with email: ${email}`);
+      throw new ServiceError(`No user found with email: ${email}`, 401);
     }
     return user;
   } catch (error: any) {
-    throw new Error(
-      `deleteUser service error; deleting the user: ${error.message}`
+    throw new HttpError(
+      `deleteUser service error; deleting the user: ${error.message}`,
+      error.statusCode
     );
   }
 };
