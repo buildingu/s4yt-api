@@ -1,14 +1,16 @@
 import UserModel from "../../models/user";
 import User from "../../typings/User";
+import UserCredentials from "../../typings/UserCredentials";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
 import { HttpError, ServiceError } from "../../middleware/errorHandler";
-import UserCredentials from "../../typings/UserCredentials";
+import { isoTimestamps } from "../../configs/timestamps";
 const { sign } = jwt;
 
 const emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const registerStartTimeMs = new Date(isoTimestamps.register_start).getTime();
 
 export const csrf = async () => {
   try {
@@ -148,13 +150,13 @@ export const login = async (loginData: { email: string; password: string }) => {
       id: user._id.toString(),
       city: user.city || null,
       country: user.country || '',
-      education: user.education || '',
+      education: user.education || null,
       email: user.email,
       name: user.name || '',
       quiz_submitted: user.quiz_submitted,
       referral_link: user.referral_link,
       region: user.region || null,
-      roles: [user.role],
+      roles: user.role || null,
       school: user.school || null,
     };
 
@@ -164,9 +166,14 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     const csrfToken = crypto.randomBytes(32).toString("hex");
 
+    // If game or registration has started, send timestamps, otherwise send "not started" message
+    const resTimestamps = registerStartTimeMs < Date.now()
+      ? "The game has not started yet"
+      : isoTimestamps;
+
     return {
       user: userCredentials,
-      timestamps: "The game has not started yet",
+      timestamps: resTimestamps,
       jwtToken,
       csrfToken
     };

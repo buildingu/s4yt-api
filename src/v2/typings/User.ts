@@ -1,8 +1,10 @@
+import { userEducation, userRoles } from './userEnums';
+
 export default interface User {
   city?: string | null;
   country?: string;
   email: string;
-  education?: string;
+  education?: typeof userEducation[number] | null;
   name?: string;
   password: string;
   quiz_submitted: number;
@@ -13,7 +15,7 @@ export default interface User {
   email_verification_token: string;
   reset_password_token: string;
   token_version: number;
-  role: 'Admin' | 'Business' | 'Player';
+  role: typeof userRoles[number];
   referer_code: string;
   used_refer_code: boolean;
   kicked?: boolean; 

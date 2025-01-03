@@ -1,5 +1,6 @@
 import { Document, model, Schema } from 'mongoose';
-import User from "../typings/User";
+import User from '../typings/User';
+import { userEducation, userRoles } from '../typings/userEnums';
 
 const userSchema = new Schema<User & Document>({
   city: { type: String, default: null },
@@ -12,7 +13,7 @@ const userSchema = new Schema<User & Document>({
   },
   education: {
     type: String,
-    enum: ['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Other']
+    enum: userEducation
   },
   name: { type: String, default: null, minlength: 2, maxlength: 128 },
   password: { type: String, required: true },
@@ -26,7 +27,7 @@ const userSchema = new Schema<User & Document>({
   token_version: { type: Number, default: 0 },
   role: { 
     type: String, 
-    enum: ['Admin', 'Business', 'Player'], 
+    enum: userRoles, 
     required: true 
   },
   coins: { type: Number, default: 50 },

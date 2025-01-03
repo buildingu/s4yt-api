@@ -21,7 +21,7 @@ import helmet from "helmet";
 import hpp from "hpp";
 import rateLimit from "express-rate-limit";
 
-import connectDB from "./configs/db";
+import connectDB from "./db/db";
 import lowercaseEmails from "./middleware/lowercaseEmails";
 import errorHandler from "./middleware/errorHandler";
 import { setupLogger } from "./utils/logger";
