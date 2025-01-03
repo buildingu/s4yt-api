@@ -164,7 +164,12 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     const csrfToken = crypto.randomBytes(32).toString("hex");
 
-    return { user: userCredentials, jwtToken, csrfToken };
+    return {
+      user: userCredentials,
+      timestamps: "The game has not started yet",
+      jwtToken,
+      csrfToken
+    };
   } catch (error: any) {
     throw new HttpError("login service error; " + error.message, error.statusCode);
   }
