@@ -53,8 +53,6 @@ export const getUser = async (email: string) => {
 };
 
 export const validatePassword = (password: string) => {
-
-
   if (password.length < passwordMinLength || password.length > passwordMaxLength) {
     return {
       valid: false,
@@ -160,7 +158,7 @@ export const login = async (loginData: { email: string; password: string }) => {
   const csrfToken = crypto.randomBytes(32).toString("hex");
 
   // If game or registration has started, send timestamps, otherwise send "not started" message
-  const resTimestamps = registerStartTimeMs < Date.now()
+  const resTimestamps = registerStartTimeMs > Date.now()
     ? "The game has not started yet"
     : isoTimestamps;
 
