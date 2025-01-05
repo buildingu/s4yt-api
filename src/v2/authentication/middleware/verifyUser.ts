@@ -24,7 +24,7 @@ const verifyUser = async (
       if (user === null) {
         // Check for null explicitly
         return res
-          .status(404)
+          .status(401)
           .json({ message: "User not found or token invalid." });
       }
       req.user = user;
@@ -37,7 +37,7 @@ const verifyUser = async (
       }
       const user = await UserModel.findOne({ resetPasswordToken: token });
       if (!user) {
-        return res.status(404).json({ message: "Invalid or expired reset token." });
+        return res.status(401).json({ message: "Invalid or expired reset token." });
       }
       // You might want to check if the token is expired here as well
       req.user = user;
@@ -46,12 +46,12 @@ const verifyUser = async (
       const email = req.body.email;
       const user = await getUser(email);
       if (!user) {
-        return res.status(404).json({ message: "User not found." });
+        return res.status(401).json({ message: "User not found." });
       }
-      if (!user.isEmailVerified) {
+      if (!user.is_email_verified) {
         return res
           .status(401)
-          .json({ message: "Please verify your email to log in." });
+          .json({ message: "Email is not verified. Please check your email to verify your account. If you lost your verification link, press Resend Verification Email above to get a new link.", });
       }
       req.user = user;
       next();

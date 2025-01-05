@@ -5,7 +5,7 @@ dotenv.config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 export const sendVerificationEmail = async (to: string, verificationToken: string) => {
-  const verificationUrl = `http://localhost:4000/api/v2/auth/email/verify?token=${verificationToken}`;
+  const verificationUrl = `${process.env.FRONTEND_URL}/register/verify-email/verify?token=${verificationToken}`;
   const msg = {
     to,
     from: process.env.FROM_EMAIL as string,
@@ -23,7 +23,7 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
 };
 
 export const sendResetPasswordEmail = async (to: string, resetToken: string) => {
-  const resetUrl = `http://localhost:4000/api/v2/auth/password?token=${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/api/v2/auth/password?token=${resetToken}`;
   const msg = {
     to,
     from: process.env.FROM_EMAIL as string,
