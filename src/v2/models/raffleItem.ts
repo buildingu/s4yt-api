@@ -6,14 +6,14 @@ interface Stake {
 }
 
 interface IRaffleItem extends Document {
-  name_raffleitem: string;
+  name_raffle_item: string;
   image: string;
   qty: number;
   stake: Stake[];
 }
 
 const raffleItemSchema = new Schema<IRaffleItem>({
-  name_raffleitem: { type: String, required: true },
+  name_raffle_item: { type: String, required: true },
   image: { type: String, required: true },
   qty: { type: Number, required: true },
   stake: [{

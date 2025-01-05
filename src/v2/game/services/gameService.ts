@@ -187,7 +187,7 @@ export const gradeSponsorQuiz = async (userId: String, sponsorId: String, respon
       throw new Error("Multiple choice question not found")
     }
   
-    let isCorrect = answer == multipleChoice.correctAnswer;
+    let isCorrect = answer == multipleChoice.correct_answer;
     submissions.push({user: userId, multipleChoice: multipleChoiceId, isCorrect: isCorrect})
     submittedQuestions.push(multipleChoiceId)
   }
@@ -247,13 +247,11 @@ export const sendBusinessesInfo = async () => {
       const busInfo = {
         id: business.id,
         name: business.name,
-        logoS4yt: business.logoS4yt,
-        logoNormal: business.logoNormal,
+        logoS4yt: business.logo_s4yt,
+        logoNormal: business.logo_normal,
         description: business.description,
-        meetStartTime: business.meetStartTime,
-        meetEndTime: business.meetEndTime,
         attachment: business.attachment,
-        videoUrls: business.videoUrls,
+        videoUrls: business.video_urls,
         numAnswers
       };
 
@@ -298,7 +296,17 @@ export const saveAnswer = async (questionId: string, userId: string, text: strin
   });
 
   await answer.save();
-  return answer;
+
+  const responseObj = {
+    _id: answer.id,
+    question: question.id,
+    business,
+    user: user._id,
+    text,
+    status: answer.status
+  }
+
+  return responseObj;
 } 
 
 export const updateAnswer = async (answerId: string, text: string, submit: boolean = false) => {
@@ -312,11 +320,32 @@ export const updateAnswer = async (answerId: string, text: string, submit: boole
     throw new Error('Answer not found');
   }
 
-  return answer;
+  const responseObj = {
+    ...answer.toObject(),
+    __v: undefined
+  }
+
+  return responseObj;
 }
   
-export const addMeetUp = async () => {
+export const addMeetUp = async (businessId: string, userId: string, rsvpType: string) => {
   try {
+    const business = await Business.findById(businessId);
+    if (!business) {
+      throw new Error('Business not found');
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (rsvpType === 'Confirm') {
+      // TODO: "user" is giving an Error
+      //business.meetMembersConfirmed.push(user);
+      await business.save();
+    }
+
     return null;
   } catch (error: any) {
     throw new Error(
@@ -353,7 +382,7 @@ export const sendBusinessChallengeWinners = async () => {
 
         if (!question) continue;
 
-        for (const prize of question.prizeAllocation) {
+        for (const prize of question.prize_allocation) {
           const user = await User.findById(prize.winner);
           if (!user) continue;
 
@@ -361,8 +390,8 @@ export const sendBusinessChallengeWinners = async () => {
             place: prize.place,
             amount: prize.amount,
             winner_name: user.name,
-            winner_province_state: user.province_state,
-            winner_country: user.country_id,
+            winner_region: user.region,
+            winner_country: user.country,
           };
           businessResults.push(award);
         }
@@ -394,7 +423,7 @@ export const getInstructionsForUser = async (userId: mongoose.Types.ObjectId): P
       throw new Error('User not found');
     }
 
-    const showInstructions = user.showInstructions !== false;
+    const showInstructions = user.show_instructions !== false;
 
     const instructionsData = {
       title: "Instructions Page",
@@ -418,7 +447,7 @@ export const getTreasureMapData = async (userId: Types.ObjectId) => {
     const raffleItems = await RaffleItem.find({ active: true });
     const raffleData = raffleItems.map(item => ({
       id: item.id,
-      name: item.name_raffleitem,
+      name: item.name_raffle_item,
       image: item.image,
       quantity: item.qty
     }));
@@ -427,7 +456,7 @@ export const getTreasureMapData = async (userId: Types.ObjectId) => {
     const sponsorData = sponsors.map(sponsor => ({
       id: sponsor.id,
       name: sponsor.name,
-      logo: sponsor.logoPath, 
+      logo: sponsor.logo_path, 
     }));
 
     const treasureMapData = {
