@@ -3,6 +3,7 @@ import Question from "../../models/question";
 import Sponsor from "../../models/sponsor";
 import MultipleChoice from "../../models/multipleChoice";
 import RaffleItem from "../../models/raffleItem";
+import RafflePartnerModel from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";
@@ -53,6 +54,54 @@ export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: m
     return winners;
   } catch (error: any) {
     throw new Error(`Error determining raffle winners: ${error.message}`);
+  }
+};
+
+export const createRafflePartner = async (rafflePartnerData: any)=>{
+  try{
+    const newPartner = new RafflePartnerModel(rafflePartnerData);
+    newPartner.save();
+    return newPartner;
+  }catch(error){
+    throw new Error(`Error creating partner`);
+  }
+}
+
+export const editRafflePartner = async (id: string, updatedData: any) => {
+  try {
+    const updatedPartner = await RafflePartnerModel.findByIdAndUpdate(id, updatedData, {
+      new: true, 
+      runValidators: true,
+    });
+    if (!updatedPartner) {
+      throw new Error('Raffle partner not found');
+    }
+    return updatedPartner;
+  } catch (error) {
+    throw new Error('Error editing raffle partner');
+  }
+};
+
+export const getAllRafflePartners = async () => {
+  try {
+    const partners = await RafflePartnerModel.find()
+    return partners;
+  } catch (error) {
+    throw new Error('Error fetching raffle partners');
+  }
+};
+
+export const getRafflePartner = async (id: string) => {
+  try {
+    const partner = await RafflePartnerModel.findById(id)
+
+    if (!partner) {
+      throw new Error('Raffle partner not found');
+    }
+
+    return partner;
+  } catch (error: any) {
+    throw new Error('Error fetching raffle partner by ID:');
   }
 };
 
