@@ -10,6 +10,7 @@
  */
 
 import express from "express";
+import { createServer } from 'node:http';
 import dotenv from "dotenv";
 // import { redisClient } from "./configs/redisConfig";
 
@@ -22,6 +23,7 @@ import hpp from "hpp";
 import rateLimit from "express-rate-limit";
 
 import connectDB from "./db/db";
+import { setupSockets } from "./sockets/sockets";
 import lowercaseEmails from "./middleware/lowercaseEmails";
 import errorHandler from "./middleware/errorHandler";
 import { setupLogger } from "./utils/logger";
@@ -31,11 +33,14 @@ import authRouter from "./authentication/routes/authRoute";
 import csrfRouter from "./csrf/routes/csrfRoute";
 import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
-
-// Connect DB
-const app = express();
 dotenv.config();
 
+// Set up server (HTTP + sockets)
+const app = express();
+const server = createServer(app);
+setupSockets(server);
+
+// Connect DB
 connectDB();
 
 const PORT = Number(process.env.PORT) || 4000,
@@ -104,7 +109,7 @@ app.use(`${baseUrl}/game`, gameRouter);
 app.use(`${baseUrl}/business`, busRouter);
 app.use(errorHandler);
 
-app.listen(PORT, process.env.HOST as string, () =>
+server.listen(PORT, process.env.HOST as string, () =>
   console.log(
     `Server is running on ${process.env.PROTOCOL}${process.env.HOST}:${PORT}; Ctrl-C to terminate...`
   )
