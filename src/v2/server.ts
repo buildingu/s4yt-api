@@ -74,10 +74,11 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://s4yt-staging.building-u.com",
-      "https://s4yt.building-u.com",
+      // "https://s4yt-staging.building-u.com", - don't know yet.
+      "https://s4yt.org",
     ], // I don't remember what the staging url looks like, I think that's it.
     credentials: true,
+    exposedHeaders: ["Authorization", "x-xsrf-token"] // Yeah this does look weird, but I had to do that so I can get values on the front. You only send these headers on login, so it's alright or you can send the tokens in the body, don't matter.
   })
 );
 

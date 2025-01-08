@@ -123,9 +123,10 @@ export const resendVerificationEmail = async () => {
 export const login = async (loginData: { email: string; password: string }) => {
   const user = await UserModel.findOne({ email: loginData.email });
   if (!user) {
-    throw new HttpError("User does not exist.", 401);
+    throw new HttpError("User does not exist.", 401); // This is 404, but ignore me if you want.
   } else if (!user.is_email_verified) {
-    // This should be already checked by verifyUser
+    // FIXME: You're checking this before you see if it's the correct password. I can put in the wrong password and see this message, put this verified message below the password isMatch.
+    // This should be already checked by verifyUser (You're not using that middleware for the login btw and probably shouldn't anyways).
     throw new HttpError(
       "Email is not verified. Please check your email to verify your account. If you lost your verification link, press Resend Verification Email above to get a new link.",
       401
