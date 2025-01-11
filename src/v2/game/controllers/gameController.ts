@@ -14,17 +14,17 @@ export const addSponsor = async (req: Request, res: Response) => {
   }
 };
 
-export const addPartner = async (req: Request, res: Response) => {
+export const addPartner = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const rafflePartnerData = req.body;
     const partner = await gameService.createRafflePartner(rafflePartnerData);
-    res.status(201).json(partner);
+    res.json(partner);
   }catch(error: any){
-    res.status(500).json({ message: error.message });
+   next(error);
   }
 };
 
-export const updatePartner = async (req: Request, res: Response) => {
+export const updatePartner = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id; 
     const updatedData = req.body; 
@@ -33,32 +33,31 @@ export const updatePartner = async (req: Request, res: Response) => {
     if (!updatedPartner) {
       return res.status(404).json({ message: 'Raffle partner not found' });
     }
-
-    res.status(200).json(updatedPartner); 
+    res.json(updatedPartner); 
   } catch (error: any) {
-    res.status(500).json({ message: error.message }); 
+    next(error); 
   }
 };
 
-export const getRafflePartners = async (req: Request, res: Response) => {
+export const getRafflePartners = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const partners = await gameService.getAllRafflePartners(); 
-    res.status(200).json(partners); 
+    res.json(partners); 
   } catch (error: any) {
-    res.status(500).json({ message: error.message }); 
+    next(error); 
   }
 };
 
-export const getRafflePartner = async (req: Request, res: Response) => {
+export const getRafflePartner = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id; 
     const partner = await gameService.getRafflePartner(id);
     if (!partner) {
       return res.status(404).json({ message: 'Raffle partner not found' });
     }
-    res.status(200).json(partner); 
+    res.json(partner); 
   } catch (error: any) {
-    res.status(500).json({ message: error.message }); 
+    next(error); 
   }
 };
 

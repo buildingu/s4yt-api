@@ -94,11 +94,9 @@ export const getAllRafflePartners = async () => {
 export const getRafflePartner = async (id: string) => {
   try {
     const partner = await RafflePartnerModel.findById(id)
-
     if (!partner) {
       throw new Error('Raffle partner not found');
     }
-
     return partner;
   } catch (error: any) {
     throw new Error('Error fetching raffle partner by ID:');
