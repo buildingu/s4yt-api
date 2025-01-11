@@ -1,27 +1,25 @@
+import { userEducation, userRoles } from './userEnums';
+
 export default interface User {
-  id: string;
-  city_id?: number | null;
-  country_id?: number;
-  education_id?: number;
-  province_state?: number | null;
+  city?: string | null;
+  country?: string;
   email: string;
-  grade_id?: number;
-  instagram_handle?: string | null;
+  education?: typeof userEducation[number] | null;
   name?: string;
   password: string;
   quiz_submitted: number;
   referral_link: string;
-  region_id: number | null;
+  region?: string | null;
   school?: string | null;
-  isEmailVerified: boolean;
-  emailVerificationToken: string;
-  resetPasswordToken: string;
-  tokenVersion: number;
-  role: 'Admin' | 'Business' | 'Player';
-  referer_Code: string;
+  is_email_verified: boolean;
+  email_verification_token: string;
+  reset_password_token: string;
+  token_version: number;
+  role: typeof userRoles[number];
+  referer_code: string;
   used_refer_code: boolean;
   kicked?: boolean; 
-  bannedUntil?: Date;
+  banned_until?: Date;
   coins: number;
-  showInstructions: boolean;
+  show_instructions: boolean;
 }

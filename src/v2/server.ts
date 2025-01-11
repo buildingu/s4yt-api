@@ -11,7 +11,7 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import { redisClient } from "./configs/redisConfig";
+// import { redisClient } from "./configs/redisConfig";
 
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -20,9 +20,11 @@ import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
 import rateLimit from "express-rate-limit";
-import morgan from "morgan";
 
+import connectDB from "./db/db";
 import lowercaseEmails from "./middleware/lowercaseEmails";
+import errorHandler from "./middleware/errorHandler";
+import { setupLogger } from "./utils/logger";
 
 import adminRouter from "./admin/routes/admRoute";
 import authRouter from "./authentication/routes/authRoute";
@@ -31,8 +33,6 @@ import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
 
 // Connect DB
-import connectDB from './configs/db';
-
 const app = express();
 dotenv.config();
 
@@ -91,12 +91,7 @@ app.use((req, res, next) => {
 });
 
 // Request logger.
-morgan.token("all-headers", (req) => {
-  return JSON.stringify(req.headers, null, 2);
-});
-app.use(
-  morgan(":method :url :status :response-time ms \n headers: :all-headers")
-);
+setupLogger(app);
 
 // *Custom*
 app.use(lowercaseEmails);
@@ -107,6 +102,7 @@ app.use(`${baseUrl}/auth`, authRouter);
 app.use(`${baseUrl}/csrf`, csrfRouter);
 app.use(`${baseUrl}/game`, gameRouter);
 app.use(`${baseUrl}/business`, busRouter);
+app.use(errorHandler);
 
 app.listen(PORT, process.env.HOST as string, () =>
   console.log(

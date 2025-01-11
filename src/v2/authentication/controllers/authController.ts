@@ -1,9 +1,15 @@
 import { Request, Response, NextFunction,  } from "express";
-import RegisterRequestDto from "../dtos/RegisterRequestDto";
+import {
+  RegisterRequestDto,
+  LoginRequestDto,
+  EmailVerificationRequestDto,
+  UpdatePasswordRequestDto,
+  GetUserRequestDto,
+  ResetPasswordRequestDto
+} from "../dtos/AuthDto";
 import { CustomJwtPayload } from '../../typings/express/Request';
 
 import * as authService from "../services/authService";
-import * as jwtService from "../services/jwtService";
 
 export const csrf = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -29,7 +35,7 @@ export const getUsers = async (
 };
 
 export const getUser = async (
-  req: Request,
+  req: GetUserRequestDto,
   res: Response,
   next: NextFunction
 ) => {
@@ -50,68 +56,88 @@ export const register = async (
   try {
     const newUser = await authService.register(req.body);
     return res.status(201).json({
-      message: "User was successfully registered.",
-      user: newUser,
+      message: "User was successfully registered. Verification email was sent successfully."
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     next(error);
   }
 };
 
 export const emailVerify = async (
-  req: Request,
+  req: EmailVerificationRequestDto,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const token = req.query.token;
     await authService.verifyEmail(token as string);
-    res.redirect("/login");
+    return res.status(200).json({
+      message: "Email was successfully verified."
+    });
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
+export const resendVerificationEmail = async (
+  req: EmailVerificationRequestDto,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    await authService.resendVerificationEmail();
+    return res.status(200).json({
+      message: "Verification email was sent successfully."
+    });
+  } catch (error: any) {
+    next(error);
+  }
+}
+
 export const login = async (
-  req: Request,
+  req: LoginRequestDto,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { email, password } = req.body;
-    const { user, token } = await authService.login({ email, password });
+    const { user, timestamps, jwtToken, csrfToken } = await authService.login({ email, password });
 
-    res.setHeader("Authorization", "Bearer " + token);
+    res.setHeader("Authorization", "Bearer " + jwtToken);
+    res.setHeader("x-xsrf-token", csrfToken);
 
     return res.status(200).json({
       message: "User is successfully authenticated.",
       user,
-      token
+      timestamps
     });
   } catch (error: any) {
-    res.status(401).json({ message: error.message });
+    next(error);
   }
 };
 
 export const updatePassword = async (
-  req: Request,
+  req: UpdatePasswordRequestDto,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
+    const { oldPassword, newPassword } = req.body;
 
-    const { newPassword } = req.body;
+    if (!oldPassword) {
+      return res.status(400).json({ message: "Old password is missing." });
+    }
 
     if (!newPassword) {
       return res.status(400).json({ message: "New password is missing." });
     }
 
-    await authService.updatePassword(userId, newPassword);
+    await authService.updatePassword(userId, oldPassword, newPassword);
 
     res.status(200).json({ message: "Password updated successfully. Please log in again." });
 
-    res.redirect("/logout");
+    //res.redirect("/logout");
   } catch (error: any) {
     next(error);
   }
@@ -137,7 +163,7 @@ export const sendResetPasswordEmail = async (
 };
 
 export const resetPassword = async (
-  req: Request,
+  req: ResetPasswordRequestDto,
   res: Response,
   next: NextFunction
 ) => {

@@ -2,8 +2,8 @@ import mongoose, { mongo } from "mongoose";
 
 const multipleChoiceSubmissionSchema = new mongoose.Schema({
     user : {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    multipleChoice : {type: mongoose.Schema.Types.ObjectId, ref: "MultipleChoice"},
-    isCorrect : {type: Boolean, required: true}
+    multiple_choice : {type: mongoose.Schema.Types.ObjectId, ref: "MultipleChoice"},
+    is_correct : {type: Boolean, required: true}
 });
 
 
