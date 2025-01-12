@@ -1,11 +1,16 @@
 import mongoose from "mongoose";
-import { Region } from "../typings/Region";
-const {Schema, model, Document} = mongoose
+const { Schema, model, Document } = mongoose;
+
+const oneRegion = new Schema({
+  name: String,
+  abbr: String,
+});
 
 const regionSchema = new Schema({
-    countryName: {type: String, required: true},
-    abbr: {type: String, required: true},
-    regions: {type: Array<Region>, required: true},
-})
+  countryName: { type: String, required: true },
+  abbr: { type: String, required: true },
+  regions: [oneRegion],
+});
 
-const Regions = model('Region', regionSchema)
+const Regions = model("Region", regionSchema);
+export default Regions;
