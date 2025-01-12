@@ -3,12 +3,13 @@ import Question from "../../models/question";
 import Sponsor from "../../models/sponsor";
 import MultipleChoice from "../../models/multipleChoice";
 import RaffleItem from "../../models/raffleItem";
-import RafflePartnerModel from "../../models/rafflePartner";
+import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";
 import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
+import { HttpError } from "../../middleware/errorHandler";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -57,29 +58,25 @@ export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: m
   }
 };
 
-export const createRafflePartner = async (rafflePartnerData: any)=>{
+export const createRafflePartner = async (rafflePartnerData: RafflePartner)=>{
   try{
     const newPartner = new RafflePartnerModel(rafflePartnerData);
-    newPartner.save();
+    await newPartner.save();
     return newPartner;
-  }catch(error){
-    throw new Error(`Error creating partner`);
+  }catch(error: any){
+    throw new HttpError(`Error creating partner: ${error.toString()}`, 400);
   }
 }
 
 export const editRafflePartner = async (id: string, updatedData: any) => {
-  try {
-    const updatedPartner = await RafflePartnerModel.findByIdAndUpdate(id, updatedData, {
-      new: true, 
-      runValidators: true,
-    });
-    if (!updatedPartner) {
-      throw new Error('Raffle partner not found');
-    }
-    return updatedPartner;
-  } catch (error) {
-    throw new Error('Error editing raffle partner');
+  const updatedPartner = await RafflePartnerModel.findByIdAndUpdate(id, updatedData, {
+    new: true, 
+    runValidators: true,
+  });
+  if (!updatedPartner) {
+    throw new HttpError('Raffle partner not found', 404);
   }
+  return updatedPartner;
 };
 
 export const getAllRafflePartners = async () => {
@@ -87,20 +84,16 @@ export const getAllRafflePartners = async () => {
     const partners = await RafflePartnerModel.find()
     return partners;
   } catch (error) {
-    throw new Error('Error fetching raffle partners');
+    throw new HttpError('Error fetching raffle partners', 500);
   }
 };
 
 export const getRafflePartner = async (id: string) => {
-  try {
-    const partner = await RafflePartnerModel.findById(id)
-    if (!partner) {
-      throw new Error('Raffle partner not found');
-    }
-    return partner;
-  } catch (error: any) {
-    throw new Error('Error fetching raffle partner by ID:');
+  const partner = await RafflePartnerModel.findById(id)
+  if (!partner) {
+    throw new HttpError('Raffle partner not found', 404);
   }
+  return partner;
 };
 
 export const assignCoinsToUser = async (userId: string, coinCount: number) => {

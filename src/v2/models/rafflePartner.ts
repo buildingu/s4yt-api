@@ -1,6 +1,6 @@
 import mongoose, {Document, Schema} from 'mongoose';
 
-interface RafflePartner extends Document{
+export interface RafflePartner extends Document{
     logo: string;   //URLL of the logo/image not sure
     organization_name: string;
     resource_link: string;
@@ -12,6 +12,4 @@ const rafflePartnerSchema = new Schema<RafflePartner>({
     resource_link: { type: String, required: true },
   });
 
- const RafflePartnerModel = mongoose.model<RafflePartner>('RafflePartner', rafflePartnerSchema);
-
- export default RafflePartnerModel;
+ export const RafflePartnerModel = mongoose.model<RafflePartner>('RafflePartner', rafflePartnerSchema);

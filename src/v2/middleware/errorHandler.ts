@@ -1,16 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/logger";
 
-export class ServiceError {
-  public message: string;
-  public statusCode: number;
- 
-  constructor(message: string, statusCode: number) {
-    this.message = message;
-    this.statusCode = statusCode || 500;
-  }
-}
-
 export class HttpError extends Error {
   public statusCode: number;
  
