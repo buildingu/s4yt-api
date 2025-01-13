@@ -61,6 +61,7 @@ export const register = async (
         await authService.awardReferralCoins(referredUser.userId, 10);
 
         // Emit the data based on the specific event to the specified clientId
+        // The event is what the client will listen on
         socketEmit.send({
           target: referredUser.clientId,
           event: 'referralBonus',

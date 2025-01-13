@@ -9,7 +9,7 @@ export const initializeSocket = (server: any): Server => {
   io = new Server(server, {
     cors: {
       origin: [
-        "http://localhost:4000",
+        "http://localhost:3000",
         "https://s4yt-staging.building-u.com",
         "https://s4yt.building-u.com",
       ],
