@@ -113,7 +113,7 @@ export const register = async (userData: any) => {
 export const resendVerificationEmail = async () => {
   const user = await UserModel.findOne();
   if (!user) {
-    throw new HttpError("User does not exist.", 401);
+    throw new HttpError("User does not exist.", 404);
   } else if (!user.email_verification_token) {
     throw new HttpError("User is already verified.", 204);
   }
@@ -123,18 +123,19 @@ export const resendVerificationEmail = async () => {
 export const login = async (loginData: { email: string; password: string }) => {
   const user = await UserModel.findOne({ email: loginData.email });
   if (!user) {
-    throw new HttpError("User does not exist.", 401);
-  } else if (!user.is_email_verified) {
-    // This should be already checked by verifyUser
+    throw new HttpError("User does not exist.", 404);
+  }
+  
+  const isMatch = await compare(loginData.password, user.password);
+  if (!isMatch) {
+    throw new HttpError("Invalid credentials.", 401);
+  }
+
+  if (!user.is_email_verified) {
     throw new HttpError(
       "Email is not verified. Please check your email to verify your account. If you lost your verification link, press Resend Verification Email above to get a new link.",
       401
     );
-  }
-
-  const isMatch = await compare(loginData.password, user.password);
-  if (!isMatch) {
-    throw new HttpError("Invalid credentials.", 401);
   }
 
   const userCredentials: UserCredentials = {
