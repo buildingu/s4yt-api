@@ -39,7 +39,7 @@ router.get("/player/coins", verifyTokens.verifyAccessToken, gameController.sendC
 router.get("/results", verifyTokens.verifyAccessToken, gameController.displayEventResults);
 
 router.post('/raffle/partners', verifyTokens.verifyAccessToken, gameController.addPartner);
-router.put('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.updatePartner); 
+router.patch('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.updatePartner); 
 router.get('/raffle/partners', verifyTokens.verifyAccessToken, gameController.getRafflePartners);
 router.get('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.getRafflePartner);
 export default router;
