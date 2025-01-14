@@ -106,6 +106,47 @@ socketEmit.send({
 ```
 
 
+## Client-Side Usage
+
+```javaScript
+import React, { useState, useEffect } from 'react';
+import io, { Socket } from 'socket.io-client';
+
+interface ReferralBonusData {
+  coins: number;
+  message: string;
+}
+
+const socket: Socket = io('http://localhost:4000'); 
+
+const ReferralBonus: React.FC = () => {
+  const [coins, setCoins] = useState<number>(0);
+  const [message, setMessage] = useState<string>('');
+
+  useEffect(() => {
+    socket.on('referralBonus', (data: ReferralBonusData) => {
+      setCoins((prevCoins) => prevCoins + data.coins);
+      setMessage(data.message);
+    });
+
+    return () => {
+      socket.off('referralBonus');
+    };
+  }, []);
+
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h1>Your Coin Balance: {coins}</h1>
+      <p>{message}</p>
+    </div>
+  );
+};
+
+export default ReferralBonus;
+
+```
+
+
 
 ### Handling Real-Time Updates
 
