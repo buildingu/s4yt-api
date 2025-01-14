@@ -125,7 +125,7 @@ export const getRafflePartner = async (id: string) => {
       throw new HttpError('Raffle partner not found', 404);
     }
 
-    throw new HttpError(`Error getting partner: an unexpected error occurred`, 500);
+    throw new HttpError(`Error fetching partner: an unexpected error occurred`, 500);
   }
 };
 
