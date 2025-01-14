@@ -67,10 +67,10 @@ export const createRafflePartner = async (rafflePartnerData: RafflePartner)=>{
     const err = error as Error;
 
     if (err.message.toLowerCase().includes('validation failed')) {
-      throw new HttpError(`Error creating partner: missing or incorrect parameters`, 400);
+      throw new HttpError('Missing or incorrect parameters.', 400);
     }
 
-    throw new HttpError(`Error creating partner: an unexpected error occurred`, 500);
+    throw new HttpError('An unexpected error occurred.', 500);
   }
 }
 
@@ -81,7 +81,7 @@ export const editRafflePartner = async (id: string, updatedData: Partial<RaffleP
       runValidators: true,
     });
     if (!updatedPartner) {
-      throw new HttpError('Raffle partner not found', 404);
+      throw new HttpError('Raffle partner not found.', 404);
     }
     return updatedPartner;
   } catch (error) {
@@ -91,10 +91,10 @@ export const editRafflePartner = async (id: string, updatedData: Partial<RaffleP
 
     const err = error as Error;
     if (err.message.toLowerCase().includes('cast to objectid failed')) {
-      throw new HttpError('Raffle partner not found', 404);
+      throw new HttpError('Raffle partner not found.', 404);
     }
 
-    throw new HttpError(`Error updating partner: an unexpected error occurred`, 500);
+    throw new HttpError(`An unexpected error occurred.`, 500);
   }
 };
 
@@ -103,7 +103,7 @@ export const getAllRafflePartners = async () => {
     const partners = await RafflePartnerModel.find();
     return partners;
   } catch (error) {
-    throw new HttpError(`Error fetching raffle partners: an unexpected error occurred`, 500);
+    throw new HttpError('An unexpected error occurred.', 500);
   }
 };
 
@@ -111,7 +111,7 @@ export const getRafflePartner = async (id: string) => {
   try {
     const partner = await RafflePartnerModel.findById(id)
     if (!partner) {
-      throw new HttpError('Raffle partner not found', 404);
+      throw new HttpError('Raffle partner not found.', 404);
     }
     return partner;
   } catch (error) {
@@ -122,10 +122,10 @@ export const getRafflePartner = async (id: string) => {
     const err = error as Error;
 
     if (err.message.toLowerCase().includes('cast to objectid failed')) {
-      throw new HttpError('Raffle partner not found', 404);
+      throw new HttpError('Raffle partner not found.', 404);
     }
 
-    throw new HttpError(`Error fetching partner: an unexpected error occurred`, 500);
+    throw new HttpError('An unexpected error occurred.', 500);
   }
 };
 
