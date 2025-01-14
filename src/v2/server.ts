@@ -25,6 +25,7 @@ import connectDB from "./db/db";
 import lowercaseEmails from "./middleware/lowercaseEmails";
 import errorHandler from "./middleware/errorHandler";
 import { setupLogger } from "./utils/logger";
+import { initializeSocket } from "./utils/socket-emitter/index";
 
 import adminRouter from "./admin/routes/admRoute";
 import authRouter from "./authentication/routes/authRoute";
@@ -104,8 +105,10 @@ app.use(`${baseUrl}/game`, gameRouter);
 app.use(`${baseUrl}/business`, busRouter);
 app.use(errorHandler);
 
-app.listen(PORT, process.env.HOST as string, () =>
+const server = app.listen(PORT, process.env.HOST as string, () =>
   console.log(
     `Server is running on ${process.env.PROTOCOL}${process.env.HOST}:${PORT}; Ctrl-C to terminate...`
   )
 );
+``
+initializeSocket(server);
