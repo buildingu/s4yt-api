@@ -3,7 +3,7 @@ import { HydratedDocument } from "mongoose";
 import User from "../typings/User";
 
 // Adds a coin transaction to a User's coin_transactions list
-export const trackCoins = async (user: HydratedDocument<User>, count: number, source: string) => {
+export const trackCoins = async (user: HydratedDocument<User>, count: number, source: string, save: boolean = true) => {
   try {
     const coinsGained: CoinTransaction = {
       source,
@@ -11,7 +11,9 @@ export const trackCoins = async (user: HydratedDocument<User>, count: number, so
     };
 
     user.coin_transactions.push(coinsGained);
-    await user.save();
+    if (save) {
+      await user.save();
+    }
 
     return {
       success: true,

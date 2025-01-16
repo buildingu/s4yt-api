@@ -7,6 +7,7 @@ import crypto from "crypto";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
 import { HttpError } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
+import { trackCoins } from "../../utils/coinLogger";
 const { sign } = jwt;
 
 const emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -101,6 +102,7 @@ export const register = async (userData: any) => {
     email_verification_token: crypto.randomBytes(20).toString("hex"),
   });
 
+  trackCoins(newUser, 50, 'register', false);
   await newUser.save();
 
   if (process.env.SEND_EMAILS === 'true') {
