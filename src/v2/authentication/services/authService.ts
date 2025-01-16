@@ -196,6 +196,7 @@ export const verifyEmail = async (token: string) => {
     user.is_email_verified = true;
     user.email_verification_token = undefined!;
     await user.save();
+    return user;
   } catch (error) {
     if (error instanceof HttpError) {
       throw error;
