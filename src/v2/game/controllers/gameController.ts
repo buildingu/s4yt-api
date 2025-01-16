@@ -29,10 +29,6 @@ export const updatePartner = async (req: Request, res: Response, next: NextFunct
     const id = req.params.id; 
     const updatedData = req.body; 
     const updatedPartner = await gameService.editRafflePartner(id, updatedData);
-    
-    if (!updatedPartner) {
-      return res.status(404).json({ message: 'Raffle partner not found' });
-    }
     res.json(updatedPartner); 
   } catch (error: any) {
     next(error); 
@@ -52,9 +48,6 @@ export const getRafflePartner = async (req: Request, res: Response, next: NextFu
   try {
     const id = req.params.id; 
     const partner = await gameService.getRafflePartner(id);
-    if (!partner) {
-      return res.status(404).json({ message: 'Raffle partner not found' });
-    }
     res.json(partner); 
   } catch (error: any) {
     next(error); 
