@@ -87,7 +87,7 @@ The application requires the following environment variables:
 ```plaintext
 NODE_ENV=development
 PORT=4000
-MONGO_URI=mongodb://root:example@localhost:27017/s4yt?authSource=admin
+MONGO_URI=mongodb://localhost:27017
 JWT_SECRET=your_jwt_secret
 SENDGRID_API_KEY=your_sendgrid_api_key
 ```
