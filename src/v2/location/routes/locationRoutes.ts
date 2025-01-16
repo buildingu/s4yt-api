@@ -3,8 +3,8 @@ import * as locationControllers from "../controllers/locationControllers";
 
 const router = Router();
 
-router.get("/getCities", locationControllers.getCities);
-router.get("/getCountry", locationControllers.getCountry);
-router.get("/getRegion", locationControllers.getRegion);
+router.post("/cities", locationControllers.getCities);
+router.get("/countries", locationControllers.getCountries);
+router.post("/regions", locationControllers.getRegions);
 
 export default router;

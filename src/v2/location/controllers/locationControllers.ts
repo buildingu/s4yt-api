@@ -4,29 +4,28 @@ import * as locationServices from "../services/locationServices";
 
 const getCities = async (req: locationDTO, res: Response) => {
   try {
-    const city = req.body.name;
-    const cityInfo = await locationServices.getOneCity(city);
+    const regionName = req.body.name;
+    const cityInfo = await locationServices.getCities(regionName);
     res.status(200).json(cityInfo);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
-const getCountry = async (req: locationDTO, res: Response) => {
+const getCountries = async (req: any, res: Response) => {
   try {
-    const country = req.body.name;
-    const countryInfo = await locationServices.getOneCountry(country);
-    res.status(200).json(countryInfo);
+    const countries = await locationServices.getCountries();
+    res.status(200).json(countries);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
-const getRegion = async (req: locationDTO, res: Response) => {
+const getRegions = async (req: locationDTO, res: Response) => {
   try {
-    const region = req.body.name;
-    const regionInfo = await locationServices.getOneRegion(region);
+    const countryName = req.body.name;
+    const regionInfo = await locationServices.getRegions(countryName);
     res.status(200).json(regionInfo);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
-export { getCities, getCountry, getRegion };
+export { getCities, getCountries, getRegions };

@@ -1,30 +1,23 @@
+import { HttpError } from "../../middleware/errorHandler";
 import City from "../../models/cities";
 import Country from "../../models/countries";
 import Regions from "../../models/region";
 
-const getOneCity = async (cityName: string) => {
-  const cityInfo = await City.findOne({ name: cityName });
-  if (!cityInfo) {
-    throw new Error("City not found!");
-  }
-  return cityInfo;
+const getCities = async (regionName: string) => {
+  const cities = await City.find({ region: regionName });
+  return cities || "Cities not Found!";
 };
-const getOneCountry = async (countryName: string) => {
-  const countryInfo = await Country.findOne({ name: countryName });
-  if (!countryInfo) {
-    throw new Error("Country not found!");
-  }
-  return countryInfo;
+const getCountries = async () => {
+  const countries = await Country.find();
+  return countries;
 };
-const getOneRegion = async (regionName: string) => {
-  const country = await Regions.findOne({ "regions.name": regionName });
+const getRegions = async (countryName: string) => {
+  const country = await Regions.findOne({ countryName: countryName });
   if (!country) {
-    throw new Error("Regions not found!");
+    return "No Regions Found!";
   }
-  const regionInfo = country.regions.find(
-    (region) => region.name === regionName
-  );
-  return regionInfo || "Regions not found!";
+  const regionInfo = country.regions;
+  return regionInfo || "No Regions Found!";
 };
 
-export { getOneCity, getOneCountry, getOneRegion };
+export { getCities, getCountries, getRegions };
