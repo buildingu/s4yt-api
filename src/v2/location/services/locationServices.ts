@@ -4,7 +4,7 @@ import Country from "../../models/countries";
 import Regions from "../../models/region";
 
 const getCities = async (regionName: string) => {
-  const cities = await City.find({ region: regionName });
+  const cities = await City.find({ region_name: regionName });
   return cities || "Cities not Found!";
 };
 const getCountries = async () => {
@@ -12,7 +12,9 @@ const getCountries = async () => {
   return countries;
 };
 const getRegions = async (countryName: string) => {
-  const country = await Regions.findOne({ countryName: countryName });
+  const country = await Regions.collection.findOne({
+    countryName: countryName,
+  });
   if (!country) {
     return "No Regions Found!";
   }
