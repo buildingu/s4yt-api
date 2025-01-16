@@ -19,3 +19,5 @@ const sponsorSchema = new mongoose.Schema({
 const Sponsor = mongoose.model<ISponsor>('Sponsor', sponsorSchema);
 
 export default Sponsor;
+
+// dfhsdfjhsdfdshf
