@@ -10,6 +10,8 @@ import { Types } from "mongoose";
 import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
 import { HttpError } from "../../middleware/errorHandler";
+import UserModel from "../../models/user";
+import { CoinTransaction } from "../../typings/CoinTransaction";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -424,19 +426,23 @@ export const sendBusinessChallengeWinners = async () => {
       
       results.push(businessResults)
     }
-  
     return results;
   };
 
-
-export const sendCoinsGainedHistory = async () => {
+export const getCoinsGainedHistory = async (userId: mongoose.Types.ObjectId): Promise<CoinTransaction[]> => {
   try {
-    return null;
-  } catch (error: any) {
-    throw new Error(
-      "sendCoinsGainedHistory service error; getting the user's gained coins history:\n" +
-        error.message
-    );
+    const user = await UserModel.findOne(userId);
+    if (!user) {
+      throw new HttpError('User not found', 404);
+    }
+
+    return user.coin_transactions;
+  } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
+
+    throw new HttpError('An unexpected error occurred', 500);
   }
 };
 
