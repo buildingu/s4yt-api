@@ -435,14 +435,14 @@ export const getCoinsGainedHistory = async (userId: mongoose.Types.ObjectId): Pr
   }
 };
 
-export const getCoinsTotal = async (userId: mongoose.Types.ObjectId): Promise<number> => {
+export const getCoinsTotal = async (userId: mongoose.Types.ObjectId) => {
   try {
-    const user = await UserModel.findOne(userId, 'coins');
+    const user = await UserModel.findOne(userId, '-_id coins');
     if (!user) {
       throw new HttpError('User not found', 404);
     }
 
-    return user.coins;
+    return user;
   } catch (error) {
     throw serviceErrorHandler(error);
   }

@@ -252,8 +252,8 @@ export const sendCoinsTotal = async (
     }
 
     const userObjectId = new mongoose.Types.ObjectId(userId);
-    const coinHistory = await gameService.getCoinsTotal(userObjectId);
-    return res.status(200).json({ coin_total: coinHistory });
+    const coinTotal = await gameService.getCoinsTotal(userObjectId);
+    return res.status(200).json(coinTotal);
   } catch (error: any) {
     next(error);
   }
