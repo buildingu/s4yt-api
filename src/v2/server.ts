@@ -110,5 +110,5 @@ const server = app.listen(PORT, process.env.HOST as string, () =>
     `Server is running on ${process.env.PROTOCOL}${process.env.HOST}:${PORT}; Ctrl-C to terminate...`
   )
 );
-``
+
 initializeSocket(server);
