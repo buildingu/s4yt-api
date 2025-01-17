@@ -5,7 +5,7 @@ import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
-import { HttpError, serviceErrorHandler } from "../../middleware/errorHandler";
+import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
 import { trackCoins } from "../../utils/coinLogger";
 import { HydratedDocument } from "mongoose";
@@ -109,7 +109,7 @@ export const register = async (userData: any) => {
 
     return newUser;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -123,7 +123,7 @@ export const resendVerificationEmail = async (email: string) => {
     }
     sendVerificationEmail(user.email, user.email_verification_token);
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 }
 
@@ -178,7 +178,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       csrfToken
     };
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -194,7 +194,7 @@ export const verifyEmail = async (token: string) => {
     await user.save();
     return user;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -213,7 +213,7 @@ export const initiatePasswordReset = async (email: string) => {
       await sendResetPasswordEmail(email, resetToken);
     }
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -229,7 +229,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
     user.reset_password_token = undefined!;
     await user.save();
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -258,7 +258,7 @@ export const updatePassword = async (userId: string, oldPassword: string, newPas
     user.token_version = user.token_version ? user.token_version + 1 : 1;
     await user.save();
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -291,7 +291,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
 
     return updatedUser;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -306,7 +306,7 @@ export const sendReferrals = async (userId: string) => {
 
     return null;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -317,6 +317,6 @@ export const deleteUser = async (email: string) => {
       throw new HttpError("User not found.", 404);
     }
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };

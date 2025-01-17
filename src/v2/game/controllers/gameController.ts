@@ -240,6 +240,25 @@ export const sendCoinsGainedHistory = async (
   }
 };
 
+export const sendCoinsTotal = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const coinTotal = await gameService.getCoinsTotal(userObjectId);
+    return res.status(200).json(coinTotal);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
 export const sendInstructions = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.decodedClaims?.userId;

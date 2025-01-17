@@ -106,6 +106,7 @@ export const login = async (
 
     res.setHeader("Authorization", "Bearer " + jwtToken);
     res.setHeader("x-xsrf-token", csrfToken);
+    res.cookie("XSRF-TOKEN", csrfToken);
 
     return res.status(200).json({
       message: "User is successfully authenticated.",
