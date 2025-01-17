@@ -10,6 +10,14 @@ export class HttpError extends Error {
   }
 }
 
+export const serviceErrorHandler = (error: unknown) => {
+  if (error instanceof HttpError) {
+    throw error;
+  }
+
+  throw new HttpError("An unexpected error occurred.", 500);
+}
+
 // This can be used as a middleware thought instead of called next for the catch error in the controllers, so it doesn't send the default node server error, but that is fine.
 const errorHandler = async (
   error: HttpError | Error,

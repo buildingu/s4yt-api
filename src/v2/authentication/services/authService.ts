@@ -5,7 +5,7 @@ import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
-import { HttpError } from "../../middleware/errorHandler";
+import { HttpError, serviceErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
 const { sign } = jwt;
 
@@ -101,11 +101,7 @@ export const register = async (userData: any) => {
 
     return newUser;
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -119,11 +115,7 @@ export const resendVerificationEmail = async (email: string) => {
     }
     sendVerificationEmail(user.email, user.email_verification_token);
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 }
 
@@ -178,11 +170,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       csrfToken
     };
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -198,11 +186,7 @@ export const verifyEmail = async (token: string) => {
     await user.save();
     return user;
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -221,11 +205,7 @@ export const initiatePasswordReset = async (email: string) => {
       await sendResetPasswordEmail(email, resetToken);
     }
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -241,11 +221,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
     user.reset_password_token = undefined!;
     await user.save();
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -274,11 +250,7 @@ export const updatePassword = async (userId: string, oldPassword: string, newPas
     user.token_version = user.token_version ? user.token_version + 1 : 1;
     await user.save();
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -311,11 +283,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
 
     return updatedUser;
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -330,11 +298,7 @@ export const sendReferrals = async (userId: string) => {
 
     return null;
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
 
@@ -345,10 +309,6 @@ export const deleteUser = async (email: string) => {
       throw new HttpError("User not found.", 404);
     }
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError("An unexpected error occurred.", 500);
+    serviceErrorHandler(error);
   }
 };
