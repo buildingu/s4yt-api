@@ -424,12 +424,25 @@ export const sendBusinessChallengeWinners = async () => {
 
 export const getCoinsGainedHistory = async (userId: mongoose.Types.ObjectId): Promise<CoinTransaction[]> => {
   try {
-    const user = await UserModel.findOne(userId);
+    const user = await UserModel.findOne(userId, 'coin_transactions');
     if (!user) {
       throw new HttpError('User not found', 404);
     }
 
     return user.coin_transactions;
+  } catch (error) {
+    throw serviceErrorHandler(error);
+  }
+};
+
+export const getCoinsTotal = async (userId: mongoose.Types.ObjectId): Promise<number> => {
+  try {
+    const user = await UserModel.findOne(userId, 'coins');
+    if (!user) {
+      throw new HttpError('User not found', 404);
+    }
+
+    return user.coins;
   } catch (error) {
     throw serviceErrorHandler(error);
   }
