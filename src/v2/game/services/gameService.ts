@@ -437,6 +437,10 @@ export const getCoinsGainedHistory = async (userId: mongoose.Types.ObjectId): Pr
 
 export const getCoinsTotal = async (userId: mongoose.Types.ObjectId) => {
   try {
+    // Aren't you doing this wrong? thought that it's like this:
+    // await UserModel.findOne({ _id: userId }, '-_id coins');
+    // Also, you don't have to do new mongoose.Types.ObjectId(userId), findOne automatically casts a _id string to a objectId in the background. 
+    // I think one of the only things you need to actually create a ObjectId is with aggregate.
     const user = await UserModel.findOne(userId, '-_id coins');
     if (!user) {
       throw new HttpError('User not found', 404);
