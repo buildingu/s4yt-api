@@ -15,7 +15,7 @@ export class HttpError extends Error {
 //
 // You can optionally pass an array of ErrorPatternCheckd to the second paramter to examine error.name and throw a custom HttpError
 // for the first one that matches. This is most for handling errors thrown from Mongoose.
-export const serviceErrorHandler = (error: unknown, errorPatternChecks?: ErrorPatternCheck[]): HttpError => {
+export const resoleveErrorHandler = (error: unknown, errorPatternChecks?: ErrorPatternCheck[]): HttpError => {
   if (error instanceof HttpError) {
     return error;
   }

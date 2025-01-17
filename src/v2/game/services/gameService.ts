@@ -9,7 +9,7 @@ import User from "../../models/user";
 import { Types } from "mongoose";
 import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
-import { HttpError, serviceErrorHandler } from "../../middleware/errorHandler";
+import { HttpError, resoleveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
 import { CoinTransaction } from "../../typings/CoinTransaction";
 
@@ -66,7 +66,7 @@ export const createRafflePartner = async (rafflePartnerData: RafflePartner)=>{
     await newPartner.save();
     return newPartner;
   } catch(error) {
-    throw serviceErrorHandler(error, [
+    throw resoleveErrorHandler(error, [
       {
         errorName: 'ValidationError',
         errorMessage: 'Missing or incorrect parameters.',
@@ -87,7 +87,7 @@ export const editRafflePartner = async (id: string, updatedData: Partial<RaffleP
     }
     return updatedPartner;
   } catch (error) {
-    throw serviceErrorHandler(error, [
+    throw resoleveErrorHandler(error, [
       {
         errorName: 'CastError',
         errorMessage: 'Raffle partner not found.',
@@ -102,7 +102,7 @@ export const getAllRafflePartners = async () => {
     const partners = await RafflePartnerModel.find();
     return partners;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resoleveErrorHandler(error);
   }
 };
 
@@ -114,7 +114,7 @@ export const getRafflePartner = async (id: string) => {
     }
     return partner;
   } catch (error) {
-    throw serviceErrorHandler(error, [
+    throw resoleveErrorHandler(error, [
       {
         errorName: 'CastError',
         errorMessage: 'Raffle partner not found.',
@@ -431,7 +431,7 @@ export const getCoinsGainedHistory = async (userId: mongoose.Types.ObjectId): Pr
 
     return user.coin_transactions;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resoleveErrorHandler(error);
   }
 };
 
@@ -444,7 +444,7 @@ export const getCoinsTotal = async (userId: mongoose.Types.ObjectId) => {
 
     return user;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resoleveErrorHandler(error);
   }
 };
 
