@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/logger";
-
+import { ErrorPatternCheck } from "../typings/ErrorPatternCheck";
 export class HttpError extends Error {
   public statusCode: number;
  
@@ -11,8 +11,30 @@ export class HttpError extends Error {
   }
 }
 
+// Use this function in the catch blocks of service functions to automatically forward HttpErrors to the corresponding controller
+//
+// You can optionally pass an array of ErrorPatternCheckd to the second paramter to examine error.name and throw a custom HttpError
+// for the first one that matches. This is most for handling errors thrown from Mongoose.
+export const serviceErrorHandler = (error: unknown, errorPatternChecks?: ErrorPatternCheck[]): HttpError => {
+  if (error instanceof HttpError) {
+    return error;
+  }
+
+  const err = error as Error;
+
+  if (errorPatternChecks) {
+    for (const check of errorPatternChecks) {
+      if (err.name === check.errorName) {
+        return new HttpError(check.errorMessage, check.httpStatusCode);
+      }
+    }
+  }
+
+  return new HttpError("An unexpected error occurred.", 500);
+}
+
 // This can be used as a middleware thought instead of called next for the catch error in the controllers, so it doesn't send the default node server error, but that is fine.
-const errorHandler = async (
+export const routeErrorHandler = async (
   error: HttpError | Error,
   req: Request,
   res: Response,
@@ -31,5 +53,3 @@ const errorHandler = async (
       message: err.message
   });
 };
-
-export default errorHandler;

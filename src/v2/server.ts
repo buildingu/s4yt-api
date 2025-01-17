@@ -23,7 +23,7 @@ import rateLimit from "express-rate-limit";
 
 import connectDB from "./db/db";
 import lowercaseEmails from "./middleware/lowercaseEmails";
-import errorHandler from "./middleware/errorHandler";
+import { routeErrorHandler } from "./middleware/errorHandler";
 import { setupLogger } from "./utils/logger";
 import { initializeSocket } from "./utils/socket-emitter/index";
 
@@ -32,6 +32,7 @@ import authRouter from "./authentication/routes/authRoute";
 import csrfRouter from "./csrf/routes/csrfRoute";
 import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
+import locationRouter from "./location/routes/locationRoutes";
 
 // Connect DB
 const app = express();
@@ -103,7 +104,8 @@ app.use(`${baseUrl}/auth`, authRouter);
 app.use(`${baseUrl}/csrf`, csrfRouter);
 app.use(`${baseUrl}/game`, gameRouter);
 app.use(`${baseUrl}/business`, busRouter);
-app.use(errorHandler);
+app.use(`${baseUrl}/location`, locationRouter);
+app.use(routeErrorHandler);
 
 const server = app.listen(PORT, process.env.HOST as string, () =>
   console.log(
