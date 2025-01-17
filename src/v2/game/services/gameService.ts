@@ -9,7 +9,7 @@ import User from "../../models/user";
 import { Types } from "mongoose";
 import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
-import { HttpError, serviceErrorHandler } from "../../middleware/errorHandler";
+import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
 import { CoinTransaction } from "../../typings/CoinTransaction";
 
@@ -66,7 +66,7 @@ export const createRafflePartner = async (rafflePartnerData: RafflePartner)=>{
     await newPartner.save();
     return newPartner;
   } catch(error) {
-    throw serviceErrorHandler(error, [
+    throw resolveErrorHandler(error, [
       {
         errorName: 'ValidationError',
         errorMessage: 'Missing or incorrect parameters.',
@@ -87,7 +87,7 @@ export const editRafflePartner = async (id: string, updatedData: Partial<RaffleP
     }
     return updatedPartner;
   } catch (error) {
-    throw serviceErrorHandler(error, [
+    throw resolveErrorHandler(error, [
       {
         errorName: 'CastError',
         errorMessage: 'Raffle partner not found.',
@@ -102,7 +102,7 @@ export const getAllRafflePartners = async () => {
     const partners = await RafflePartnerModel.find();
     return partners;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
   }
 };
 
@@ -114,7 +114,7 @@ export const getRafflePartner = async (id: string) => {
     }
     return partner;
   } catch (error) {
-    throw serviceErrorHandler(error, [
+    throw resolveErrorHandler(error, [
       {
         errorName: 'CastError',
         errorMessage: 'Raffle partner not found.',
@@ -422,16 +422,29 @@ export const sendBusinessChallengeWinners = async () => {
     return results;
   };
 
-export const getCoinsGainedHistory = async (userId: mongoose.Types.ObjectId): Promise<CoinTransaction[]> => {
+export const getCoinsGainedHistory = async (userId: string): Promise<CoinTransaction[]> => {
   try {
-    const user = await UserModel.findOne(userId);
+    const user = await UserModel.findById(userId, 'coin_transactions');
     if (!user) {
       throw new HttpError('User not found', 404);
     }
 
     return user.coin_transactions;
   } catch (error) {
-    throw serviceErrorHandler(error);
+    throw resolveErrorHandler(error);
+  }
+};
+
+export const getCoinsTotal = async (userId: string) => {
+  try {
+    const user = await UserModel.findById(userId, '-_id coins');
+    if (!user) {
+      throw new HttpError('User not found', 404);
+    }
+
+    return user;
+  } catch (error) {
+    throw resolveErrorHandler(error);
   }
 };
 
