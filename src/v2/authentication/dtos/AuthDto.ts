@@ -37,6 +37,12 @@ export interface EmailVerificationRequestDto extends Request {
   }
 }
 
+export interface ResendVerificationEmailRequestDto extends Request {
+  body: {
+    email: string;
+  }
+}
+
 export interface UpdatePasswordRequestDto extends Request {
   body: {
     userId: string;
