@@ -1,3 +1,4 @@
+import mongoose, { Types } from 'mongoose';
 import { CoinTransaction } from './CoinTransaction';
 import { userEducation, userRoles } from './userEnums';
 
@@ -9,7 +10,6 @@ export default interface User {
   name?: string;
   password: string;
   quiz_submitted: number;
-  referral_link: string;
   region?: string | null;
   school?: string | null;
   is_email_verified: boolean;
@@ -17,8 +17,8 @@ export default interface User {
   reset_password_token: string;
   token_version: number;
   role: typeof userRoles[number];
-  referer_code: string;
-  used_refer_code: boolean;
+  referrer_code: string;
+  accepted_referrals: Types.ObjectId[];
   kicked?: boolean; 
   banned_until?: Date;
   coins: number;
