@@ -10,6 +10,7 @@ export class HttpError extends Error {
   }
 }
 
+// Use this function in the catch blocks of service functions to automatically forward HttpErrors to the corresponding controller
 export const serviceErrorHandler = (error: unknown) => {
   if (error instanceof HttpError) {
     throw error;

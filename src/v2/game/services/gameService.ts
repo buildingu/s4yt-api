@@ -3,11 +3,13 @@ import Question from "../../models/question";
 import Sponsor from "../../models/sponsor";
 import MultipleChoice from "../../models/multipleChoice";
 import RaffleItem from "../../models/raffleItem";
+import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";
 import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
+import { HttpError } from "../../middleware/errorHandler";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -53,6 +55,77 @@ export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: m
     return winners;
   } catch (error: any) {
     throw new Error(`Error determining raffle winners: ${error.message}`);
+  }
+};
+
+export const createRafflePartner = async (rafflePartnerData: RafflePartner)=>{
+  try {
+    const newPartner = new RafflePartnerModel(rafflePartnerData);
+    await newPartner.save();
+    return newPartner;
+  } catch(error) {
+    const err = error as Error;
+
+    if (err.message.toLowerCase().includes('validation failed')) {
+      throw new HttpError('Missing or incorrect parameters.', 400);
+    }
+
+    throw new HttpError('An unexpected error occurred.', 500);
+  }
+}
+
+export const editRafflePartner = async (id: string, updatedData: Partial<RafflePartner>) => {
+  try {
+    const updatedPartner = await RafflePartnerModel.findByIdAndUpdate(id, updatedData, {
+      new: true, 
+      runValidators: true,
+    });
+    if (!updatedPartner) {
+      throw new HttpError('Raffle partner not found.', 404);
+    }
+    return updatedPartner;
+  } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
+
+    const err = error as Error;
+    if (err.message.toLowerCase().includes('cast to objectid failed')) {
+      throw new HttpError('Raffle partner not found.', 404);
+    }
+
+    throw new HttpError(`An unexpected error occurred.`, 500);
+  }
+};
+
+export const getAllRafflePartners = async () => {
+  try {
+    const partners = await RafflePartnerModel.find();
+    return partners;
+  } catch (error) {
+    throw new HttpError('An unexpected error occurred.', 500);
+  }
+};
+
+export const getRafflePartner = async (id: string) => {
+  try {
+    const partner = await RafflePartnerModel.findById(id)
+    if (!partner) {
+      throw new HttpError('Raffle partner not found.', 404);
+    }
+    return partner;
+  } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
+
+    const err = error as Error;
+
+    if (err.message.toLowerCase().includes('cast to objectid failed')) {
+      throw new HttpError('Raffle partner not found.', 404);
+    }
+
+    throw new HttpError('An unexpected error occurred.', 500);
   }
 };
 

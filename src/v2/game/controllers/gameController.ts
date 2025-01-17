@@ -14,6 +14,46 @@ export const addSponsor = async (req: Request, res: Response) => {
   }
 };
 
+export const addPartner = async (req: Request, res: Response, next: NextFunction) => {
+  try{
+    const rafflePartnerData = req.body;
+    const partner = await gameService.createRafflePartner(rafflePartnerData);
+    res.json(partner);
+  }catch(error: any){
+   next(error);
+  }
+};
+
+export const updatePartner = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id; 
+    const updatedData = req.body; 
+    const updatedPartner = await gameService.editRafflePartner(id, updatedData);
+    res.json(updatedPartner); 
+  } catch (error: any) {
+    next(error); 
+  }
+};
+
+export const getRafflePartners = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const partners = await gameService.getAllRafflePartners(); 
+    res.json(partners); 
+  } catch (error: any) {
+    next(error); 
+  }
+};
+
+export const getRafflePartner = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id; 
+    const partner = await gameService.getRafflePartner(id);
+    res.json(partner); 
+  } catch (error: any) {
+    next(error); 
+  }
+};
+
 export const addMultipleChoice = async (req: Request, res: Response) => {
   try {
     const { sponsorId } = req.params;
