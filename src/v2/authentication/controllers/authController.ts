@@ -5,7 +5,8 @@ import {
   EmailVerificationRequestDto,
   UpdatePasswordRequestDto,
   GetUserRequestDto,
-  ResetPasswordRequestDto
+  ResetPasswordRequestDto,
+  ResendVerificationEmailRequestDto
 } from "../dtos/AuthDto";
 import { CustomJwtPayload } from '../../typings/express/Request';
 
@@ -80,12 +81,12 @@ export const emailVerify = async (
 };
 
 export const resendVerificationEmail = async (
-  req: EmailVerificationRequestDto,
+  req: ResendVerificationEmailRequestDto,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    await authService.resendVerificationEmail();
+    await authService.resendVerificationEmail(req.body.email);
     return res.status(200).json({
       message: "Verification email was sent successfully."
     });
@@ -124,17 +125,7 @@ export const updatePassword = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
     const { oldPassword, newPassword } = req.body;
-
-    if (!oldPassword) {
-      return res.status(400).json({ message: "Old password is missing." });
-    }
-
-    if (!newPassword) {
-      return res.status(400).json({ message: "New password is missing." });
-    }
-
     await authService.updatePassword(userId, oldPassword, newPassword);
-
     res.status(200).json({ message: "Password updated successfully. Please log in again." });
 
     //res.redirect("/logout");
