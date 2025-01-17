@@ -3,6 +3,8 @@ import * as gameService from "../services/gameService";
 import { getInstructionsForUser } from "../services/gameService";
 import mongoose from "mongoose";
 import { SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
+import { CustomJwtPayload } from "../../typings/express/Request";
+import { HttpError } from "../../middleware/errorHandler";
 
 export const addSponsor = async (req: Request, res: Response) => {
   try {
@@ -225,7 +227,14 @@ export const sendCoinsGainedHistory = async (
   next: NextFunction
 ) => {
   try {
-    return res.status(200).json({ message: "" });
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const coinHistory = await gameService.getCoinsGainedHistory(userObjectId);
+    return res.status(200).json({ coin_details: coinHistory });
   } catch (error: any) {
     next(error);
   }

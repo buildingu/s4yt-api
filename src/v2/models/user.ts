@@ -1,6 +1,8 @@
 import { Document, model, Schema } from 'mongoose';
 import User from '../typings/User';
+import { CoinTransaction } from '../typings/CoinTransaction';
 import { userEducation, userRoles } from '../typings/userEnums';
+import { coinTransactionSchema } from './coinTransaction';
 
 const userSchema = new Schema<User & Document>({
   city: { type: String, default: null },
@@ -30,7 +32,8 @@ const userSchema = new Schema<User & Document>({
     enum: userRoles, 
     required: true 
   },
-  coins: { type: Number, default: 50 },
+  coins: { type: Number, default: 0 },
+  coin_transactions: [coinTransactionSchema],
   referer_code: { type: String, default: null },
   used_refer_code: { type: Boolean, default: false },
   kicked: { type: Boolean, default: false },

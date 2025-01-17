@@ -7,6 +7,8 @@ import crypto from "crypto";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
 import { HttpError, serviceErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
+import { trackCoins } from "../../utils/coinLogger";
+import { HydratedDocument } from "mongoose";
 const { sign } = jwt;
 
 const emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -62,6 +64,11 @@ export const validatePassword = (password: string) => {
   return { valid: true, message: "password is valid" };
 };
 
+const awardRegistrationCoins = (user: HydratedDocument<User>, amount: number) => {
+  user.coins += amount;
+  trackCoins(user, amount, 'register', false);
+}
+
 export const register = async (userData: any) => {
   try {
     if (!emailPattern.test(userData.email)) {
@@ -86,13 +93,14 @@ export const register = async (userData: any) => {
       ...userData,
       password: hashedPassword,
       role: userData.role || 'Player',
-      coin: userData.coin || 50,
+      coin: userData.coin || 0,
       referer_code: userData.refererCode || refererCode, 
       used_refer_code: userData.usedReferCode || false,
       is_email_verified: false,
       email_verification_token: crypto.randomBytes(20).toString("hex"),
     });
 
+    awardRegistrationCoins(newUser, 50);
     await newUser.save();
 
     if (process.env.SEND_EMAILS === 'true') {

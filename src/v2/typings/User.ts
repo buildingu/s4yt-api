@@ -1,3 +1,4 @@
+import { CoinTransaction } from './CoinTransaction';
 import { userEducation, userRoles } from './userEnums';
 
 export default interface User {
@@ -21,5 +22,6 @@ export default interface User {
   kicked?: boolean; 
   banned_until?: Date;
   coins: number;
+  coin_transactions: CoinTransaction[],
   show_instructions: boolean;
 }
