@@ -431,11 +431,7 @@ export const getCoinsGainedHistory = async (userId: mongoose.Types.ObjectId): Pr
 
     return user.coin_transactions;
   } catch (error) {
-    if (error instanceof HttpError) {
-      throw error;
-    }
-
-    throw new HttpError('An unexpected error occurred', 500);
+    throw serviceErrorHandler(error);
   }
 };
 
