@@ -18,6 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "check-ts": "npx tsc --noEmit",
     "build": "webpack --config webpack.config.cjs",
+    "seed": "mongo-seeding import --db-name yourDatabaseName --input seeders",
     "serve": "cross-env NODE_ENV=production node ./build/server.cjs",
     "clean": "rm -rf node_modules"
   },
@@ -58,6 +59,7 @@
     "@types/redis": "^4.0.11",
     "cross-env": "^7.0.3",
     "esm": "^3.2.25",
+    "mongo-seeding": "^4.0.1",
     "nodemon": "^3.0.2",
     "path": "^0.12.7",
     "ts-loader": "^9.5.2",
