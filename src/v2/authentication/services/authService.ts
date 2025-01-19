@@ -80,6 +80,18 @@ const awardRegistrationCoins = (
   trackCoins(user, amount, "register", false);
 };
 
+const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
+  const invitingUser = await UserModel.findOne({ referral_code: referralCode });
+  if (!invitingUser) {
+    return false;
+  }
+
+  invitingUser.accepted_referrals.push(newUser._id);
+  invitingUser.coins += amount;
+  trackCoins(invitingUser, amount, "referral", false);
+  return true;
+};
+
 export const register = async (userData: any) => {
   try {
     if (!emailPattern.test(userData.email)) {
@@ -97,20 +109,21 @@ export const register = async (userData: any) => {
     }
 
     const hashedPassword = await hash(userData.password, 12);
-    
-    const referrerCode = crypto.randomBytes(10).toString('hex');
+    const inviterReferralCode = userData.referral_code;
+    const newUserReferralCode = crypto.randomBytes(10).toString('hex');
 
     const newUser = new UserModel({
       ...userData,
       password: hashedPassword,
       role: userData.role || "Player",
       coin: userData.coin || 0,
-      referrer_code: referrerCode, 
+      referral_code: newUserReferralCode, 
       is_email_verified: false,
       email_verification_token: crypto.randomBytes(20).toString("hex"),
     });
 
     awardRegistrationCoins(newUser, 50);
+    handleReferralBonus(newUser, inviterReferralCode, 5);
     await newUser.save();
 
     if (process.env.SEND_EMAILS === 'true') {
