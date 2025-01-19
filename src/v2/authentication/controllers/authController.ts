@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction,  } from "express";
+import { Request, Response, NextFunction } from "express";
 import {
   RegisterRequestDto,
   LoginRequestDto,
@@ -6,9 +6,9 @@ import {
   UpdatePasswordRequestDto,
   GetUserRequestDto,
   ResetPasswordRequestDto,
-  ResendVerificationEmailRequestDto
+  ResendVerificationEmailRequestDto,
 } from "../dtos/AuthDto";
-import { CustomJwtPayload } from '../../typings/express/Request';
+import { CustomJwtPayload } from "../../typings/express/Request";
 
 import * as authService from "../services/authService";
 import { HttpError } from "../../middleware/errorHandler";
@@ -58,7 +58,8 @@ export const register = async (
   try {
     const newUser = await authService.register(req.body);
     return res.status(201).json({
-      message: "User was successfully registered. Verification email was sent successfully."
+      message:
+        "User was successfully registered. Verification email was sent successfully.",
     });
   } catch (error: unknown) {
     next(error);
@@ -74,7 +75,7 @@ export const emailVerify = async (
     const token = req.query.token;
     await authService.verifyEmail(token as string);
     return res.status(200).json({
-      message: "Email was successfully verified."
+      message: "Email was successfully verified.",
     });
   } catch (error: any) {
     next(error);
@@ -89,12 +90,12 @@ export const resendVerificationEmail = async (
   try {
     await authService.resendVerificationEmail(req.body.email);
     return res.status(200).json({
-      message: "Verification email was sent successfully."
+      message: "Verification email was sent successfully.",
     });
   } catch (error: any) {
     next(error);
   }
-}
+};
 
 export const login = async (
   req: LoginRequestDto,
@@ -103,7 +104,10 @@ export const login = async (
 ) => {
   try {
     const { email, password } = req.body;
-    const { user, timestamps, jwtToken, csrfToken } = await authService.login({ email, password });
+    const { user, timestamps, jwtToken, csrfToken } = await authService.login({
+      email,
+      password,
+    });
 
     res.setHeader("Authorization", "Bearer " + jwtToken);
     res.setHeader("x-xsrf-token", csrfToken);
@@ -112,7 +116,7 @@ export const login = async (
     return res.status(200).json({
       message: "User is successfully authenticated.",
       user,
-      timestamps
+      timestamps,
     });
   } catch (error: any) {
     next(error);
@@ -125,10 +129,13 @@ export const updatePassword = async (
   next: NextFunction
 ) => {
   try {
-    const userId = (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
+    const userId =
+      (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
     const { oldPassword, newPassword } = req.body;
     await authService.updatePassword(userId, oldPassword, newPassword);
-    res.status(200).json({ message: "Password updated successfully. Please log in again." });
+    res
+      .status(200)
+      .json({ message: "Password updated successfully. Please log in again." });
 
     //res.redirect("/logout");
   } catch (error: any) {
@@ -144,12 +151,10 @@ export const sendResetPasswordEmail = async (
   try {
     const { email } = req.body;
     await authService.initiatePasswordReset(email);
-    res
-      .status(200)
-      .json({
-        message:
-          "If a user with that email exists, a password reset email has been sent.",
-      });
+    res.status(200).json({
+      message:
+        "If a user with that email exists, a password reset email has been sent.",
+    });
   } catch (error) {
     next(error);
   }
@@ -169,7 +174,11 @@ export const resetPassword = async (
   }
 };
 
-export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+export const updateProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     const profileUpdates = req.body;
@@ -178,11 +187,15 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
       return res.status(400).json({ message: "User identifier is missing." });
     }
 
-    const updatedUser = await authService.updateProfile(userId, profileUpdates);
+    const [updatedUser, needsReverification] = await authService.updateProfile(
+      userId,
+      profileUpdates
+    );
 
     return res.status(200).json({
       message: "Profile updated successfully.",
-      user: updatedUser
+      user: updatedUser,
+      verify_email: needsReverification,
     });
   } catch (error: any) {
     next(error);
@@ -201,7 +214,10 @@ export const sendAcceptedReferrals = async (
     }
 
     const acceptedReferrals = await authService.getAcceptedReferrals(userId);
-    return res.status(200).json({ referrals: acceptedReferrals });
+    return res.status(200).json({ 
+      message: "Referrals retrieved successfully.",
+      referrals: acceptedReferrals
+    });
   } catch (error: any) {
     next(error);
   }

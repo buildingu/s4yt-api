@@ -4,17 +4,22 @@ import UserCredentials from "../../typings/UserCredentials";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
+import {
+  sendVerificationEmail,
+  sendResetPasswordEmail,
+} from "../services/emailService";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
 import { trackCoins } from "../../utils/coinLogger";
 import { HydratedDocument } from "mongoose";
 const { sign } = jwt;
 
-const emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailPattern =
+  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const passwordMinLength = 8;
 const passwordMaxLength = 32;
-const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,32}$/;
+const passwordPattern =
+  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,32}$/;
 
 const registerStartTimeMs = new Date(isoTimestamps.register_start).getTime();
 
@@ -46,7 +51,10 @@ export const getUser = async (email: string) => {
 };
 
 export const validatePassword = (password: string) => {
-  if (password.length < passwordMinLength || password.length > passwordMaxLength) {
+  if (
+    password.length < passwordMinLength ||
+    password.length > passwordMaxLength
+  ) {
     return {
       valid: false,
       message: `password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
@@ -64,10 +72,13 @@ export const validatePassword = (password: string) => {
   return { valid: true, message: "password is valid" };
 };
 
-const awardRegistrationCoins = (user: HydratedDocument<User>, amount: number) => {
+const awardRegistrationCoins = (
+  user: HydratedDocument<User>,
+  amount: number
+) => {
   user.coins += amount;
-  trackCoins(user, amount, 'register', false);
-}
+  trackCoins(user, amount, "register", false);
+};
 
 export const register = async (userData: any) => {
   try {
@@ -77,12 +88,12 @@ export const register = async (userData: any) => {
 
     const existingUser = await getUser(userData.email);
     if (existingUser) {
-      throw new HttpError("Invalid email or password.", 400); 
+      throw new HttpError("Invalid email or password.", 400);
     }
 
     const { valid, message } = validatePassword(userData.password);
     if (!valid) {
-      throw new HttpError(message, 400); 
+      throw new HttpError(message, 400);
     }
 
     const hashedPassword = await hash(userData.password, 12);
@@ -92,7 +103,7 @@ export const register = async (userData: any) => {
     const newUser = new UserModel({
       ...userData,
       password: hashedPassword,
-      role: userData.role || 'Player',
+      role: userData.role || "Player",
       coin: userData.coin || 0,
       referrer_code: referrerCode, 
       is_email_verified: false,
@@ -124,7 +135,7 @@ export const resendVerificationEmail = async (email: string) => {
   } catch (error) {
     throw resolveErrorHandler(error);
   }
-}
+};
 
 export const getAcceptedReferrals = async (userId: string) => {
   try {
@@ -145,7 +156,7 @@ export const login = async (loginData: { email: string; password: string }) => {
     if (!user) {
       throw new HttpError("User does not exist.", 404);
     }
-    
+
     const isMatch = await compare(loginData.password, user.password);
     if (!isMatch) {
       throw new HttpError("Invalid credentials.", 401);
@@ -161,10 +172,10 @@ export const login = async (loginData: { email: string; password: string }) => {
     const userCredentials: UserCredentials = {
       id: user._id.toString(),
       city: user.city || null,
-      country: user.country || '',
+      country: user.country || "",
       education: user.education || null,
       email: user.email,
-      name: user.name || '',
+      name: user.name || "",
       quiz_submitted: user.quiz_submitted,
       region: user.region || null,
       roles: user.role || null,
@@ -177,15 +188,16 @@ export const login = async (loginData: { email: string; password: string }) => {
     const csrfToken = crypto.randomBytes(32).toString("hex");
 
     // If game or registration has started, send timestamps, otherwise send "not started" message
-    const resTimestamps = registerStartTimeMs > Date.now()
-      ? "The game has not started yet"
-      : isoTimestamps;
+    const resTimestamps =
+      registerStartTimeMs > Date.now()
+        ? "The game has not started yet"
+        : isoTimestamps;
 
     return {
       user: userCredentials,
       timestamps: resTimestamps,
       jwtToken,
-      csrfToken
+      csrfToken,
     };
   } catch (error) {
     throw resolveErrorHandler(error);
@@ -214,12 +226,12 @@ export const initiatePasswordReset = async (email: string) => {
     if (!user) {
       throw new HttpError("User not found.", 404);
     }
-    
-    const resetToken = crypto.randomBytes(20).toString('hex');
+
+    const resetToken = crypto.randomBytes(20).toString("hex");
     user.reset_password_token = resetToken;
     await user.save();
 
-    if (process.env.SEND_EMAILS === 'true') {
+    if (process.env.SEND_EMAILS === "true") {
       await sendResetPasswordEmail(email, resetToken);
     }
   } catch (error) {
@@ -243,7 +255,11 @@ export const resetPassword = async (token: string, newPassword: string) => {
   }
 };
 
-export const updatePassword = async (userId: string, oldPassword: string, newPassword: string) => {
+export const updatePassword = async (
+  userId: string,
+  oldPassword: string,
+  newPassword: string
+) => {
   try {
     if (!oldPassword) {
       throw new HttpError("Current password is missing.", 400);
@@ -275,20 +291,31 @@ export const updatePassword = async (userId: string, oldPassword: string, newPas
 export const updateProfile = async (userId: string, profileUpdates: any) => {
   try {
     const user = await UserModel.findById(userId);
-
+    let needsReverification = false;
     if (!user) {
       throw new HttpError("User not found.", 401);
     }
 
-    if (profileUpdates.hasOwnProperty('name')) user.name = profileUpdates.name;
-    if (profileUpdates.hasOwnProperty('email')) user.email = profileUpdates.email;
-    if (profileUpdates.hasOwnProperty('city')) user.city = profileUpdates.city;
-    if (profileUpdates.hasOwnProperty('country')) user.country = profileUpdates.country;
-    if (profileUpdates.hasOwnProperty('region')) user.region = profileUpdates.region;
-    if (profileUpdates.hasOwnProperty('education')) user.education = profileUpdates.education;
+    if (profileUpdates.hasOwnProperty("name")) user.name = profileUpdates.name;
+    if (profileUpdates.hasOwnProperty("email"))
+      user.email = profileUpdates.email;
+    if (profileUpdates.hasOwnProperty("city")) user.city = profileUpdates.city;
+    if (profileUpdates.hasOwnProperty("country"))
+      user.country = profileUpdates.country;
+    if (profileUpdates.hasOwnProperty("region"))
+      user.region = profileUpdates.region;
+    if (profileUpdates.hasOwnProperty("education"))
+      user.education = profileUpdates.education;
 
-    if (user.isModified('email') && !emailPattern.test(user.email)) {
-      throw new HttpError("Invalid email format.", 400);
+    if (user.isModified("email")) {
+      if (!emailPattern.test(user.email)) {
+        throw new HttpError("Invalid email format.", 400);
+      }
+      user.is_email_verified = false;
+      user.email_verification_token = crypto.randomBytes(20).toString("hex");
+      sendVerificationEmail(user.email, user.email_verification_token);
+      needsReverification = true;
+      //Frontend needs to inform user to re-verify email
     }
 
     await user.save();
@@ -298,7 +325,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     delete updatedUser.emailVerificationToken;
     delete updatedUser.resetPasswordToken;
 
-    return updatedUser;
+    return [updatedUser, needsReverification];
   } catch (error) {
     throw resolveErrorHandler(error);
   }
