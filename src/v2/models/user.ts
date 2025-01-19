@@ -21,7 +21,6 @@ const userSchema = new Schema<User & Document>({
   password: { type: String, required: true },
   quiz_submitted: { type: Number, default: null },
   region: { type: String, default: null },
-  school: { type: String, default: null },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },
   reset_password_token: { type: String, default: null },

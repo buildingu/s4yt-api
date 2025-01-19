@@ -126,19 +126,18 @@ export const resendVerificationEmail = async (email: string) => {
   }
 }
 
-export const sendReferralEmail = async (userId: string, recipientEmail: string) => {
+export const getAcceptedReferrals = async (userId: string) => {
   try {
-    const user = await UserModel.findById(userId);
+    const user = await UserModel.findById(userId, 'accepted_referrals');
     if (!user) {
-      throw new HttpError("User does not exist.", 404);
+      throw new HttpError('User not found', 404);
     }
 
-    const referralCode = user.referral_code;
-    await sendReferralEmail(recipientEmail, referralCode);
+    return user.accepted_referrals;
   } catch (error) {
     throw resolveErrorHandler(error);
   }
-}
+};
 
 export const login = async (loginData: { email: string; password: string }) => {
   try {
@@ -169,7 +168,6 @@ export const login = async (loginData: { email: string; password: string }) => {
       quiz_submitted: user.quiz_submitted,
       region: user.region || null,
       roles: user.role || null,
-      school: user.school || null,
     };
 
     const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
@@ -288,7 +286,6 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     if (profileUpdates.hasOwnProperty('country')) user.country = profileUpdates.country;
     if (profileUpdates.hasOwnProperty('region')) user.region = profileUpdates.region;
     if (profileUpdates.hasOwnProperty('education')) user.education = profileUpdates.education;
-    if (profileUpdates.hasOwnProperty('school')) user.school = profileUpdates.school;
 
     if (user.isModified('email') && !emailPattern.test(user.email)) {
       throw new HttpError("Invalid email format.", 400);

@@ -10,5 +10,4 @@ export default interface UserCredentials {
   quiz_submitted: number;
   region: string | null;
   roles: typeof userRoles[number] | null;
-  school: string | null;
 }

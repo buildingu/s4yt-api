@@ -11,7 +11,6 @@ export default interface User {
   password: string;
   quiz_submitted: number;
   region?: string | null;
-  school?: string | null;
   is_email_verified: boolean;
   email_verification_token: string;
   reset_password_token: string;

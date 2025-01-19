@@ -17,7 +17,6 @@ export interface RegisterRequestDto extends Request {
     // Don't add password_confirmation to the user, u know.
     password_confirmation: string;
     education: string;
-    school: string;
     country: string;
     region: string;
     city: string;
