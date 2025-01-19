@@ -87,15 +87,14 @@ export const register = async (userData: any) => {
 
     const hashedPassword = await hash(userData.password, 12);
     
-    const refererCode = crypto.randomBytes(10).toString('hex');
+    const referrerCode = crypto.randomBytes(10).toString('hex');
 
     const newUser = new UserModel({
       ...userData,
       password: hashedPassword,
       role: userData.role || 'Player',
       coin: userData.coin || 0,
-      referer_code: userData.refererCode || refererCode, 
-      used_refer_code: userData.usedReferCode || false,
+      referrer_code: referrerCode, 
       is_email_verified: false,
       email_verification_token: crypto.randomBytes(20).toString("hex"),
     });
@@ -154,7 +153,6 @@ export const login = async (loginData: { email: string; password: string }) => {
       email: user.email,
       name: user.name || '',
       quiz_submitted: user.quiz_submitted,
-      referral_link: user.referral_link,
       region: user.region || null,
       roles: user.role || null,
       school: user.school || null,
