@@ -281,7 +281,7 @@ export const updatePassword = async (
 export const updateProfile = async (userId: string, profileUpdates: any) => {
   try {
     const user = await UserModel.findById(userId);
-
+    let needsReverification = false;
     if (!user) {
       throw new HttpError("User not found.", 401);
     }
@@ -306,6 +306,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       user.is_email_verified = false;
       user.email_verification_token = crypto.randomBytes(20).toString("hex");
       sendVerificationEmail(user.email, user.email_verification_token);
+      needsReverification = true;
       //Frontend needs to inform user to re-verify email
     }
 
@@ -316,7 +317,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     delete updatedUser.emailVerificationToken;
     delete updatedUser.resetPasswordToken;
 
-    return updatedUser;
+    return [updatedUser, needsReverification];
   } catch (error) {
     throw resolveErrorHandler(error);
   }
