@@ -39,3 +39,21 @@ export const sendResetPasswordEmail = async (to: string, resetToken: string) => 
     throw new Error('Error sending reset password email');
   }
 };
+
+export const sendReferralEmail = async (to: string, referralCode: string) => {
+  const referralUrl = `${process.env.FRONTEND_URL}/register?referralcode=${referralCode}`;
+  const msg = {
+    to,
+    from: process.env.FROM_EMAIL as string,
+    subject: 'You have been invited to join $4YT',
+    html: `<p>You have been invited to join $4YT, please click the link below to sign up for an account:</p><a href="${referralUrl}">Register</a>`,
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log(`Verification email sent to: ${to}`);
+  } catch (error) {
+    console.error(`Error sending verification email to ${to}: ${error}`);
+    throw new Error('Error sending verification email');
+  }
+};

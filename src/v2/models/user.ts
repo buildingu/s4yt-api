@@ -33,7 +33,7 @@ const userSchema = new Schema<User & Document>({
   },
   coins: { type: Number, default: 0 },
   coin_transactions: [coinTransactionSchema],
-  referrer_code: { type: String, default: null },
+  referral_code: { type: String, default: null },
   accepted_referrals: { types: Types.ObjectId, ref: 'User' },
   kicked: { type: Boolean, default: false },
   banned_until: { type: Date, default: null },

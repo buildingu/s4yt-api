@@ -194,11 +194,12 @@ export const sendReferrals = async (
   next: NextFunction
 ) => {
   try {
+    const recipientEmail = req.body.recipientEmail;
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId; 
-    const referrals = await authService.sendReferrals(userId);
+    const referrals = await authService.sendReferralEmail(userId, recipientEmail);
 
     return res.status(200).json({
-      message: "Referrals retrieved successfully.",
+      message: "Referrals sent successfully.",
       referrals
     });
   } catch (error: any) {

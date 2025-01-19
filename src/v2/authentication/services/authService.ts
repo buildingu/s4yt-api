@@ -103,7 +103,7 @@ export const register = async (userData: any) => {
     await newUser.save();
 
     if (process.env.SEND_EMAILS === 'true') {
-      sendVerificationEmail(newUser.email, newUser.email_verification_token);
+      await sendVerificationEmail(newUser.email, newUser.email_verification_token);
     }
 
     return newUser;
@@ -120,7 +120,21 @@ export const resendVerificationEmail = async (email: string) => {
     } else if (!user.email_verification_token) {
       throw new HttpError("User is already verified.", 204);
     }
-    sendVerificationEmail(user.email, user.email_verification_token);
+    await sendVerificationEmail(user.email, user.email_verification_token);
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+}
+
+export const sendReferralEmail = async (userId: string, recipientEmail: string) => {
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      throw new HttpError("User does not exist.", 404);
+    }
+
+    const referralCode = user.referral_code;
+    await sendReferralEmail(recipientEmail, referralCode);
   } catch (error) {
     throw resolveErrorHandler(error);
   }
@@ -288,21 +302,6 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     delete updatedUser.resetPasswordToken;
 
     return updatedUser;
-  } catch (error) {
-    throw resolveErrorHandler(error);
-  }
-};
-
-export const sendReferrals = async (userId: string) => {
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      throw new HttpError("User not found.", 404);
-    }
-
-    // const referrals = user.referrals;
-
-    return null;
   } catch (error) {
     throw resolveErrorHandler(error);
   }

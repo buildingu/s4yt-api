@@ -17,7 +17,7 @@ export default interface User {
   reset_password_token: string;
   token_version: number;
   role: typeof userRoles[number];
-  referrer_code: string;
+  referral_code: string;
   accepted_referrals: Types.ObjectId[];
   kicked?: boolean; 
   banned_until?: Date;
