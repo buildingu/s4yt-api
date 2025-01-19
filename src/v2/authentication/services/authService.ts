@@ -299,10 +299,10 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     if (profileUpdates.hasOwnProperty("school"))
       user.school = profileUpdates.school;
 
-    if (user.isModified("email") && !emailPattern.test(user.email)) {
-      throw new HttpError("Invalid email format.", 400);
-    }
     if (user.isModified("email")) {
+      if (!emailPattern.test(user.email)) {
+        throw new HttpError("Invalid email format.", 400);
+      }
       user.is_email_verified = false;
       user.email_verification_token = crypto.randomBytes(20).toString("hex");
       sendVerificationEmail(user.email, user.email_verification_token);
