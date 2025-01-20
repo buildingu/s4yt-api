@@ -82,17 +82,10 @@ const awardRegistrationCoins = (
 };
 
 const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
-  console.log("HANDLE REFERRAL BONUS!");
-  console.log("referral code " + referralCode);
-  console.log("new user id " + newUser._id);
-
   const invitingUser = await UserModel.findOne({ referral_code: referralCode });
   if (!invitingUser) {
-    console.log("No user with referral code " + referralCode);
     return false;
   }
-
-  console.log("inviting user id " + invitingUser._id);
 
   const acceptedReferral = new AcceptedReferralModel({
     invited_user: newUser,
@@ -105,7 +98,6 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   invitingUser.coins += amount;
 
   trackCoins(invitingUser, amount, "referral", false);
-  console.log(invitingUser);
   await invitingUser.save();
 
   return true;
@@ -184,11 +176,8 @@ export const getAcceptedReferrals = async (userId: string) => {
       throw new HttpError('User not found', 404);
     }
 
-    console.log(user);
-
     return user.accepted_referrals;
   } catch (error) {
-    console.log(error);
     throw resolveErrorHandler(error);
   }
 };
