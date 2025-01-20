@@ -208,7 +208,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       education: user.education || null,
       email: user.email,
       name: user.name || "",
-      referral_link: `$${process.env.FRONTEND_URL}/register?referralcode=${user.referral_code}`,
+      referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
       quiz_submitted: user.quiz_submitted,
       region: user.region || null,
       roles: user.role || null,
