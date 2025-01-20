@@ -48,8 +48,8 @@ export const socketEmit = {
     { target, event, data, transformData }: { 
       target: string, 
       event: string, 
-      data: string | boolean | Array<any>, 
-      transformData?: (data: string | boolean | Array<any>) => string | boolean | Array<any> 
+      data: string | boolean | Array<any> | Object, 
+      transformData?: (data: string | boolean | Array<any> | Object) => string | boolean | Array<any> | Object
     }
   ): void => {
     if (!io) {

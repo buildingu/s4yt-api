@@ -13,6 +13,7 @@ import { isoTimestamps } from "../../configs/timestamps";
 import { trackCoins } from "../../utils/coinLogger";
 import { HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
+import { socketEmit } from "../../utils/socket-emitter";
 const { sign } = jwt;
 
 const emailPattern =
@@ -87,6 +88,7 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
     return false;
   }
 
+  // Create a new accepted referral doc and save it 
   const acceptedReferral = new AcceptedReferralModel({
     invited_user: newUser,
     coins: amount,
@@ -94,11 +96,23 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
 
   await acceptedReferral.save();
 
+  // Update the inviting user's accepted referrals list, give and track bonus coins
   invitingUser.accepted_referrals.push(acceptedReferral._id);
   invitingUser.coins += amount;
-
   trackCoins(invitingUser, amount, "referral", false);
+
   await invitingUser.save();
+
+  // Notify the inviting user via socket that their referral was used
+  socketEmit.send({
+    target: invitingUser.email,
+    event: 'referralBonus',
+    data: {
+      email: newUser.email,
+      name: newUser.name,
+      coins: amount
+    }
+  });
 
   return true;
 };
