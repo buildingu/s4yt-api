@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { CoinTransaction } from './CoinTransaction';
 import { userEducation, userRoles } from './userEnums';
 

@@ -1,6 +1,5 @@
 import { Document, model, Schema, Types } from 'mongoose';
 import User from '../typings/User';
-import { CoinTransaction } from '../typings/CoinTransaction';
 import { userEducation, userRoles } from '../typings/userEnums';
 import { coinTransactionSchema } from './coinTransaction';
 
@@ -33,7 +32,7 @@ const userSchema = new Schema<User & Document>({
   coins: { type: Number, default: 0 },
   coin_transactions: [coinTransactionSchema],
   referral_code: { type: String, default: null },
-  accepted_referrals: { types: Types.ObjectId, ref: 'User' },
+  accepted_referrals: [{ type: Types.ObjectId, ref: 'AcceptedReferrals' }],
   kicked: { type: Boolean, default: false },
   banned_until: { type: Date, default: null },
   show_instructions: { type: Boolean, default: true },

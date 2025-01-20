@@ -6,6 +6,4 @@ export const coinTransactionSchema = new Schema<CoinTransaction & Document>({
   count: { type: Number, required: true }
 }, { _id : false });
 
-const CoinTransactionModel = model<CoinTransaction & Document>('CoinTransaction', coinTransactionSchema);
-
-export default CoinTransactionModel;
+export const CoinTransactionModel = model<CoinTransaction & Document>('CoinTransaction', coinTransactionSchema);

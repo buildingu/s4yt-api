@@ -12,6 +12,7 @@ import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
 import { trackCoins } from "../../utils/coinLogger";
 import { HydratedDocument } from "mongoose";
+import { AcceptedReferralModel } from "../../models/acceptedReferrals";
 const { sign } = jwt;
 
 const emailPattern =
@@ -81,14 +82,32 @@ const awardRegistrationCoins = (
 };
 
 const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
+  console.log("HANDLE REFERRAL BONUS!");
+  console.log("referral code " + referralCode);
+  console.log("new user id " + newUser._id);
+
   const invitingUser = await UserModel.findOne({ referral_code: referralCode });
   if (!invitingUser) {
+    console.log("No user with referral code " + referralCode);
     return false;
   }
 
-  invitingUser.accepted_referrals.push(newUser._id);
+  console.log("inviting user id " + invitingUser._id);
+
+  const acceptedReferral = new AcceptedReferralModel({
+    invited_user: newUser,
+    coins: amount,
+  });
+
+  await acceptedReferral.save();
+
+  invitingUser.accepted_referrals.push(acceptedReferral._id);
   invitingUser.coins += amount;
+
   trackCoins(invitingUser, amount, "referral", false);
+  console.log(invitingUser);
+  await invitingUser.save();
+
   return true;
 };
 
