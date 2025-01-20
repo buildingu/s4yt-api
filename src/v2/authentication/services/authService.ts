@@ -171,13 +171,24 @@ export const resendVerificationEmail = async (email: string) => {
 
 export const getAcceptedReferrals = async (userId: string) => {
   try {
-    const user = await UserModel.findById(userId, 'accepted_referrals');
+    const user = await UserModel.findById(userId, 'accepted_referrals').populate({
+      path: 'accepted_referrals',
+      select: '-_id -__v',
+      populate: {
+        path: 'invited_user',
+        select: '-_id name email'
+      }
+    });
+
     if (!user) {
       throw new HttpError('User not found', 404);
     }
 
+    console.log(user);
+
     return user.accepted_referrals;
   } catch (error) {
+    console.log(error);
     throw resolveErrorHandler(error);
   }
 };
