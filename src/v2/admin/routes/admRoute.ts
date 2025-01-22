@@ -7,5 +7,7 @@ const router = Router();
 router.get('/users', verifySuperAdmin, superAdminController.getAllUsers);
 router.post('/users/kick/:userId', verifySuperAdmin, superAdminController.kickUser);
 router.post('/users/ban/:userId', verifySuperAdmin, superAdminController.banUser);
+router.get('/business', superAdminController.getAllBusinesses); // TODO: needs verifySuperAdmin
+router.post('/business', superAdminController.createBusiness); // TODO: needs verifySuperAdmin
 
 export default router;

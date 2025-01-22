@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
 import { getInstructionsForUser } from "../services/gameService";
 import mongoose from "mongoose";
+import { SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
+import { CustomJwtPayload } from "../../typings/express/Request";
+import { HttpError } from "../../middleware/errorHandler";
 
 export const addSponsor = async (req: Request, res: Response) => {
   try {
@@ -10,6 +13,46 @@ export const addSponsor = async (req: Request, res: Response) => {
     res.status(201).json(sponsor);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const addPartner = async (req: Request, res: Response, next: NextFunction) => {
+  try{
+    const rafflePartnerData = req.body;
+    const partner = await gameService.createRafflePartner(rafflePartnerData);
+    res.json(partner);
+  }catch(error: any){
+   next(error);
+  }
+};
+
+export const updatePartner = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id; 
+    const updatedData = req.body; 
+    const updatedPartner = await gameService.editRafflePartner(id, updatedData);
+    res.json(updatedPartner); 
+  } catch (error: any) {
+    next(error); 
+  }
+};
+
+export const getRafflePartners = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const partners = await gameService.getAllRafflePartners(); 
+    res.json(partners); 
+  } catch (error: any) {
+    next(error); 
+  }
+};
+
+export const getRafflePartner = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id; 
+    const partner = await gameService.getRafflePartner(id);
+    res.json(partner); 
+  } catch (error: any) {
+    next(error); 
   }
 };
 
@@ -106,35 +149,64 @@ export const addQuizCoins = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const sendBusinessesInfo = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
-    }
-  },
-  addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
-    }
-  },
-  sendBusinessChallengeWinners = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      return res.status(200).json({ message: "" });
-    } catch (error: any) {
-      next(error);
-    }
-  };
+export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const allBusinesses = await gameService.sendBusinessesInfo();
+    res.json(allBusinesses);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
+  try {
+    const { questionId } = req.params;
+    const { userId, text, submit } = req.body;
+    const boolSubmit = submit === 'true';
+
+    const answer = await gameService.saveAnswer(questionId, userId, text, boolSubmit);
+    res.status(200).json(answer);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) => {
+  try {
+    const { answerId } = req.params;
+    const { text, submit } = req.body;
+    const boolSubmit = submit === 'true';
+
+    const answer = await gameService.updateAnswer(answerId, text, boolSubmit);
+    res.json(answer);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { businessId } = req.params;
+    const { userId, rsvpType } = req.body;
+
+    const addResult = await gameService.addMeetUp(businessId, userId, rsvpType);
+    return res.status(200).json({ message: "Player added to meeting" });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const sendBusinessChallengeWinners = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    return res.status(200).json({ message: "" });
+  } catch (error: any) {
+    next(error);
+  }
+};
 
 export const displayEventResults = async (
   req: Request,
@@ -155,7 +227,31 @@ export const sendCoinsGainedHistory = async (
   next: NextFunction
 ) => {
   try {
-    return res.status(200).json({ message: "" });
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+
+    const coinHistory = await gameService.getCoinsGainedHistory(userId);
+    return res.status(200).json({ coin_details: coinHistory });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const sendCoinsTotal = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+
+    const coinTotal = await gameService.getCoinsTotal(userId);
+    return res.status(200).json(coinTotal);
   } catch (error: any) {
     next(error);
   }

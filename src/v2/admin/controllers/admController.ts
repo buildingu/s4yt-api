@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
 import * as playerService from '../../business/services/playerService';
+import { CreateBusinessRequestDto } from '../dtos/AdminDto';
 
 // export const uploadImage = async (req: Request, res: Response) => {
 //   try {
@@ -35,6 +36,25 @@ export const banUser = async (req: Request, res: Response) => {
     const { duration } = req.body;
     await superAdminService.banAUser(req.params.userId, duration);
     res.json({ message: 'User has been banned successfully.' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const createBusiness = async (req: CreateBusinessRequestDto, res: Response) => {
+  try {
+    const { name, logoS4yt, description } = req.body;
+    await superAdminService.createBusiness(name, logoS4yt, description);
+    res.status(200).send('Business created successfully');
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+};
+
+export const getAllBusinesses = async (req: Request, res: Response) => {
+  try {
+    const businesses = await superAdminService.retrieveAllBusinesses();
+    res.status(200).json(businesses);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

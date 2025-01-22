@@ -11,7 +11,7 @@ router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTr
 
 router.post('/sponsors', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addSponsor);
 router.post('/sponsors/:sponsorId', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMultipleChoice)
-router.put('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
+router.patch('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
 router.get('/sponsors', verifyTokens.verifyAccessToken, gameController.getSponsors);
 // Send the info about the sponsors, so you will send us the logos too for all of this, which would be a path to the image, can be store here or some image hosting place.
 
@@ -23,16 +23,23 @@ router.post('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.veri
 // router.post("/player/coins/quiz", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addQuizCoins); // This is for the coins earned from submitting the sponsor quiz (you can also delete this route and just make one route for adding coins).
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
-router.post("/businesses/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
+router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
+
+router.post("/questions/:questionId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);
+router.patch("/answers/:answerId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateAnswer);
 
 router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleInfo); // Sends us the raffle items and stuff.
 router.get("/raffle/coins", verifyTokens.verifyAccessToken, gameController.sendRaffleIndicatorCoins); // This gives use the gold and sliver coins, which is the gold coin means someone placed a coin(s) on that raffle item and the sliver coins means none.
 // *There is a socket to listen for the placement of coins on items so we can update in real-time.*
 router.get("/raffle/winners", verifyTokens.verifyAccessToken, gameController.sendRaffleWinners); // To do this you'll create a randomizer with better odds for someone with more coins added to that item and find the winner for each raffle item I think or do it whatever way you like.
 
-router.get("/player/coins", verifyTokens.verifyAccessToken, gameController.sendCoinsGainedHistory); // You have to keep track of how the coins were gained (referral, quiz, or whatever) and just send use the type(where it was from) and the coins.
-
+router.get("/player/coins/history", verifyTokens.verifyAccessToken, gameController.sendCoinsGainedHistory); // You have to keep track of how the coins were gained (referral, quiz, or whatever) and just send use the type(where it was from) and the coins.
+router.get("/player/coins/total", verifyTokens.verifyAccessToken, gameController.sendCoinsTotal);
 router.get("/results", verifyTokens.verifyAccessToken, gameController.displayEventResults);
 
+router.post('/raffle/partners', verifyTokens.verifyAccessToken, gameController.addPartner);
+router.patch('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.updatePartner); 
+router.get('/raffle/partners', verifyTokens.verifyAccessToken, gameController.getRafflePartners);
+router.get('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.getRafflePartner);
 export default router;
