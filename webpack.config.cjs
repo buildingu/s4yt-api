@@ -8,7 +8,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'), 
     filename: 'server.cjs', 
-    clean: true, building
+    clean: true,
   },
   resolve: {
     extensions: ['.ts', '.js'], 
