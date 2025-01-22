@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Tech Corp",
+    "logo_s4yt": "https://example.com/logo-small.png",
+    "logo_normal": "https://example.com/logo-normal.png",
+    "description": "A leading tech company.",
+    "meet_members_confirmed": [],
+    "meet_members_interested": [],
+    "attachment": "https://example.com/attachment.pdf",
+    "video_urls": ["https://example.com/video1.mp4", "https://example.com/video2.mp4"],
+    "questions": []
+  },
+  {
+    "name": "Eco Solutions",
+    "logo_s4yt": "https://example.com/eco-logo-small.png",
+    "logo_normal": "https://example.com/eco-logo-normal.png",
+    "description": "Innovative eco-friendly solutions.",
+    "meet_members_confirmed": [],
+    "meet_members_interested": [],
+    "attachment": null,
+    "video_urls": ["https://example.com/eco-video.mp4"],
+    "questions": []
+  }
+]

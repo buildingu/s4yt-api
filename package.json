@@ -18,7 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "check-ts": "npx tsc --noEmit",
     "build": "webpack --config webpack.config.cjs",
-    "seed": "mongo-seeding import --db-name yourDatabaseName --input seeders",
+    "seed:custom": "node --loader ts-node/esm src/v2/seeders/seeder.ts",    
     "serve": "cross-env NODE_ENV=production node ./build/server.cjs",
     "clean": "rm -rf node_modules"
   },
