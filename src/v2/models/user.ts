@@ -1,6 +1,5 @@
-import { Document, model, Schema } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 import User from '../typings/User';
-import { CoinTransaction } from '../typings/CoinTransaction';
 import { userEducation, userRoles } from '../typings/userEnums';
 import { coinTransactionSchema } from './coinTransaction';
 
@@ -20,9 +19,7 @@ const userSchema = new Schema<User & Document>({
   name: { type: String, default: null, minlength: 2, maxlength: 128 },
   password: { type: String, required: true },
   quiz_submitted: { type: Number, default: null },
-  referral_link: { type: String, default: null },
   region: { type: String, default: null },
-  school: { type: String, default: null },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },
   reset_password_token: { type: String, default: null },
@@ -34,8 +31,8 @@ const userSchema = new Schema<User & Document>({
   },
   coins: { type: Number, default: 0 },
   coin_transactions: [coinTransactionSchema],
-  referer_code: { type: String, default: null },
-  used_refer_code: { type: Boolean, default: false },
+  referral_code: { type: String, default: null },
+  accepted_referrals: [{ type: Types.ObjectId, ref: 'AcceptedReferral' }],
   kicked: { type: Boolean, default: false },
   banned_until: { type: Date, default: null },
   show_instructions: { type: Boolean, default: true },

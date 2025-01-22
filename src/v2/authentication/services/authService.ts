@@ -12,6 +12,8 @@ import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
 import { trackCoins } from "../../utils/coinLogger";
 import { HydratedDocument } from "mongoose";
+import { AcceptedReferralModel } from "../../models/acceptedReferrals";
+import { socketEmit } from "../../utils/socket-emitter";
 const { sign } = jwt;
 
 const emailPattern =
@@ -80,6 +82,41 @@ const awardRegistrationCoins = (
   trackCoins(user, amount, "register", false);
 };
 
+const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
+  const invitingUser = await UserModel.findOne({ referral_code: referralCode });
+  if (!invitingUser) {
+    return false;
+  }
+
+  // Create a new accepted referral doc and save it 
+  const acceptedReferral = new AcceptedReferralModel({
+    invited_user: newUser,
+    coins: amount,
+  });
+
+  await acceptedReferral.save();
+
+  // Update the inviting user's accepted referrals list, give and track bonus coins
+  invitingUser.accepted_referrals.push(acceptedReferral._id);
+  invitingUser.coins += amount;
+  trackCoins(invitingUser, amount, "referral", false);
+
+  await invitingUser.save();
+
+  // Notify the inviting user via socket that their referral was used
+  socketEmit.send({
+    target: invitingUser.email,
+    event: 'referralBonus',
+    data: {
+      email: newUser.email,
+      name: newUser.name,
+      coins: amount
+    }
+  });
+
+  return true;
+};
+
 export const register = async (userData: any) => {
   try {
     if (!emailPattern.test(userData.email)) {
@@ -97,25 +134,25 @@ export const register = async (userData: any) => {
     }
 
     const hashedPassword = await hash(userData.password, 12);
-
-    const refererCode = crypto.randomBytes(10).toString("hex");
+    const inviterReferralCode = userData.referral_code;
+    const newUserReferralCode = crypto.randomBytes(10).toString('hex');
 
     const newUser = new UserModel({
       ...userData,
       password: hashedPassword,
       role: userData.role || "Player",
       coin: userData.coin || 0,
-      referer_code: userData.refererCode || refererCode,
-      used_refer_code: userData.usedReferCode || false,
+      referral_code: newUserReferralCode, 
       is_email_verified: false,
       email_verification_token: crypto.randomBytes(20).toString("hex"),
     });
 
     awardRegistrationCoins(newUser, 50);
+    handleReferralBonus(newUser, inviterReferralCode, 5);
     await newUser.save();
 
-    if (process.env.SEND_EMAILS === "true") {
-      sendVerificationEmail(newUser.email, newUser.email_verification_token);
+    if (process.env.SEND_EMAILS === 'true') {
+      await sendVerificationEmail(newUser.email, newUser.email_verification_token);
     }
 
     return newUser;
@@ -132,7 +169,28 @@ export const resendVerificationEmail = async (email: string) => {
     } else if (!user.email_verification_token) {
       throw new HttpError("User is already verified.", 204);
     }
-    sendVerificationEmail(user.email, user.email_verification_token);
+    await sendVerificationEmail(user.email, user.email_verification_token);
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+};
+
+export const getAcceptedReferrals = async (userId: string) => {
+  try {
+    const user = await UserModel.findById(userId, 'accepted_referrals').populate({
+      path: 'accepted_referrals',
+      select: '-_id -__v',
+      populate: {
+        path: 'invited_user',
+        select: '-_id name email'
+      }
+    });
+
+    if (!user) {
+      throw new HttpError('User not found', 404);
+    }
+
+    return user.accepted_referrals;
   } catch (error) {
     throw resolveErrorHandler(error);
   }
@@ -164,11 +222,10 @@ export const login = async (loginData: { email: string; password: string }) => {
       education: user.education || null,
       email: user.email,
       name: user.name || "",
+      referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
       quiz_submitted: user.quiz_submitted,
-      referral_link: user.referral_link,
       region: user.region || null,
       roles: user.role || null,
-      school: user.school || null,
     };
 
     const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
@@ -296,8 +353,6 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       user.region = profileUpdates.region;
     if (profileUpdates.hasOwnProperty("education"))
       user.education = profileUpdates.education;
-    if (profileUpdates.hasOwnProperty("school"))
-      user.school = profileUpdates.school;
 
     if (user.isModified("email")) {
       if (!emailPattern.test(user.email)) {
@@ -318,21 +373,6 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     delete updatedUser.resetPasswordToken;
 
     return [updatedUser, needsReverification];
-  } catch (error) {
-    throw resolveErrorHandler(error);
-  }
-};
-
-export const sendReferrals = async (userId: string) => {
-  try {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      throw new HttpError("User not found.", 404);
-    }
-
-    // const referrals = user.referrals;
-
-    return null;
   } catch (error) {
     throw resolveErrorHandler(error);
   }

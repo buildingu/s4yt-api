@@ -7,9 +7,8 @@ export default interface UserCredentials {
   education: typeof userEducation[number] | null;
   email: string;
   name: string;
-  quiz_submitted: number;
   referral_link: string;
+  quiz_submitted: number;
   region: string | null;
   roles: typeof userRoles[number] | null;
-  school: string | null;
 }

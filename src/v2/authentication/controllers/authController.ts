@@ -11,6 +11,7 @@ import {
 import { CustomJwtPayload } from "../../typings/express/Request";
 
 import * as authService from "../services/authService";
+import { HttpError } from "../../middleware/errorHandler";
 
 export const csrf = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -55,7 +56,7 @@ export const register = async (
   next: NextFunction
 ) => {
   try {
-    const newUser = await authService.register(req.body);
+    await authService.register(req.body);
     return res.status(201).json({
       message:
         "User was successfully registered. Verification email was sent successfully.",
@@ -201,19 +202,21 @@ export const updateProfile = async (
   }
 };
 
-export const sendReferrals = async (
+export const sendAcceptedReferrals = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const userId =
-      (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
-    const referrals = await authService.sendReferrals(userId);
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
 
-    return res.status(200).json({
+    const acceptedReferrals = await authService.getAcceptedReferrals(userId);
+    return res.status(200).json({ 
       message: "Referrals retrieved successfully.",
-      referrals,
+      referrals: acceptedReferrals
     });
   } catch (error: any) {
     next(error);
