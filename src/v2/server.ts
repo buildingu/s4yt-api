@@ -75,6 +75,7 @@ app.use(
       "https://s4yt.building-u.com",
     ], // I don't remember what the staging url looks like, I think that's it.
     credentials: true,
+    exposedHeaders: ["Authorization", "x-xsrf-token"] // Expose bearer and CSRF tokens to frontend.
   })
 );
 

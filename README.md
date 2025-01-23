@@ -116,5 +116,67 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
+# Running Builds for TypeScript Files
+
+## **Using Webpack for Project Builds**
+Our Webpack configuration allows you to build the entire project or individual TypeScript files with ease. Here's how you can use it:
+
+### **Build the Entire Project**
+To build the entire project, simply run:
+
+```bash
+npm run build
+```
+
+- This command compiles all TypeScript files in the project using Webpack.
+- The output will be placed in the `build/` directory, with the main entry point being `build/server.cjs`.
+
+---
+
+## **Building Individual TypeScript Files**
+You can also build individual TypeScript files without running the entire project build. This is useful for testing or running specific utilities like seeders.
+
+### **Using Webpack for Individual Builds**
+To build a specific TypeScript file using Webpack, you need to pass the file as an entry point. Here's an example for building `src/v2/seeder.ts`:
+
+```bash
+npx webpack --entry ./src/v2/seeder.ts --output-path ./build/seeder --output-filename seeder.js
+```
+
+- **`--entry`**: Path to the TypeScript file you want to build.
+- **`--output-path`**: Directory where the output will be placed (e.g., `build/seeder/`).
+- **`--output-filename`**: Name of the output file (e.g., `seeder.js`).
+
+After running this command:
+- The transpiled JavaScript file will be available in the specified output directory (e.g., `build/seeder/seeder.js`).
+
+### **Using `tsc` for Quick Transpilation**
+For a quick build of a single file without Webpack, you can use the TypeScript compiler:
+
+```bash
+npx tsc src/v2/seeder.ts --outDir build --module commonjs
+```
+
+- The transpiled file will be placed in the `build/` directory, preserving the directory structure of the source file.
+
+### **Using `ts-node` for Execution**
+To directly execute a TypeScript file without building it, you can use `ts-node`:
+
+```bash
+npx ts-node src/v2/seeder.ts
+```
+
+This approach is great for quick testing but does not produce a separate build file.
+
+---
+
+## **Output Directory Structure**
+All builds, whether for the entire project or individual files, will be output to the `build/` directory. The structure mirrors the source directory (`src/`) for easy navigation.
+
+For example:
+- Source file: `src/v2/seeder.ts`
+- Build file: `build/v2/seeder.js`
+
+
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
