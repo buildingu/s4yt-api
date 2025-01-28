@@ -8,7 +8,7 @@ export default interface UserCredentials {
   email: string;
   name: string;
   referral_link: string;
-  quiz_submitted: number;
+  chests_submitted: Map<string, number>;
   region: string | null;
   roles: typeof userRoles[number] | null;
 }

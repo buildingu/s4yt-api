@@ -11,7 +11,8 @@ import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
-import { CoinTransaction } from "../../typings/CoinTransaction";
+import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
+import { awardCoinsToUser } from "../../utils/coins";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -124,17 +125,28 @@ export const getRafflePartner = async (id: string) => {
   }
 };
 
-export const assignCoinsToUser = async (userId: string, coinCount: number) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error('User not found');
+export const assignCoinsToUser = async (
+  userId: string,
+  count: number,
+  source: typeof coinSources[number],
+  payload: Record<string, any>
+) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new HttpError('User not found', 404);
+    }
+
+    const results = await awardCoinsToUser(user, count, source, payload);
+    if (!results.success) {
+      throw new HttpError(results.message, results.statusCode);
+    }
+
+    await user.save();
+    return user;
+  } catch (error) {
+    throw resolveErrorHandler(error);
   }
-
-  user.coins += coinCount;
-
-  await user.save();
-
-  return user;
 };
 
 export const createSponsor = async (sponsorData: any) => {

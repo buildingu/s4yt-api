@@ -19,9 +19,6 @@ router.get('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verif
 router.post('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.submitSponsorQuiz)
 // only grant coins when all the multiple choice questions are submitted
 
-// potentially overriden by submitSponsorQuestion (auto mark multiple choice)
-// router.post("/player/coins/quiz", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addQuizCoins); // This is for the coins earned from submitting the sponsor quiz (you can also delete this route and just make one route for adding coins).
-
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
 router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
@@ -34,6 +31,7 @@ router.get("/raffle/coins", verifyTokens.verifyAccessToken, gameController.sendR
 // *There is a socket to listen for the placement of coins on items so we can update in real-time.*
 router.get("/raffle/winners", verifyTokens.verifyAccessToken, gameController.sendRaffleWinners); // To do this you'll create a randomizer with better odds for someone with more coins added to that item and find the winner for each raffle item I think or do it whatever way you like.
 
+router.post("/player/coins/chest", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addChestCoins); // This is for awarding coins to the player earned from chests in "Learn and Earn"
 router.get("/player/coins/history", verifyTokens.verifyAccessToken, gameController.sendCoinsGainedHistory); // You have to keep track of how the coins were gained (referral, quiz, or whatever) and just send use the type(where it was from) and the coins.
 router.get("/player/coins/total", verifyTokens.verifyAccessToken, gameController.sendCoinsTotal);
 router.get("/results", verifyTokens.verifyAccessToken, gameController.displayEventResults);
