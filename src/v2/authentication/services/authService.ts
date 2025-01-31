@@ -208,6 +208,13 @@ export const login = async (loginData: { email: string; password: string }) => {
       );
     }
 
+    const chestKeyValues = user.chests_submitted.keys();
+    const simpleChestData: Record<string, boolean> = {};
+
+    for (const key of chestKeyValues) {
+      simpleChestData[key] = true;
+    }
+
     const userCredentials: UserCredentials = {
       id: user._id.toString(),
       city: user.city || null,
@@ -216,7 +223,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       email: user.email,
       name: user.name || "",
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
-      chests_submitted: user.chests_submitted,
+      chests_submitted: simpleChestData,
       region: user.region || null,
       roles: user.role || null,
     };
