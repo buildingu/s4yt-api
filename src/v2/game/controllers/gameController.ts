@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
+import { createChestSubmittedChecklist } from "../../utils/user";
 
 export const addSponsor = async (req: Request, res: Response) => {
   try {
@@ -146,8 +147,10 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
     }
   
     const { amount, chestId } = req.body;
-    await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
-    res.status(200).json({message: 'Coins from chest successfully added to user\'s balance'});
+    const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
+    const chestsSubmittedChecklist = createChestSubmittedChecklist(user);
+
+    res.status(200).json({ chests_submitted: chestsSubmittedChecklist});
   } catch (error: any) {
     next(error);
   }

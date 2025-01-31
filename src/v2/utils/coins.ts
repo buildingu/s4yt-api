@@ -24,6 +24,15 @@ export const awardCoinsToUser = async (
         };
       }
 
+      // Check if chest has already been submitted, to prevent potential abuse
+      if (user.chests_submitted.has(chestId)) {
+        return {
+          success: true,
+          message: 'Chest has already been submitted',
+          statusCode: 200
+        };
+      }
+
       user.chests_submitted.set(chestId, count);
       break;
 
