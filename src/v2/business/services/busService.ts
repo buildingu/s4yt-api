@@ -48,3 +48,74 @@ export const getAnswersToQuestion = async (questionId: string) => {
   }
   return answers;
 };
+
+
+
+export const updateAwardAmount = async (businessId: string, award: number) => {
+  const business = await Business.findById(businessId);
+  if (!business) {
+    throw new Error('Business not found');
+  }
+
+  business.award = award;
+  business.awardedTotal = business.winners.reduce((sum, w) => sum + w.award, 0); 
+  await business.save();
+
+  return business;
+};
+
+
+export const getAwardDetails = async (businessId: string) => {
+  const business = await Business.findById(businessId);
+  if (!business) {
+    throw new Error('Business not found');
+  }
+
+  return {
+    totalAward: business.award,
+    remainingAward: business.award - business.awardedTotal
+  };
+};
+
+
+export const selectWinners = async (
+  businessId: string,
+  winners: { winnerId: string; award: number }[]
+) => {
+  const business = await Business.findById(businessId);
+  if (!business) {
+    throw new Error('Business not found');
+  }
+
+  let totalAwarded = business.awardedTotal;
+
+  for (const { winnerId, award } of winners) {
+    if (business.winners.some(w => w.winnerId.toString() === winnerId)) {
+      throw new Error(`Winner ${winnerId} has already been awarded.`);
+    }
+    if (totalAwarded + award > business.award) {
+      throw new Error('Insufficient award balance');
+    }
+    business.winners.push({ winnerId, award });
+    totalAwarded += award;
+  }
+
+  business.awardedTotal = totalAwarded;
+  await business.save();
+
+  return business.winners;
+};
+
+
+export const getEventResults = async (businessId: string) => {
+  const business = await Business.findById(businessId);
+  if (!business) {
+    throw new Error('Business not found');
+  }
+
+  return {
+    totalAward: business.award,
+    remainingAward: business.award - business.awardedTotal,
+    winners: business.winners
+  };
+};

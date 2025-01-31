@@ -29,3 +29,23 @@ export interface GetAnswersRequestDto extends Request {
     questionId: string;
   }
 }
+
+export interface AwardRequestDto extends Request {
+  body: { award: number };
+  params: { businessId: string };
+}
+
+export interface SelectWinnersRequestDto extends Request {
+  body: {
+    winners: { winnerId: string; award: number }[];
+  };
+  params: { businessId: string };
+}
+
+export interface GetAwardRequestDto extends Request {
+  params: { businessId: string };
+}
+
+export interface GetEventResultsRequestDto extends Request {
+  params: { businessId: string };
+}
