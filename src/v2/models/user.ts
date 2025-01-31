@@ -18,7 +18,7 @@ const userSchema = new Schema<User & Document>({
   },
   name: { type: String, default: null, minlength: 2, maxlength: 128 },
   password: { type: String, required: true },
-  chests_submitted: { type: Map, of: Number },
+  chests_submitted: { type: Map, of: Boolean },
   region: { type: String, default: null },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },

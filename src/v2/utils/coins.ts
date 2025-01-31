@@ -33,7 +33,7 @@ export const awardCoinsToUser = async (
         };
       }
 
-      user.chests_submitted.set(chestId, count);
+      user.chests_submitted.set(chestId, true);
       break;
 
     case 'referral':

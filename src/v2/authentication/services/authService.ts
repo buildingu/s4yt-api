@@ -14,7 +14,6 @@ import { HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
 import { socketEmit } from "../../utils/socket-emitter";
 import { awardCoinsToUser } from "../../utils/coins";
-import { createChestSubmittedChecklist } from "../../utils/user";
 const { sign } = jwt;
 
 const emailPattern =
@@ -209,8 +208,6 @@ export const login = async (loginData: { email: string; password: string }) => {
       );
     }
 
-    const chestsSubmittedChecklist = createChestSubmittedChecklist(user);
-
     const userCredentials: UserCredentials = {
       id: user._id.toString(),
       city: user.city || null,
@@ -219,7 +216,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       email: user.email,
       name: user.name || "",
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
-      chests_submitted: chestsSubmittedChecklist,
+      chests_submitted: Object.fromEntries(user.chests_submitted),
       region: user.region || null,
       roles: user.role || null,
     };
