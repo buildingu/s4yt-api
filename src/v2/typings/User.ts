@@ -9,7 +9,7 @@ export default interface User {
   education?: typeof userEducation[number] | null;
   name?: string;
   password: string;
-  quiz_submitted: number;
+  chests_submitted: Map<string, boolean>;
   region?: string | null;
   is_email_verified: boolean;
   email_verification_token: string;

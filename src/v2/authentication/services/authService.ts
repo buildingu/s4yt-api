@@ -10,10 +10,10 @@ import {
 } from "../services/emailService";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
-import { trackCoins } from "../../utils/coinLogger";
 import { HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
 import { socketEmit } from "../../utils/socket-emitter";
+import { awardCoinsToUser } from "../../utils/coins";
 const { sign } = jwt;
 
 const emailPattern =
@@ -74,14 +74,6 @@ export const validatePassword = (password: string) => {
   return { valid: true, message: "password is valid" };
 };
 
-const awardRegistrationCoins = (
-  user: HydratedDocument<User>,
-  amount: number
-) => {
-  user.coins += amount;
-  trackCoins(user, amount, "register", false);
-};
-
 const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
   const invitingUser = await UserModel.findOne({ referral_code: referralCode });
   if (!invitingUser) {
@@ -97,9 +89,9 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   await acceptedReferral.save();
 
   // Update the inviting user's accepted referrals list, give and track bonus coins
-  invitingUser.accepted_referrals.push(acceptedReferral._id);
-  invitingUser.coins += amount;
-  trackCoins(invitingUser, amount, "referral", false);
+  awardCoinsToUser(invitingUser, amount, 'referral', {
+    acceptedReferralId: acceptedReferral._id
+  });
 
   await invitingUser.save();
 
@@ -142,12 +134,13 @@ export const register = async (userData: any) => {
       password: hashedPassword,
       role: userData.role || "Player",
       coin: userData.coin || 0,
-      referral_code: newUserReferralCode, 
+      referral_code: newUserReferralCode,
       is_email_verified: false,
       email_verification_token: crypto.randomBytes(20).toString("hex"),
+      chests_submitted: {},
     });
 
-    awardRegistrationCoins(newUser, 50);
+    awardCoinsToUser(newUser, 50, 'register', {});
     handleReferralBonus(newUser, inviterReferralCode, 5);
     await newUser.save();
 
@@ -223,7 +216,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       email: user.email,
       name: user.name || "",
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
-      quiz_submitted: user.quiz_submitted,
+      chests_submitted: Object.fromEntries(user.chests_submitted),
       region: user.region || null,
       roles: user.role || null,
     };

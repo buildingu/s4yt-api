@@ -20,3 +20,10 @@ export interface UpdateAnswerRequestDto extends Request {
     answerId: string;
   }
 }
+
+export interface AddChestCoinsRequestDto extends Request {
+  body: {
+    chestId: string;
+    amount: string;
+  }
+}

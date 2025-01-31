@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
 import { getInstructionsForUser } from "../services/gameService";
 import mongoose from "mongoose";
-import { SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
+import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
@@ -137,13 +137,18 @@ export const sendRaffleWinners = async (req: Request, res: Response, next: NextF
   }
 };
 
-// Controller to add quiz coins to a user's total
-export const addQuizCoins = async (req: Request, res: Response, next: NextFunction) => {
-  // Assuming we receive userId and coinCount from the request
-  const { userId, coinCount } = req.body;
+// Controller to add "Learn and Earn" chest coins to a user's total
+export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response, next: NextFunction) => {
   try {
-    const updatedUser = await gameService.assignCoinsToUser(userId, coinCount);
-    res.status(200).json(updatedUser);
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+  
+    const { amount, chestId } = req.body;
+    const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
+
+    res.status(200).json({ chests_submitted: Object.fromEntries(user.chests_submitted)});
   } catch (error: any) {
     next(error);
   }
