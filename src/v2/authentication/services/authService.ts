@@ -156,6 +156,8 @@ export const register = async (userData: any) => {
 
 export const resendVerificationEmail = async (email: string) => {
   try {
+    // Like again, you could do this:
+    // const user = await UserModel.findOne({ email }, "-_id email email_verification_token", { lean: true });
     const user = await UserModel.findOne({ email });
     if (!user) {
       throw new HttpError("User does not exist.", 404);
@@ -191,6 +193,15 @@ export const getAcceptedReferrals = async (userId: string) => {
 
 export const login = async (loginData: { email: string; password: string }) => {
   try {
+    // Instead of getting the whole document to make this better you could do this (also take out the id for now I don't think I need it and I told you we shouldn't expose the actual _id):
+    // const user = await UserModel.findOne(
+    //   { email: loginData.email },
+    //   "-_id city country education email is_email_verified name referral_link chests_submitted region roles",
+    //   { lean: true }
+    // );
+    // Later use this but I never used it before, I think it will convert that map, if that don't work, then you'll have to do Object.fromEntries on the map. (I don't think you can use toJSON when you lean lol because all document methods are gone).
+    // user.toJSON()
+
     const user = await UserModel.findOne({ email: loginData.email });
     if (!user) {
       throw new HttpError("User does not exist.", 404);
@@ -208,6 +219,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       );
     }
 
+    // Then delete this but all you need to do is take out is_email_verified out of the document (it doesn't matter if you do what I'm saying or not).
     const userCredentials: UserCredentials = {
       id: user._id.toString(),
       city: user.city || null,

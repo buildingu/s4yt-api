@@ -145,9 +145,12 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
       throw new HttpError('User is not authenticated', 401);
     }
   
+    // TODO: You also need to make a route to give me all the questions (chests), you can just put all the mock data I had on the front in to documents and just give me that for the time being.
+    // Also, use a uuid for the chest_id, it's nice in mongoose because you can just do default: crypto.RandomUUID() or whatever it's called.
     const { amount, chestId } = req.body;
     const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
 
+    // You don't need to do Object.fromEntries when you don't lean it. When you don't lean it will just know when you put it in json and be the object entries.
     res.status(200).json({ chests_submitted: Object.fromEntries(user.chests_submitted)});
   } catch (error: any) {
     next(error);

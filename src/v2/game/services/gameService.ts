@@ -24,6 +24,7 @@ export const getRaffleItemsService = async () => {
   }
 };
 
+// TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to sliver and gold coin changes.
 export const getRaffleIndicatorCoinsService = async () => {
   try {
     const raffleItems = await RaffleItem.find().populate('stake.user');
@@ -125,6 +126,9 @@ export const getRafflePartner = async (id: string) => {
   }
 };
 
+// Remember, you will emit all coin changes to me. I will be listening to an event, whatever you call the event, to change the
+// balance of the user on my end. So, you should already be doing it for the referrals, but this happens on any change of the coin balance, 
+// you have to emit that to me.
 export const assignCoinsToUser = async (
   userId: string,
   count: number,
@@ -149,12 +153,14 @@ export const assignCoinsToUser = async (
   }
 };
 
+// TODO: DELETE
 export const createSponsor = async (sponsorData: any) => {
   const sponsor = new Sponsor(sponsorData);
   await sponsor.save();
   return sponsor;
 };
 
+// TODO: DELETE
 export const addMultipleChoiceToSponsor = async (sponsorId: string, multipleChoiceData: any) => {
   const sponsor = await Sponsor.findById(sponsorId);
   if (!sponsor) {
@@ -170,16 +176,20 @@ export const addMultipleChoiceToSponsor = async (sponsorId: string, multipleChoi
   return multipleChoice;
 };
 
+// TODO: DELETE
 export const updateSponsor = async (id: String, sponsorData: any) => {
   const sponsor = await Sponsor.findByIdAndUpdate(id, sponsorData, { new: true });
   return sponsor;
 };
 
+// TODO: DELETE
 export const getAllSponsors = async () => {
   const sponsors = await Sponsor.find({});
   return sponsors;
 };
 
+// I don't know all the spots that's old at the moment, but you need to clean your code up (like the csrf directory, you're not using it right?) (also, it highly likely that you can comment out or delete code that's not yours, like all of this is Andrew's and he's gone. Just so we can see things more clearly).
+// TODO: DELETE
 export const getMultipleChoiceFromSponsor = async (sponsorId: String) => {
   const sponsor = await Sponsor.findById(sponsorId);
   if (!sponsor) {
@@ -196,6 +206,7 @@ export const getMultipleChoiceFromSponsor = async (sponsorId: String) => {
   return multipleChoice
 };
 
+// TODO: DELETE
 export const gradeSponsorQuiz = async (userId: String, sponsorId: String, responses: any) => {
   const sponsor = await Sponsor.findById(sponsorId);
   if (!sponsor) {
@@ -246,6 +257,7 @@ export const gradeSponsorQuiz = async (userId: String, sponsorId: String, respon
   return submissions
 }
 
+// TODO: DELETE
 export const addQuizCoins = async (userId: String, coinCount: number) => {
   try {
     const updatedUser = await User.findById(userId);
@@ -460,6 +472,7 @@ export const getCoinsTotal = async (userId: string) => {
   }
 };
 
+// What is this? If this is the instructions on the home page (treasure map), we don't need it and show_instructions is gone as you already did I think, so you can delete this.
 export const getInstructionsForUser = async (userId: mongoose.Types.ObjectId): Promise<any> => {
   try {
     const user = await User.findById(userId);
@@ -481,6 +494,7 @@ export const getInstructionsForUser = async (userId: mongoose.Types.ObjectId): P
   }
 };
 
+// Don't call this TreasureMap the TreasureMap is actually the main page that shows all the links to go to the raffle, learn and earn, or where ever (home). (I know I think this is old).
 export const getTreasureMapData = async (userId: Types.ObjectId) => {
   try {
     // Fetch user details to determine which elements to show on the treasure map
