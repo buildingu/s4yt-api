@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
-import { getInstructionsForUser } from "../services/gameService";
 import mongoose from "mongoose";
 import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
@@ -89,7 +88,6 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
     const { amount, chestId } = req.body;
     const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
 
-    // You don't need to do Object.fromEntries when you don't lean it. When you don't lean it will just know when you put it in json and be the object entries.
     res.status(200).json({ chests_submitted: user.chests_submitted });
   } catch (error: any) {
     next(error);
@@ -199,22 +197,6 @@ export const sendCoinsTotal = async (
 
     const coinTotal = await gameService.getCoinsTotal(userId);
     return res.status(200).json(coinTotal);
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-export const sendInstructions = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.decodedClaims?.userId;
-    if (!userId) {
-      return res.status(401).json({ message: "User is not authenticated" });
-    }
-
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-
-    const instructionsData = await getInstructionsForUser(userObjectId);
-    res.status(200).json(instructionsData);
   } catch (error: any) {
     next(error);
   }

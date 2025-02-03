@@ -6,7 +6,6 @@ import { verify } from "crypto";
 
 const router = Router();
 
-router.get("/instructions", verifyTokens.verifyAccessToken, gameController.sendInstructions);
 router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTreasureMap);
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);

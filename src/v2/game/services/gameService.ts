@@ -347,28 +347,6 @@ export const getCoinsTotal = async (userId: string) => {
   }
 };
 
-// What is this? If this is the instructions on the home page (treasure map), we don't need it and show_instructions is gone as you already did I think, so you can delete this.
-export const getInstructionsForUser = async (userId: mongoose.Types.ObjectId): Promise<any> => {
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    const showInstructions = user.show_instructions !== false;
-
-    const instructionsData = {
-      title: "Instructions Page",
-      content: "Visit each island to answer the questions. Click on raffle page, to use your free DUBL-U-NES.",
-      showOnLogin: showInstructions
-    };
-
-    return instructionsData;
-  } catch (error: any) {
-    throw new Error(`Error retrieving instructions: ${error.message}`);
-  }
-};
-
 // Don't call this TreasureMap the TreasureMap is actually the main page that shows all the links to go to the raffle, learn and earn, or where ever (home). (I know I think this is old).
 export const getTreasureMapData = async (userId: Types.ObjectId) => {
   try {
