@@ -1,6 +1,7 @@
 import { CoinTransaction, coinSources } from "../typings/CoinTransaction"
 import { HydratedDocument } from "mongoose";
 import User from "../typings/User";
+import { socketEmit } from "./socket-emitter";
 
 // Adds coins to user's balance given a legitimate source and adds it to their coin history
 // NOTE: `await user.save()` must be called after calling this function, since it doesn't update the user's data to the db itself
@@ -34,20 +35,38 @@ export const awardCoinsToUser = async (
       }
 
       user.chests_submitted.set(chestId, true);
+
+      socketEmit.send({
+        target: user.email,
+        event: 'chestSubmitted',
+        data: {
+          chestId,
+          coins: count
+        }
+      });
+      
       break;
 
     case 'referral':
-      // Update the inviting user's accepted_referrals list
-      const { acceptedReferralId } = payload;
-      if (!acceptedReferralId) {
+      const { newUserName, newUserEmail } = payload;
+      if (!newUserName || !newUserEmail) {
         return {
           success: false,
-          message: 'Invalid accepted referral user id',
+          message: 'Invalid new user data',
           statusCode: 400
         };
       }
 
-      user.accepted_referrals.push(acceptedReferralId);
+      socketEmit.send({
+        target: user.email,
+        event: 'referralBonus',
+        data: {
+          email: newUserEmail,
+          name: newUserName,
+          coins: count
+        }
+      });
+
       break;
 
     case 'register':

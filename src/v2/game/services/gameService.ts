@@ -126,9 +126,6 @@ export const getRafflePartner = async (id: string) => {
   }
 };
 
-// Remember, you will emit all coin changes to me. I will be listening to an event, whatever you call the event, to change the
-// balance of the user on my end. So, you should already be doing it for the referrals, but this happens on any change of the coin balance, 
-// you have to emit that to me.
 export const assignCoinsToUser = async (
   userId: string,
   count: number,

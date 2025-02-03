@@ -78,24 +78,15 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   });
 
   await acceptedReferral.save();
+  invitingUser.accepted_referrals.push(acceptedReferral._id);
 
-  // Update the inviting user's accepted referrals list, give and track bonus coins
+  // Give and track bonus coins
   awardCoinsToUser(invitingUser, amount, 'referral', {
-    acceptedReferralId: acceptedReferral._id
+    newUserName: newUser.name,
+    newUserEmail: newUser.email
   });
 
   await invitingUser.save();
-
-  // Notify the inviting user via socket that their referral was used
-  socketEmit.send({
-    target: invitingUser.email,
-    event: 'referralBonus',
-    data: {
-      email: newUser.email,
-      name: newUser.name,
-      coins: amount
-    }
-  });
 
   return true;
 };
