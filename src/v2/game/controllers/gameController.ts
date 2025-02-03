@@ -154,6 +154,15 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
   }
 };
 
+export const getChests = async (req: Request, res: Response, next: NextFunction) => {
+  try { 
+    const chests = await gameService.getChests();
+    res.status(200).json(chests);
+  } catch (error: any) {
+    next(error);
+  }
+}
+
 export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const allBusinesses = await gameService.sendBusinessesInfo();

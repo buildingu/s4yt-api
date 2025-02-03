@@ -19,6 +19,8 @@ router.get('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verif
 router.post('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.submitSponsorQuiz)
 // only grant coins when all the multiple choice questions are submitted
 
+router.get("/chests", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getChests);
+
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
 router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
