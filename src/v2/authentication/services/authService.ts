@@ -34,15 +34,6 @@ export const csrf = async () => {
   }
 };
 
-export const getUsers = async () => {
-  try {
-    const users = await UserModel.find();
-    return users;
-  } catch (error) {
-    throw new HttpError("Error fetching users.", 500);
-  }
-};
-
 export const getUser = async (email: string) => {
   try {
     const user = await UserModel.findOne({ email });

@@ -23,19 +23,6 @@ export const csrf = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export const getUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const users = await authService.getUsers();
-    res.status(200).json(users);
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const getUser = async (
   req: GetUserRequestDto,
   res: Response,
