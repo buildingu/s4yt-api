@@ -138,9 +138,7 @@ export const register = async (userData: any) => {
 
 export const resendVerificationEmail = async (email: string) => {
   try {
-    // Like again, you could do this:
-    // const user = await UserModel.findOne({ email }, "-_id email email_verification_token", { lean: true });
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email }, "-_id email email_verification_token", { lean: true });
     if (!user) {
       throw new HttpError("User does not exist.", 404);
     } else if (!user.email_verification_token) {
@@ -177,7 +175,7 @@ export const login = async (loginData: { email: string; password: string }) => {
   try {
     const user = await UserModel.findOne(
       { email: loginData.email },
-      "-_id city country education email is_email_verified name password referral_code chests_submitted region role",
+      "city country education email is_email_verified name password referral_code chests_submitted region role",
       { lean: true }
     );
 

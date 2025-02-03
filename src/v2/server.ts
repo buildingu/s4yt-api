@@ -29,7 +29,6 @@ import { initializeSocket } from "./utils/socket-emitter/index";
 
 import adminRouter from "./admin/routes/admRoute";
 import authRouter from "./authentication/routes/authRoute";
-import csrfRouter from "./csrf/routes/csrfRoute";
 import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
 import locationRouter from "./location/routes/locationRoutes";
@@ -102,7 +101,6 @@ app.use(lowercaseEmails);
 // *Router*
 app.use(`${baseUrl}/admin`, adminRouter);
 app.use(`${baseUrl}/auth`, authRouter);
-app.use(`${baseUrl}/csrf`, csrfRouter);
 app.use(`${baseUrl}/game`, gameRouter);
 app.use(`${baseUrl}/business`, busRouter);
 app.use(`${baseUrl}/location`, locationRouter);

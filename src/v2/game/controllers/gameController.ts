@@ -90,7 +90,7 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
     const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
 
     // You don't need to do Object.fromEntries when you don't lean it. When you don't lean it will just know when you put it in json and be the object entries.
-    res.status(200).json({ chests_submitted: Object.fromEntries(user.chests_submitted)});
+    res.status(200).json({ chests_submitted: user.chests_submitted });
   } catch (error: any) {
     next(error);
   }
