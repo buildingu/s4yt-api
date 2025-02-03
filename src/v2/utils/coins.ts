@@ -64,9 +64,11 @@ export const awardCoinsToUser = async (
   }
 
   // Add coins to user and track
+  console.log('e');
   user.coins += count;
   trackCoins(user, count, source);
 
+  console.log('f');
   return {
     success: true,
     message: 'OK',

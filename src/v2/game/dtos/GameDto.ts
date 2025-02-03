@@ -25,5 +25,6 @@ export interface AddChestCoinsRequestDto extends Request {
   body: {
     chestId: string;
     amount: string;
+    foo: string[];
   }
 }

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
 import * as playerService from '../../business/services/playerService';
-import { CreateBusinessRequestDto } from '../dtos/AdminDto';
+import { CreateBusinessRequestDto, CreateChestRequestDto } from '../dtos/AdminDto';
 
 // export const uploadImage = async (req: Request, res: Response) => {
 //   try {
@@ -65,6 +65,17 @@ export const editBusinessQuestion = async (req: Request, res: Response) => {
     const { questionId, questionData } = req.body;
     await superAdminService.editQuestion(questionId, questionData);
     res.status(200).send('Question edited successfully');
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+};
+
+export const createChests = async (req: CreateChestRequestDto, res: Response) => {
+  try {
+    for (const chestGroupData of req.body) {
+      await superAdminService.createChest(chestGroupData);
+    }
+    res.status(200).send('Chests created successfully');
   } catch (error: any) {
     res.status(500).send(error.message);
   }

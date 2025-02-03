@@ -9,5 +9,6 @@ router.post('/users/kick/:userId', verifySuperAdmin, superAdminController.kickUs
 router.post('/users/ban/:userId', verifySuperAdmin, superAdminController.banUser);
 router.get('/business', superAdminController.getAllBusinesses); // TODO: needs verifySuperAdmin
 router.post('/business', superAdminController.createBusiness); // TODO: needs verifySuperAdmin
+router.post('/chest', superAdminController.createChests); // For testing purposes
 
 export default router;

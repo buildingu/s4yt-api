@@ -13,6 +13,7 @@ import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
+import ChestModel from "../../models/chest";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -149,6 +150,9 @@ export const assignCoinsToUser = async (
   }
 };
 
+export const getChests = async () => {
+}
+
 export const createSponsor = async (sponsorData: any) => {
   const sponsor = new Sponsor(sponsorData);
   await sponsor.save();
@@ -218,9 +222,9 @@ export const gradeSponsorQuiz = async (userId: String, sponsorId: String, respon
       throw new Error("Multiple choice question not found")
     }
   
-    let isCorrect = answer == multipleChoice.correct_answer;
-    submissions.push({user: userId, multipleChoice: multipleChoiceId, isCorrect: isCorrect})
-    submittedQuestions.push(multipleChoiceId)
+    //let isCorrect = answer == multipleChoice.correct_answer;
+    //submissions.push({user: userId, multipleChoice: multipleChoiceId, isCorrect: isCorrect})
+    //submittedQuestions.push(multipleChoiceId)
   }
 
   if (JSON.stringify(submittedQuestions.sort()) != JSON.stringify(sponsor.questions.sort())) {
