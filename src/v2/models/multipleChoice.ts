@@ -7,6 +7,6 @@ const multipleChoiceSchema = new mongoose.Schema({
   sponsor: { type: mongoose.Schema.Types.ObjectId, ref: 'Sponsor' } 
 });
 
-const MultipleChoice = mongoose.model('MultipleChoice', multipleChoiceSchema);
+const MultipleChoiceModel = mongoose.model('MultipleChoice', multipleChoiceSchema);
 
-export default MultipleChoice;
+export default MultipleChoiceModel;
