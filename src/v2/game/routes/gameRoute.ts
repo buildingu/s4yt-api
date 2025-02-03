@@ -9,16 +9,6 @@ const router = Router();
 router.get("/instructions", verifyTokens.verifyAccessToken, gameController.sendInstructions);
 router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTreasureMap);
 
-router.post('/sponsors', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addSponsor);
-router.post('/sponsors/:sponsorId', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMultipleChoice)
-router.patch('/sponsors/:id', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateSponsorInfo);
-router.get('/sponsors', verifyTokens.verifyAccessToken, gameController.getSponsors);
-// Send the info about the sponsors, so you will send us the logos too for all of this, which would be a path to the image, can be store here or some image hosting place.
-
-router.get('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getMultipleChoice)
-router.post('/sponsors/:sponsorId/questions', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.submitSponsorQuiz)
-// only grant coins when all the multiple choice questions are submitted
-
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
 router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.

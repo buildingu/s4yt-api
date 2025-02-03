@@ -6,16 +6,6 @@ import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto }
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
-export const addSponsor = async (req: Request, res: Response) => {
-  try {
-    const sponsorData = req.body;
-    const sponsor = await gameService.createSponsor(sponsorData);
-    res.status(201).json(sponsor);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 export const addPartner = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const rafflePartnerData = req.body;
@@ -55,57 +45,6 @@ export const getRafflePartner = async (req: Request, res: Response, next: NextFu
     next(error); 
   }
 };
-
-export const addMultipleChoice = async (req: Request, res: Response) => {
-  try {
-    const { sponsorId } = req.params;
-    const multipleChoiceData = req.body;
-    const multipleChoice = await gameService.addMultipleChoiceToSponsor(sponsorId, multipleChoiceData);
-    res.status(201).json(multipleChoice);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-}
-
-export const updateSponsorInfo = async (req: Request, res: Response) => {
-  try {
-    const sponsorData = req.body;
-    const sponsor = await gameService.updateSponsor(req.params.id, sponsorData);
-    res.json(sponsor);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getSponsors = async (req: Request, res: Response) => {
-  try {
-    const sponsors = await gameService.getAllSponsors();
-    res.json(sponsors);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getMultipleChoice = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {sponsorId} = req.params;
-    const sponsorMultipleChoice = await gameService.getMultipleChoiceFromSponsor(sponsorId);
-    res.json(sponsorMultipleChoice);
-  } catch (error: any) {
-    next(error);
-  }
-}
-
-export const submitSponsorQuiz = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {userId, multipleChoiceResponses} = req.body;
-    const {sponsorId} = req.params;
-    const submissions = await gameService.gradeSponsorQuiz(userId, sponsorId, multipleChoiceResponses);
-    res.status(200).json(submissions);
-  } catch (error: any) {
-    next(error);
-  }
-}
 
 // Controller to send raffle items info
 export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
