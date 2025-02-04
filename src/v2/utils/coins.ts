@@ -35,15 +35,6 @@ export const awardCoinsToUser = async (
       }
 
       user.chests_submitted.set(chestId, true);
-
-      socketEmit.send({
-        target: user.email,
-        event: 'chestSubmitted',
-        data: {
-          chestId,
-          coins: count
-        }
-      });
       
       break;
 
@@ -56,16 +47,6 @@ export const awardCoinsToUser = async (
           statusCode: 400
         };
       }
-
-      socketEmit.send({
-        target: user.email,
-        event: 'referralBonus',
-        data: {
-          email: newUserEmail,
-          name: newUserName,
-          coins: count
-        }
-      });
 
       break;
 
@@ -85,6 +66,14 @@ export const awardCoinsToUser = async (
   // Add coins to user and track
   user.coins += count;
   trackCoins(user, count, source);
+
+  socketEmit.send({
+    target: user.email,
+    event: 'coin_changed',
+    data: {
+      coins: count
+    }
+  });
 
   return {
     success: true,
