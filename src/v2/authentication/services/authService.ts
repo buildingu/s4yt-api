@@ -175,7 +175,7 @@ export const login = async (loginData: { email: string; password: string }) => {
   try {
     const user = await UserModel.findOne(
       { email: loginData.email },
-      "city country education email is_email_verified name password referral_code chests_submitted region role",
+      "city coins country education email is_email_verified name password referral_code chests_submitted region role",
       { lean: true }
     );
 
@@ -197,6 +197,7 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     const userCredentials: UserCredentials = {
       city: user.city || null,
+      coins: user.coins,
       country: user.country || "",
       education: user.education || null,
       email: user.email,
