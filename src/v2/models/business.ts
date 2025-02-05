@@ -9,7 +9,15 @@ const businessSchema = new mongoose.Schema({
   meet_members_interested: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   attachment: { type: String, default: null },
   video_urls: [{ type: String, default: null }],
-  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }]
+  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+  winners: [
+    {
+      winnerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      award: { type: Number, default: 0, min: 0 }
+    }
+  ],
+  award: { type: Number, default: 0, min: 0 },
+  awardedTotal: { type: Number, default: 0, min: 0 } 
 }, {collection : "businesses"});
 
 const Business = mongoose.model('Business', businessSchema);

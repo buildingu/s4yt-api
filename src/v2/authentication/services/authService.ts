@@ -12,7 +12,6 @@ import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
 import { HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
-import { socketEmit } from "../../utils/socket-emitter";
 import { awardCoinsToUser } from "../../utils/coins";
 const { sign } = jwt;
 
@@ -31,15 +30,6 @@ export const csrf = async () => {
     return token;
   } catch (error) {
     throw new HttpError("Error generating CSRF token.", 500);
-  }
-};
-
-export const getUsers = async () => {
-  try {
-    const users = await UserModel.find();
-    return users;
-  } catch (error) {
-    throw new HttpError("Error fetching users.", 500);
   }
 };
 
@@ -87,24 +77,12 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   });
 
   await acceptedReferral.save();
+  invitingUser.accepted_referrals.push(acceptedReferral._id);
 
-  // Update the inviting user's accepted referrals list, give and track bonus coins
-  awardCoinsToUser(invitingUser, amount, 'referral', {
-    acceptedReferralId: acceptedReferral._id
-  });
+  // Give and track bonus coins
+  awardCoinsToUser(invitingUser, amount, 'referral');
 
   await invitingUser.save();
-
-  // Notify the inviting user via socket that their referral was used
-  socketEmit.send({
-    target: invitingUser.email,
-    event: 'referralBonus',
-    data: {
-      email: newUser.email,
-      name: newUser.name,
-      coins: amount
-    }
-  });
 
   return true;
 };
@@ -140,7 +118,7 @@ export const register = async (userData: any) => {
       chests_submitted: {},
     });
 
-    awardCoinsToUser(newUser, 50, 'register', {});
+    awardCoinsToUser(newUser, 50, 'register');
     handleReferralBonus(newUser, inviterReferralCode, 5);
     await newUser.save();
 
@@ -156,7 +134,7 @@ export const register = async (userData: any) => {
 
 export const resendVerificationEmail = async (email: string) => {
   try {
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email }, "-_id email email_verification_token", { lean: true });
     if (!user) {
       throw new HttpError("User does not exist.", 404);
     } else if (!user.email_verification_token) {
@@ -191,7 +169,12 @@ export const getAcceptedReferrals = async (userId: string) => {
 
 export const login = async (loginData: { email: string; password: string }) => {
   try {
-    const user = await UserModel.findOne({ email: loginData.email });
+    const user = await UserModel.findOne(
+      { email: loginData.email },
+      "city coins country education email is_email_verified name password referral_code chests_submitted region role",
+      { lean: true }
+    );
+
     if (!user) {
       throw new HttpError("User does not exist.", 404);
     }
@@ -209,14 +192,14 @@ export const login = async (loginData: { email: string; password: string }) => {
     }
 
     const userCredentials: UserCredentials = {
-      id: user._id.toString(),
       city: user.city || null,
+      coins: user.coins,
       country: user.country || "",
       education: user.education || null,
       email: user.email,
       name: user.name || "",
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
-      chests_submitted: Object.fromEntries(user.chests_submitted),
+      chests_submitted: user.chests_submitted,
       region: user.region || null,
       roles: user.role || null,
     };

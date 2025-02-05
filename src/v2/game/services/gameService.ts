@@ -1,13 +1,11 @@
 import Business from "../../models/business";
 import Question from "../../models/question";
 import Sponsor from "../../models/sponsor";
-import MultipleChoice from "../../models/multipleChoice";
 import RaffleItem from "../../models/raffleItem";
 import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";
-import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
@@ -25,6 +23,7 @@ export const getRaffleItemsService = async () => {
   }
 };
 
+// TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to sliver and gold coin changes.
 export const getRaffleIndicatorCoinsService = async () => {
   try {
     const raffleItems = await RaffleItem.find().populate('stake.user');
@@ -138,142 +137,21 @@ export const assignCoinsToUser = async (
       throw new HttpError('User not found', 404);
     }
 
-    const results = await awardCoinsToUser(user, count, source, payload);
-    if (!results.success) {
-      throw new HttpError(results.message, results.statusCode);
+    const { chestId } = payload;
+
+    // Check if chest has already been submitted, to prevent potential abuse
+    if (user.chests_submitted.has(chestId)) {
+      throw new HttpError('Chest has already been submitted', 200);
     }
 
+    user.chests_submitted.set(chestId, true);
+
+    await awardCoinsToUser(user, count, source);
     await user.save();
+
     return user;
   } catch (error) {
     throw resolveErrorHandler(error);
-  }
-};
-
-export const getChests = async () => {
-  try {
-    const chests = await ChestModel.find({}, '-_id -__v')
-      .populate({
-         path: 'group',
-         select: '-_id -__v'
-      });
-    return chests;
-  } catch (error) {
-    throw resolveErrorHandler(error);
-  }
-}
-
-export const createSponsor = async (sponsorData: any) => {
-  const sponsor = new Sponsor(sponsorData);
-  await sponsor.save();
-  return sponsor;
-};
-
-export const addMultipleChoiceToSponsor = async (sponsorId: string, multipleChoiceData: any) => {
-  const sponsor = await Sponsor.findById(sponsorId);
-  if (!sponsor) {
-    throw new Error('Sponsor not found');
-  }
-
-  const multipleChoice = new MultipleChoice({ ...multipleChoiceData, sponsor: sponsorId });
-  await multipleChoice.save();
-
-  sponsor.questions.push(multipleChoice._id);
-  await sponsor.save();
-
-  return multipleChoice;
-};
-
-export const updateSponsor = async (id: String, sponsorData: any) => {
-  const sponsor = await Sponsor.findByIdAndUpdate(id, sponsorData, { new: true });
-  return sponsor;
-};
-
-export const getAllSponsors = async () => {
-  const sponsors = await Sponsor.find({});
-  return sponsors;
-};
-
-export const getMultipleChoiceFromSponsor = async (sponsorId: String) => {
-  const sponsor = await Sponsor.findById(sponsorId);
-  if (!sponsor) {
-    throw new Error('Sponsor not found');
-  }
-  
-  // const multipleChoice = await MultipleChoice.findById(sponsor.questions[0])
-  let multipleChoice : any[] = []
-  for (let multipleChoiceId of sponsor.questions){ 
-    let question = await MultipleChoice.findById(multipleChoiceId)
-    multipleChoice.push(question)
-  }
-
-  return multipleChoice
-};
-
-export const gradeSponsorQuiz = async (userId: String, sponsorId: String, responses: any) => {
-  const sponsor = await Sponsor.findById(sponsorId);
-  if (!sponsor) {
-    throw new Error('Sponsor not found');
-  }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  let submittedQuestions : any[] = [];
-  let submissions : any[] = [];
-
-  for (let response of responses) {
-    const {answer, multipleChoiceId} = response;
-    const multipleChoice = await MultipleChoice.findById(multipleChoiceId);
-    
-    if (!multipleChoice) {
-      throw new Error("Multiple choice question not found")
-    }
-  
-    //let isCorrect = answer == multipleChoice.correct_answer;
-    //submissions.push({user: userId, multipleChoice: multipleChoiceId, isCorrect: isCorrect})
-    //submittedQuestions.push(multipleChoiceId)
-  }
-
-  if (JSON.stringify(submittedQuestions.sort()) != JSON.stringify(sponsor.questions.sort())) {
-    throw new Error(`Questions submitted does not completely match quiz`)
-  }
-
-  // add record to db
-  for (let submission of submissions) {
-    const multipleChoiceId = submission.multipleChoice;
-
-    const submissionRecord = await MultipleChoiceSubmission.findOneAndUpdate({"multipleChoice": multipleChoiceId}, submission, {upsert: true})
-
-    // add coins
-    if (!submissionRecord) {
-      // add 3 coins
-      if (submission.isCorrect) {
-        addQuizCoins(userId, 3);
-      } else {
-        addQuizCoins(userId, 1);
-      }
-    }
-  }
-  return submissions
-}
-
-export const addQuizCoins = async (userId: String, coinCount: number) => {
-  try {
-    const updatedUser = await User.findById(userId);
-    if (updatedUser) {
-      updatedUser.coins += coinCount;
-      await updatedUser.save();
-    }
-
-    return updatedUser;
-  } catch (error: any) {
-    throw new Error(
-      "addQuizCoins service error; adding coins earned from the quiz to the user:\n" +
-        error.message
-    );
   }
 };
 
@@ -474,27 +352,7 @@ export const getCoinsTotal = async (userId: string) => {
   }
 };
 
-export const getInstructionsForUser = async (userId: mongoose.Types.ObjectId): Promise<any> => {
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    const showInstructions = user.show_instructions !== false;
-
-    const instructionsData = {
-      title: "Instructions Page",
-      content: "Visit each island to answer the questions. Click on raffle page, to use your free DUBL-U-NES.",
-      showOnLogin: showInstructions
-    };
-
-    return instructionsData;
-  } catch (error: any) {
-    throw new Error(`Error retrieving instructions: ${error.message}`);
-  }
-};
-
+// Don't call this TreasureMap the TreasureMap is actually the main page that shows all the links to go to the raffle, learn and earn, or where ever (home). (I know I think this is old).
 export const getTreasureMapData = async (userId: Types.ObjectId) => {
   try {
     // Fetch user details to determine which elements to show on the treasure map
