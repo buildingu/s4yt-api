@@ -6,9 +6,6 @@ import * as authController from "../controllers/authController";
 
 const router = Router();
 
-router.get("/users", verifyCsrfToken, verifyUser, authController.getUsers);
-router.get("/users/:email", verifyCsrfToken, verifyUser, authController.getUser);
-
 router.post("/register", authController.register);
 router.get("/email/verify", verifyUser, authController.emailVerify); // Verifies a user's email with a provided verification token
 router.get("/email/sendVerification", verifyUser, authController.resendVerificationEmail); // Sends verification email to user's registered email address with verification token

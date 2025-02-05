@@ -1,20 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
-import { getInstructionsForUser } from "../services/gameService";
 import mongoose from "mongoose";
 import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
-
-export const addSponsor = async (req: Request, res: Response) => {
-  try {
-    const sponsorData = req.body;
-    const sponsor = await gameService.createSponsor(sponsorData);
-    res.status(201).json(sponsor);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 export const addPartner = async (req: Request, res: Response, next: NextFunction) => {
   try{
@@ -56,57 +45,6 @@ export const getRafflePartner = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const addMultipleChoice = async (req: Request, res: Response) => {
-  try {
-    const { sponsorId } = req.params;
-    const multipleChoiceData = req.body;
-    const multipleChoice = await gameService.addMultipleChoiceToSponsor(sponsorId, multipleChoiceData);
-    res.status(201).json(multipleChoice);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-}
-
-export const updateSponsorInfo = async (req: Request, res: Response) => {
-  try {
-    const sponsorData = req.body;
-    const sponsor = await gameService.updateSponsor(req.params.id, sponsorData);
-    res.json(sponsor);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getSponsors = async (req: Request, res: Response) => {
-  try {
-    const sponsors = await gameService.getAllSponsors();
-    res.json(sponsors);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getMultipleChoice = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {sponsorId} = req.params;
-    const sponsorMultipleChoice = await gameService.getMultipleChoiceFromSponsor(sponsorId);
-    res.json(sponsorMultipleChoice);
-  } catch (error: any) {
-    next(error);
-  }
-}
-
-export const submitSponsorQuiz = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {userId, multipleChoiceResponses} = req.body;
-    const {sponsorId} = req.params;
-    const submissions = await gameService.gradeSponsorQuiz(userId, sponsorId, multipleChoiceResponses);
-    res.status(200).json(submissions);
-  } catch (error: any) {
-    next(error);
-  }
-}
-
 // Controller to send raffle items info
 export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -145,10 +83,12 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
       throw new HttpError('User is not authenticated', 401);
     }
   
+    // TODO: You also need to make a route to give me all the questions (chests), you can just put all the mock data I had on the front in to documents and just give me that for the time being.
+    // Also, use a uuid for the chest_id, it's nice in mongoose because you can just do default: crypto.RandomUUID() or whatever it's called.
     const { amount, chestId } = req.body;
     const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
 
-    res.status(200).json({ chests_submitted: Object.fromEntries(user.chests_submitted)});
+    res.status(200).json({ chests_submitted: user.chests_submitted });
   } catch (error: any) {
     next(error);
   }
@@ -257,22 +197,6 @@ export const sendCoinsTotal = async (
 
     const coinTotal = await gameService.getCoinsTotal(userId);
     return res.status(200).json(coinTotal);
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-export const sendInstructions = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.decodedClaims?.userId;
-    if (!userId) {
-      return res.status(401).json({ message: "User is not authenticated" });
-    }
-
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-
-    const instructionsData = await getInstructionsForUser(userObjectId);
-    res.status(200).json(instructionsData);
   } catch (error: any) {
     next(error);
   }

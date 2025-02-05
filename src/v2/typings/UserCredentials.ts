@@ -1,14 +1,14 @@
 import { userEducation, userRoles } from './userEnums';
 
 export default interface UserCredentials {
-  id: string;
-  city: string | null;
-  country: string;
-  education: typeof userEducation[number] | null;
+  city?: string | null;
+  coins: number;
+  country?: string;
+  education?: typeof userEducation[number] | null;
   email: string;
-  name: string;
+  name?: string;
   referral_link: string;
   chests_submitted: Record<string, boolean>;
-  region: string | null;
-  roles: typeof userRoles[number] | null;
+  region?: string | null;
+  roles: typeof userRoles[number];
 }
