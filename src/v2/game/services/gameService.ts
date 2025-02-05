@@ -138,12 +138,18 @@ export const assignCoinsToUser = async (
       throw new HttpError('User not found', 404);
     }
 
-    const results = await awardCoinsToUser(user, count, source, payload);
-    if (!results.success) {
-      throw new HttpError(results.message, results.statusCode);
+    const { chestId } = payload;
+    
+    // Check if chest has already been submitted, to prevent potential abuse
+    if (user.chests_submitted.has(chestId)) {
+      throw new HttpError('Chest has already been submitted', 200);
     }
 
+    user.chests_submitted.set(chestId, true);
+
+    await awardCoinsToUser(user, count, source);
     await user.save();
+
     return user;
   } catch (error) {
     throw resolveErrorHandler(error);

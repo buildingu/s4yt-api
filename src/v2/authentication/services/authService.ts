@@ -12,7 +12,6 @@ import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
 import { HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
-import { socketEmit } from "../../utils/socket-emitter";
 import { awardCoinsToUser } from "../../utils/coins";
 const { sign } = jwt;
 
@@ -81,10 +80,7 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   invitingUser.accepted_referrals.push(acceptedReferral._id);
 
   // Give and track bonus coins
-  awardCoinsToUser(invitingUser, amount, 'referral', {
-    newUserName: newUser.name,
-    newUserEmail: newUser.email
-  });
+  awardCoinsToUser(invitingUser, amount, 'referral');
 
   await invitingUser.save();
 
@@ -122,7 +118,7 @@ export const register = async (userData: any) => {
       chests_submitted: {},
     });
 
-    awardCoinsToUser(newUser, 50, 'register', {});
+    awardCoinsToUser(newUser, 50, 'register');
     handleReferralBonus(newUser, inviterReferralCode, 5);
     await newUser.save();
 
