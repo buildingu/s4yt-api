@@ -1,13 +1,11 @@
 import Business from "../../models/business";
 import Question from "../../models/question";
 import Sponsor from "../../models/sponsor";
-import MultipleChoice from "../../models/multipleChoice";
 import RaffleItem from "../../models/raffleItem";
 import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";
-import MultipleChoiceSubmission from "../../models/multipleChoiceSubmission";
 import Answer from "../../models/answer";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
@@ -139,7 +137,7 @@ export const assignCoinsToUser = async (
     }
 
     const { chestId } = payload;
-    
+
     // Check if chest has already been submitted, to prevent potential abuse
     if (user.chests_submitted.has(chestId)) {
       throw new HttpError('Chest has already been submitted', 200);
