@@ -23,7 +23,7 @@ const passwordMaxLength = 32;
 const passwordPattern =
   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,32}$/;
 
-const registerStartTimeMs = new Date(isoTimestamps.register_start).getTime();
+const gameStartTimeMs = new Date(isoTimestamps.game_start).getTime();
 
 export const csrf = async () => {
   try {
@@ -216,7 +216,7 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     // If game or registration has started, send timestamps, otherwise send "not started" message
     const resTimestamps =
-      registerStartTimeMs > Date.now()
+      gameStartTimeMs > Date.now()
         ? "The game has not started yet"
         : isoTimestamps;
 

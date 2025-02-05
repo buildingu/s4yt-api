@@ -1,11 +1,11 @@
 import { Timestamps } from '../typings/Timestamps';
 
+// TODO: move to db
 const timestamps = {
-  register_start: '2025-1-1',
-  game_start: '2025-1-7',
-  review_start: '2025-1-10',
-  review_end: '2025-1-11',
-  game_end: '2025-1-12',
+  game_start: '2025-03-01',
+  review_start: '2025-03-03',
+  review_end: '2025-03-05',
+  game_end: '2025-03-07',
 }
 
 // Convert timestamps into ISO strings
