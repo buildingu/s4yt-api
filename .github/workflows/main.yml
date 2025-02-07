@@ -55,8 +55,8 @@ jobs:
           git clean -f .env 
           git pull origin main
 
-          echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
-          echo "SENGRID_API_KEY=${{ secrets.SENGRIDS_API_KEY }}" >> .env
+          echo "MONGO_URI=${{ secrets.MONGODB_URI}}" > .env
+          echo "SENGRID_API_KEY=${{ secrets.SENGRID_API_KEY }}" >> .env
           echo "LOG_FREQUENCY=${{ secrets.LOG_FREQUENCY }}" >> .env
           echo "LOG_SIZE=${{ secrets.LOG_SIZE }}" >> .env
           echo "LOG_FILE_ON=${{ secrets.LOG_FILE_ON }}" >> .env
