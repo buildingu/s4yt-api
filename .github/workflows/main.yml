@@ -57,9 +57,14 @@ jobs:
 
           echo "MONGO_URI=${{ secrets.MONGODB_URI}}" > .env
           echo "SENGRID_API_KEY=${{ secrets.SENGRID_API_KEY }}" >> .env
+          echo "SEND_EMAILS=${{ secrets.SEND_EMAILS }}" >> .env
+          echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "LOG_FREQUENCY=${{ secrets.LOG_FREQUENCY }}" >> .env
           echo "LOG_SIZE=${{ secrets.LOG_SIZE }}" >> .env
           echo "LOG_FILE_ON=${{ secrets.LOG_FILE_ON }}" >> .env
+          echo "LOG_PATH=${{ secrets.LOG_PATH }}" >> .env
           echo "PORT=${{ secrets.SERVER_PORT }}" >> .env
           echo "PROTOCOL=${{ secrets.PROTOCOL }}" >> .env
           echo "HOST=${{ secrets.SERVER_HOST }}" >> .env
