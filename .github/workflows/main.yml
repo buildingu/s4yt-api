@@ -56,7 +56,7 @@ jobs:
           git pull origin main
 
           echo "MONGO_URI=${{ secrets.MONGODB_URI}}" > .env
-          echo "SENGRID_API_KEY=${{ secrets.SENGRID_API_KEY }}" >> .env
+          echo "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}" >> .env
           echo "SEND_EMAILS=${{ secrets.SEND_EMAILS }}" >> .env
           echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
