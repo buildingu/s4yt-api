@@ -51,7 +51,7 @@ jobs:
           node -v
 
           # Clean untracked files (removes .env and package-lock.json)
-          pm2 stop s4yt-apin
+          pm2 stop s4yt-api
           git clean -f .env 
           git pull origin main
 
