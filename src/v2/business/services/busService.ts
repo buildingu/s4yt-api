@@ -90,7 +90,7 @@ export const selectWinners = async (
   let totalAwarded = business.awardedTotal;
 
   for (const { winnerId, award } of winners) {
-    if (business.winners.some(w => w.winnerId.toString() === winnerId)) {
+    if (business.winners.some(w => w?.winnerId?.toString() === winnerId )) {
       throw new Error(`Winner ${winnerId} has already been awarded.`);
     }
     if (totalAwarded + award > business.award) {
