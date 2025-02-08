@@ -34,6 +34,8 @@ jobs:
           ssh -i private_key -o StrictHostKeyChecking=no $USER@$HOST -p $PORT << 'EOF'
 
           cd /var/www/s4yt/server/s4yt-api/ || exit
+
+          # force reinstall nvm and node to use correct version
           export NVM_DIR="$HOME/.nvm"
           if [ ! -d "$NVM_DIR" ]; then
             echo "Installing NVM..."
