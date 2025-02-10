@@ -193,7 +193,6 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     const userCredentials: UserCredentials = {
       city: user.city || null,
-      coins: user.coins,
       country: user.country || "",
       education: user.education || null,
       email: user.email,
@@ -218,6 +217,7 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     return {
       user: userCredentials,
+      coins: user.coins,
       timestamps: resTimestamps,
       jwtToken,
       csrfToken,
