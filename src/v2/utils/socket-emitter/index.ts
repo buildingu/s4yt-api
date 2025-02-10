@@ -10,8 +10,7 @@ export const initializeSocket = (server: any): Server => {
     cors: {
       origin: [
         "http://localhost:3000",
-        "https://s4yt-staging.building-u.com",
-        "https://s4yt.building-u.com",
+        "https://s4yt.org"
       ],
       credentials: true,
     },
