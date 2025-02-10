@@ -155,6 +155,19 @@ export const assignCoinsToUser = async (
   }
 };
 
+export const getChests = async () => {
+  try {
+    const chests = await ChestModel.find({}, '-_id -__v')
+      .populate({
+         path: 'group',
+         select: '-_id -__v'
+      });
+    return chests;
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+}
+
 export const sendBusinessesInfo = async () => {
   try {
     const allBus = await Business.find();
