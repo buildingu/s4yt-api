@@ -1,4 +1,3 @@
-import { Timestamps } from './Timestamps';
 import { userEducation, userRoles } from './userEnums';
 
 export default interface UserCredentials {
