@@ -11,7 +11,6 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import sgMail from '@sendgrid/mail';
 // import { redisClient } from "./configs/redisConfig";
 
 import bodyParser from "body-parser";
@@ -39,7 +38,6 @@ const app = express();
 dotenv.config();
 
 connectDB();
-sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 const PORT = Number(process.env.PORT) || 4000,
   baseUrl = "/api/v2";
