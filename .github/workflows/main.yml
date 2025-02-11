@@ -57,7 +57,7 @@ jobs:
           git clean -f .env 
           git pull origin main
 
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI}}" > .env
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI}}" >> .env
           echo "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}" >> .env
           echo "SEND_EMAILS=${{ secrets.SEND_EMAILS }}" >> .env
           echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
