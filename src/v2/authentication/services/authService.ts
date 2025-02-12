@@ -90,7 +90,7 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
 export const register = async (userData: any) => {
   try {
     if (!emailPattern.test(userData.email)) {
-      throw new HttpError("Invalid email or password.", 400);
+      throw new HttpError("Invalid email.", 400);
     }
 
     const existingUser = await getUser(userData.email);
