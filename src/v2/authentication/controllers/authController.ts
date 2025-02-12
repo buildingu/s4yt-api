@@ -91,7 +91,7 @@ export const login = async (
 ) => {
   try {
     const { email, password } = req.body;
-    const { user, timestamps, jwtToken, csrfToken } = await authService.login({
+    const { user, coins, timestamps, jwtToken, csrfToken } = await authService.login({
       email,
       password,
     });
@@ -103,6 +103,7 @@ export const login = async (
     return res.status(200).json({
       message: "User is successfully authenticated.",
       user,
+      coins,
       timestamps,
     });
   } catch (error: any) {
