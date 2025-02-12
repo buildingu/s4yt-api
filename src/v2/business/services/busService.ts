@@ -73,7 +73,7 @@ export const getAwardDetails = async (businessId: string) => {
 
   return {
     totalAward: business.award,
-    remainingAward: business.award - business.awardedTotal
+    //remainingAward: business.award - business.awardedTotal // TODO: fix this
   };
 };
 
@@ -93,11 +93,12 @@ export const selectWinners = async (
     if (business.winners.some(w => w?.winnerId?.toString() === winnerId )) {
       throw new Error(`Winner ${winnerId} has already been awarded.`);
     }
-    if (totalAwarded + award > business.award) {
+    /*if (totalAwarded + award > business.award) {
       throw new Error('Insufficient award balance');
-    }
+    }*/ 
+    // TODO: fix this
     business.winners.push({ winnerId, award });
-    totalAwarded += award;
+    // totalAwarded += award;
   }
 
   business.awardedTotal = totalAwarded;
@@ -115,7 +116,7 @@ export const getEventResults = async (businessId: string) => {
 
   return {
     totalAward: business.award,
-    remainingAward: business.award - business.awardedTotal,
+    // remainingAward: business.award - business.awardedTotal, // TODO: fix this
     winners: business.winners
   };
 };

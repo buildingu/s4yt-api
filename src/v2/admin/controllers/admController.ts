@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
-import * as playerService from '../../business/services/playerService';
 import { CreateBusinessRequestDto, CreateChestRequestDto } from '../dtos/AdminDto';
 
 // export const uploadImage = async (req: Request, res: Response) => {
