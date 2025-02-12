@@ -9,61 +9,7 @@ export const awardCoinsToUser = async (
   user: HydratedDocument<User>,
   count: number,
   source: typeof coinSources[number],
-  payload: Record<string, any>
 ) => {
-  // Handle source-specific side effects
-  switch (source) {
-    case 'chest':
-      // Add coin amount and its chest source to user's chests_submitted list
-      const { chestId } = payload;
-
-      if (!chestId) {
-        return {
-          success: false,
-          message: 'Invalid chest id',
-          statusCode: 400
-        };
-      }
-
-      // Check if chest has already been submitted, to prevent potential abuse
-      if (user.chests_submitted.has(chestId)) {
-        return {
-          success: true,
-          message: 'Chest has already been submitted',
-          statusCode: 200
-        };
-      }
-
-      user.chests_submitted.set(chestId, true);
-      
-      break;
-
-    case 'referral':
-      const { newUserName, newUserEmail } = payload;
-      if (!newUserName || !newUserEmail) {
-        return {
-          success: false,
-          message: 'Invalid new user data',
-          statusCode: 400
-        };
-      }
-
-      break;
-
-    case 'register':
-      // No additional side effects
-      break;
-
-    default:
-      // Typescript should prevent this from happening
-      return {
-        success: false,
-        message: 'Invalid coin source type',
-        statusCode: 400
-      };
-  }
-
-  // Add coins to user and track
   user.coins += count;
   trackCoins(user, count, source);
 
@@ -74,12 +20,6 @@ export const awardCoinsToUser = async (
       coins: count
     }
   });
-
-  return {
-    success: true,
-    message: 'OK',
-    statusCode: 200
-  };
 }
 
 // Adds a coin transaction to a User's coin_transactions list

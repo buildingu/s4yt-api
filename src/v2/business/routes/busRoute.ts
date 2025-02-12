@@ -10,4 +10,11 @@ router.patch('/questions/:questionId', verifyAccessToken, businessController.upd
 router.get('/questions/:businessId', verifyAccessToken, businessController.getQuestions);
 router.get('/answers/:questionId', verifyAccessToken, businessController.getAnswers);
 
+
+router.post('/:businessId/award', businessController.updateAward);
+router.get('/:businessId/award', businessController.getAwardDetails);
+router.post('/:businessId/winners', businessController.selectWinners);
+router.get('/:businessId/event-results', businessController.getEventResults);
+
+
 export default router;
