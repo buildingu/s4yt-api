@@ -80,7 +80,7 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   invitingUser.accepted_referrals.push(acceptedReferral._id);
 
   // Give and track bonus coins
-  awardCoinsToUser(invitingUser, amount, 'referral');
+  awardCoinsToUser(invitingUser, amount, 'referral', true);
 
   await invitingUser.save();
 
@@ -118,7 +118,7 @@ export const register = async (userData: any) => {
       chests_submitted: {},
     });
 
-    awardCoinsToUser(newUser, 50, 'register');
+    awardCoinsToUser(newUser, 3, 'register', false);
     handleReferralBonus(newUser, inviterReferralCode, 5);
     await newUser.save();
 
