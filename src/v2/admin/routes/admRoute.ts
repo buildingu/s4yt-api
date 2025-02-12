@@ -11,6 +11,6 @@ router.post('/users/kick/:userId', verifyCsrfToken, verifyAccessToken, verifySup
 router.post('/users/ban/:userId', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.banUser);
 router.get('/business', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getAllBusinesses);
 router.post('/business', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.createBusiness);
-router.post('/chest', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.createChests); // For testing purposes
+router.post('/chest', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.createChests);
 
 export default router;
