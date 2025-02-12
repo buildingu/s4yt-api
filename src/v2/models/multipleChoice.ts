@@ -1,12 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { MultipleChoice } from '../typings/MultipleChoice';
 
-const multipleChoiceSchema = new mongoose.Schema({
-  prompt: {type: String, required: true},
-  answers: {type: Array<String>, required: true},
-  correct_answer: {type: String, required: true},
-  sponsor: { type: mongoose.Schema.Types.ObjectId, ref: 'Sponsor' } 
+const multipleChoiceSchema = new Schema<MultipleChoice>({
+  question: {type: String, required: true},
+  answers: {
+    choices: { type: Map, of: String },
+    correct: { type: String, required: true},
+    explanation: String
+  }
 });
 
-const MultipleChoice = mongoose.model('MultipleChoice', multipleChoiceSchema);
+const MultipleChoiceModel = mongoose.model('MultipleChoice', multipleChoiceSchema);
 
-export default MultipleChoice;
+export default MultipleChoiceModel;

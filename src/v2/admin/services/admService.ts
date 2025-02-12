@@ -1,6 +1,8 @@
 import User from '../../models/user';
 import Question from '../../models/question';
 import Business from '../../models/business';
+import ChestModel from '../../models/chest';
+import MultipleChoiceModel from '../../models/multipleChoice';
 
 export const retrieveAllUsers = async () => {
   const users = await User.find({});
@@ -44,3 +46,20 @@ export const editQuestion = async (questionId: string, questionData: any) => {
   }
   return question;
 };
+
+export const createChest = async (chestGroupData: any) => {
+  const chestGroup = await Promise.all(
+    chestGroupData.map(async (questionData: any) => {
+      const multipleChoice = new MultipleChoiceModel(questionData);
+      await multipleChoice.save();
+      return multipleChoice;
+    })
+  );
+
+  const chest = new ChestModel({
+    group: chestGroup
+  });
+
+  await chest.save();
+  return chest;
+}

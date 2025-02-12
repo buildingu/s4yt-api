@@ -11,6 +11,7 @@ import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
+import ChestModel from "../../models/chest";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -153,6 +154,19 @@ export const assignCoinsToUser = async (
     throw resolveErrorHandler(error);
   }
 };
+
+export const getChests = async () => {
+  try {
+    const chests = await ChestModel.find({}, '-_id -__v')
+      .populate({
+         path: 'group',
+         select: '-_id -__v'
+      });
+    return chests;
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+}
 
 export const sendBusinessesInfo = async () => {
   try {
