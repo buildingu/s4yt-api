@@ -72,3 +72,4 @@ jobs:
           echo "HOST=${{ secrets.SERVER_HOST }}" >> .env
           
           pm2 start s4yt-api
+          pm2 logs s4yt-app --lines 100 &
