@@ -104,7 +104,7 @@ export const login = async (
       maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year because this should last forever or however long the game lasts.
       httpOnly: true,
       secure: true,
-      sameSite: "none" // TODO: I think we can try sameSite strict since the server and the client is one the same domain (s4yt.org)?
+      sameSite: "none" // TODO: I think we can try sameSite strict since the server and the client is on the same domain (s4yt.org)?
     });
 
     return res.status(200).json({
