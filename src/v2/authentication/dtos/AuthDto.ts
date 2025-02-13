@@ -31,7 +31,7 @@ export interface LoginRequestDto extends Request {
 }
 
 export interface EmailVerificationRequestDto extends Request {
-  query: {
+  body: {
     token: string;
   }
 }
