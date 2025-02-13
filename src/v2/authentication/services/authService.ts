@@ -49,7 +49,7 @@ export const validatePassword = (password: string) => {
   ) {
     return {
       valid: false,
-      message: `password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
+      message: `Password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
     };
   }
 
@@ -57,11 +57,11 @@ export const validatePassword = (password: string) => {
     return {
       valid: false,
       message:
-        "password must contain at least one number, one lowercase and one uppercase letter, and one special character",
+        "Password must contain at least one number, one lowercase and one uppercase letter, and one special character",
     };
   }
 
-  return { valid: true, message: "password is valid" };
+  return { valid: true, message: "Password is valid" };
 };
 
 const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
@@ -265,9 +265,14 @@ export const initiatePasswordReset = async (email: string) => {
 
 export const resetPassword = async (token: string, newPassword: string) => {
   try {
-    const user = await UserModel.findOne({ resetPasswordToken: token });
+    const user = await UserModel.findOne({ reset_password_token: token });
     if (!user) {
       throw new HttpError("Invalid or expired password reset token.", 401);
+    }
+
+    const { valid, message } = validatePassword(newPassword);
+    if (!valid) {
+      throw new HttpError(message, 400);
     }
 
     const hashedPassword = await hash(newPassword, 12);
@@ -301,6 +306,11 @@ export const updatePassword = async (
     const isMatch = await compare(oldPassword, user.password);
     if (!isMatch) {
       throw new HttpError("Invalid credentials.", 401);
+    }
+
+    const { valid, message } = validatePassword(newPassword);
+    if (!valid) {
+      throw new HttpError(message, 400);
     }
 
     const hashedNewPassword = await hash(newPassword, 12);

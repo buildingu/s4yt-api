@@ -9,7 +9,7 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
   const msg = {
     to,
     from: process.env.FROM_EMAIL as string,
-    subject: 'Dollars for Your Thoughts ($4YT) - Please Verify Your Email Address',
+    subject: 'Dollars for Your Thoughts ($4YT) - Verify Your Email Address',
     html: `<p>To verify your email address for your Dollars for Your Thoughts ($4YT) account, please click the link below:</p><a href="${verificationUrl}">Verify Email</a>`,
   };
 
@@ -27,8 +27,8 @@ export const sendResetPasswordEmail = async (to: string, resetToken: string) => 
   const msg = {
     to,
     from: process.env.FROM_EMAIL as string,
-    subject: 'Reset Your Password',
-    html: `<p>To reset your password, please click the link below:</p><a href="${resetUrl}">Reset Password</a>`,
+    subject: 'Dollars for Your Thoughts ($4YT) - Reset Your Password',
+    html: `<p>To reset your password of your Dollars for Your Thoughts ($4YT) account, please click the link below:</p><a href="${resetUrl}">Reset Password</a>`,
   };
 
   try {
