@@ -230,6 +230,7 @@ export const login = async (loginData: { email: string; password: string }) => {
 
 export const verifyEmail = async (token: string) => {
   try {
+    console.log(`email token: ${token}`);
     const user = await UserModel.findOne({ emailVerificationToken: token });
     if (!user) {
       throw new HttpError("User not found.", 404);
