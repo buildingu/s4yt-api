@@ -14,20 +14,6 @@ const verifyUser = async (
 ) => {
   try {
     if (req.path.includes("/email/verify")) {
-      const token = req.query.token as string;
-      if (!token) {
-        return res
-          .status(400)
-          .json({ message: "Verification token is missing." });
-      }
-      const user = await verifyEmail(token);
-      if (user === null) {
-        // Check for null explicitly
-        return res
-          .status(401)
-          .json({ message: "User not found or token invalid." });
-      }
-      req.user = user;
       return next();
     } else if (req.path.includes("/password")) {
       // Handle password reset token verification

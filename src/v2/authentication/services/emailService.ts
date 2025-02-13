@@ -9,8 +9,8 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
   const msg = {
     to,
     from: process.env.FROM_EMAIL as string,
-    subject: 'Please Verify Your Email Address',
-    html: `<p>To verify your email address, please click the link below:</p><a href="${verificationUrl}">Verify Email</a>`,
+    subject: 'Dollars for Your Thoughts ($4YT) - Please Verify Your Email Address',
+    html: `<p>To verify your email address for your Dollars for Your Thoughts ($4YT) account, please click the link below:</p><a href="${verificationUrl}">Verify Email</a>`,
   };
 
   try {
