@@ -141,7 +141,7 @@ export const assignCoinsToUser = async (
 
     // Check if chest has already been submitted, to prevent potential abuse
     if (user.chests_submitted.has(chestId)) {
-      throw new HttpError('Chest has already been submitted', 200);
+      throw new HttpError('Chest has already been submitted', 409);
     }
 
     user.chests_submitted.set(chestId, true);
