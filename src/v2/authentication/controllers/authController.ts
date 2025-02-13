@@ -93,18 +93,25 @@ export const login = async (
     const { email, password } = req.body;
     const { user, coins, timestamps, jwtToken, csrfToken } = await authService.login({
       email,
-      password,
+      password
     });
 
     res.setHeader("Authorization", "Bearer " + jwtToken);
     res.setHeader("x-xsrf-token", csrfToken);
-    res.cookie("XSRF-TOKEN", csrfToken);
+    // TODO: We should probably think about a logout route to clear things, like this cookie.
+    res.cookie("XSRF-TOKEN", csrfToken, {
+      path: "/",
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year because this should last forever or however long the game lasts.
+      httpOnly: true,
+      secure: true,
+      sameSite: "none" // TODO: I think we can try sameSite strict since the server and the client is one the same domain (s4yt.org)?
+    });
 
     return res.status(200).json({
       message: "User is successfully authenticated.",
       user,
       coins,
-      timestamps,
+      timestamps
     });
   } catch (error: any) {
     next(error);
@@ -124,8 +131,6 @@ export const updatePassword = async (
     res
       .status(200)
       .json({ message: "Password updated successfully. Please log in again." });
-
-    //res.redirect("/logout");
   } catch (error: any) {
     next(error);
   }
