@@ -95,7 +95,7 @@ export const register = async (userData: any) => {
 
     const existingUser = await getUser(userData.email);
     if (existingUser) {
-      throw new HttpError("User already exists.", 400);
+      throw new HttpError("User already exists.", 409);
     }
 
     const { valid, message } = validatePassword(userData.password);
