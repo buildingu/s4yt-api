@@ -120,11 +120,12 @@ export const register = async (userData: any) => {
 
     awardCoinsToUser(newUser, 3, 'register', false);
     handleReferralBonus(newUser, inviterReferralCode, 5);
-    await newUser.save();
 
     if (process.env.SEND_EMAILS === 'true') {
       await sendVerificationEmail(newUser.email, newUser.email_verification_token);
     }
+
+    await newUser.save();
 
     return newUser;
   } catch (error) {
