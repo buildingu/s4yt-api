@@ -144,7 +144,7 @@ export const assignCoinsToUser = async (
       throw new HttpError('Chest has already been submitted', 409);
     }
 
-    user.chests_submitted.set(chestId, true);
+    user.chests_submitted.set(chestId, count);
 
     await awardCoinsToUser(user, count, source, true);
     await user.save();
