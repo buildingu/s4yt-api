@@ -8,6 +8,7 @@ const multipleChoiceSchema = new Schema<MultipleChoice>({
     correct: { type: String, required: true},
     explanation: String
   }
+  //this is supposed to be connected 
 });
 
 const MultipleChoiceModel = mongoose.model('MultipleChoice', multipleChoiceSchema);

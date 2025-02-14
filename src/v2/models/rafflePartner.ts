@@ -10,6 +10,7 @@ const rafflePartnerSchema = new Schema<RafflePartner>({
     logo: { type: String, required: true },
     organization_name: { type: String, required: true },
     resource_link: { type: String, required: true },
+    
   });
 
  export const RafflePartnerModel = mongoose.model<RafflePartner>('RafflePartner', rafflePartnerSchema);

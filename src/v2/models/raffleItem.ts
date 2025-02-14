@@ -14,6 +14,7 @@ interface IRaffleItem extends Document {
 
 const raffleItemSchema = new Schema<IRaffleItem>({
   name_raffle_item: { type: String, required: true },
+  //resource_link
   image: { type: String, required: true },
   qty: { type: Number, required: true },
   stake: [{
