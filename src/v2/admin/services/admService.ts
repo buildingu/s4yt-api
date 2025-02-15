@@ -3,6 +3,42 @@ import Question from '../../models/question';
 import Business from '../../models/business';
 import ChestModel from '../../models/chest';
 import MultipleChoiceModel from '../../models/multipleChoice';
+import { LoginResponse } from '../dtos/AdminDto';
+import { compare } from "bcrypt";
+import jwt from 'jsonwebtoken';
+
+export const loginAdmin = async (email: string, password: string): Promise<LoginResponse> => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error("Invalid email");
+  }
+
+  const isMatch = await compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Invalid password");
+  }
+
+  const business = user.role === "Business"
+    ? await Business.findOne({ business_user_id: user._id }).select("_id")
+    : null;
+
+  const token = jwt.sign(
+    { userId: user._id, roles: user.role },
+    process.env.JWT_SECRET as string,
+    { expiresIn: "1h" }
+  );
+
+  return {
+    token,
+    userData: {
+      _id: user._id.toString(),
+      email: user.email,
+      role: user.role,
+      businessId: business?._id?.toString() || null,
+    },
+  };
+};
+
 
 export const retrieveAllUsers = async () => {
   const users = await User.find({});

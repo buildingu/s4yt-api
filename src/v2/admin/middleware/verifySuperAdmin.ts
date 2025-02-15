@@ -14,7 +14,7 @@ const verifySuperAdmin = async (req: Request, res: Response, next: NextFunction)
     res.status(403).json({ message: "Access denied. This action requires Super Admin privileges." });
   }
 
-  if (user?.role === 'Admin') {
+  if (user?.role === 'Admin') { //superadmin
     next();
   } else {
     res.status(403).json({ message: "Access denied. This action requires Super Admin privileges." });

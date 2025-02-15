@@ -11,7 +11,15 @@ import { CreateBusinessRequestDto, CreateChestRequestDto } from '../dtos/AdminDt
 //     res.status(500).send(error.message);
 //   }
 // };
-
+export const adminLogin = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const response = await superAdminService.loginAdmin(email, password);
+    res.status(200).json(response);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+}
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await superAdminService.retrieveAllUsers();
