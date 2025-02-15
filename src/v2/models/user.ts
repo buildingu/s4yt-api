@@ -3,9 +3,10 @@ import User from '../typings/User';
 import { userEducation, userRoles } from '../typings/userEnums';
 import { coinTransactionSchema } from './coinTransaction';
 
+// TODO: country, name, education should be required, but register is giving validation errors
 const userSchema = new Schema<User & Document>({
-  city: String,
-  country: { type: String, required: true },
+  city: { type: String, default: null },
+  country: { type: String, default: null },
   email: {
     type: String,
     lowercase: true,
@@ -14,14 +15,13 @@ const userSchema = new Schema<User & Document>({
   },
   education: {
     type: String,
-    enum: userEducation,
-    required: true
+    enum: userEducation
   },
-  school: String,
-  name: { type: String, required: true, minlength: 2, maxlength: 128 },
+  school: { type: String, default: null },
+  name: { type: String, default: null, minlength: 2, maxlength: 128 },
   password: { type: String, required: true },
   chests_submitted: { type: Map, of: Number },
-  region: String,
+  region: { type: String, default: null },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },
   reset_password_token: { type: String, default: null },
