@@ -349,6 +349,8 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       user.region = profileUpdates.region;
     if (profileUpdates.hasOwnProperty("education"))
       user.education = profileUpdates.education;
+    if (profileUpdates.hasOwnProperty("school"))
+      user.school = profileUpdates.school;
 
     if (user.isModified("email")) {
       if (!emailPattern.test(user.email)) {
