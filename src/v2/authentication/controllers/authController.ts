@@ -125,9 +125,9 @@ export const updatePassword = async (
 ) => {
   try {
     const userId =
-      (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
-    const { oldPassword, newPassword } = req.body;
-    await authService.updatePassword(userId, oldPassword, newPassword);
+      (req.decodedClaims as CustomJwtPayload)?.userId;
+    const { old_password, password, password_confirmation } = req.body;
+    await authService.updatePassword(userId, old_password, password, password_confirmation);
     res
       .status(200)
       .json({ message: "Password updated successfully. Please log in again." });

@@ -88,7 +88,7 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
 };
 
 export const register = async (userData: any) => {
-  try {
+  try {   
     if (!emailPattern.test(userData.email)) {
       throw new HttpError("Invalid email.", 400);
     }
@@ -96,6 +96,10 @@ export const register = async (userData: any) => {
     const existingUser = await getUser(userData.email);
     if (existingUser) {
       throw new HttpError("User already exists.", 409);
+    }
+
+    if (userData.password !== userData.password_confirmation) {
+      throw new HttpError("Passwords do not match.", 400);
     }
 
     const { valid, message } = validatePassword(userData.password);
@@ -285,17 +289,22 @@ export const resetPassword = async (token: string, newPassword: string) => {
 };
 
 export const updatePassword = async (
-  userId: string,
+  userId: string | undefined,
   oldPassword: string,
-  newPassword: string
+  password: string,
+  passwordConfirmation: string
 ) => {
   try {
     if (!oldPassword) {
       throw new HttpError("Current password is missing.", 400);
     }
 
-    if (!newPassword) {
-      throw new HttpError("New password is missing.", 400);
+    if (password !== passwordConfirmation) {
+      throw new HttpError("Passwords do not match.", 400);
+    }
+
+    if (!userId) {
+      throw new HttpError("User not found.", 404);
     }
 
     const user = await UserModel.findById(userId);
@@ -308,12 +317,12 @@ export const updatePassword = async (
       throw new HttpError("Invalid credentials.", 401);
     }
 
-    const { valid, message } = validatePassword(newPassword);
+    const { valid, message } = validatePassword(password);
     if (!valid) {
       throw new HttpError(message, 400);
     }
 
-    const hashedNewPassword = await hash(newPassword, 12);
+    const hashedNewPassword = await hash(password, 12);
     user.password = hashedNewPassword;
     user.token_version = user.token_version ? user.token_version + 1 : 1;
     await user.save();

@@ -6,9 +6,7 @@ export interface GetUserRequestDto extends Request {
     email: string;
   }
 }
-/**
- * There is also be password_confirmation coming, just check if the password and password_confirmation equals.
- */
+
 export interface RegisterRequestDto extends Request {
   body: {
     name: string;
@@ -44,9 +42,9 @@ export interface ResendVerificationEmailRequestDto extends Request {
 
 export interface UpdatePasswordRequestDto extends Request {
   body: {
-    userId: string;
-    oldPassword: string;
-    newPassword: string;
+    old_password: string;
+    password: string;
+    password_confirmation: string;
   }
 }
 
