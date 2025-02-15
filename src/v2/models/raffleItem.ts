@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 
 const raffleItemSchema = new Schema<RaffleItem>({
   item_id: { type: String, default: () => randomUUID() },
+  raffle_partner: { type: Schema.Types.ObjectId, ref: 'RafflePartner'},
   name: { type: String, required: true },
   description: { type: String },
   image_src: { type: String, required: true },
@@ -11,7 +12,8 @@ const raffleItemSchema = new Schema<RaffleItem>({
   entries: [{
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     coins: { type: Number, required: true }
-  }]
+  }],
+  deleted: { type: Boolean, default: false }
 });
 
 const RaffleItemModel = model<RaffleItem>('RaffleItem', raffleItemSchema);

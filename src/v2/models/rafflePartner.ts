@@ -4,14 +4,16 @@ export interface RafflePartner extends Document{
     logo: string;
     organization_name: string;
     resource_link: string;
-    education_category: string;
+    resource_category: string;
+    deleted: boolean;
 }
 
 const rafflePartnerSchema = new Schema<RafflePartner>({
     logo: { type: String, required: true },
     organization_name: { type: String, required: true },
     resource_link: { type: String, required: true },
-    // education_category
+    resource_category: { type: String, required: true },
+    deleted: { type: Boolean, default: false }
   });
 
  export const RafflePartnerModel = mongoose.model<RafflePartner>('RafflePartner', rafflePartnerSchema);

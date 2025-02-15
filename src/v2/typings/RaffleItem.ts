@@ -20,4 +20,6 @@ export interface RaffleItem {
 
   entries: Stake[];
   // TODO: derive total coins, silver/gold status from entries in response  
+
+  deleted: boolean;
 }
