@@ -111,6 +111,8 @@ export const register = async (userData: any) => {
     const inviterReferralCode = userData.referral_code;
     const newUserReferralCode = crypto.randomBytes(10).toString('hex');
 
+    console.log(userData);
+
     const newUser = new UserModel({
       ...userData,
       password: hashedPassword,
