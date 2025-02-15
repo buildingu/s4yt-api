@@ -9,6 +9,10 @@ const transporter = nodemailer.createTransport({
     user: process.env.FROM_EMAIL,
     pass: process.env.EMAIL_PASSWORD,
   },
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
+  rateLimit: 10
 });
 
 export const sendVerificationEmail = async (to: string, verificationToken: string) => {
