@@ -61,6 +61,9 @@ jobs:
 
           echo "MONGODB_URI=${{ secrets.MONGODB_URI}}" > .env
           echo "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}" >> .env
+          echo "EMAIL_HOST=${{secrets.EMAIL_HOST}}" >> .env
+          echo "EMAIL_PORT=${{secrets.EMAIL_PORT}}}" >> .env
+          echo "EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}" >> .env
           echo "SEND_EMAILS=${{ secrets.SEND_EMAILS }}" >> .env
           echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
