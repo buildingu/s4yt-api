@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { fillTemplate, loadEmailTemplate } from '../../utils/emails';
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -11,15 +12,18 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const verificationEmail = loadEmailTemplate('verification.html');
+const resetPasswordEmail = loadEmailTemplate('verification.html');
+
 export const sendVerificationEmail = async (to: string, verificationToken: string) => {
   const verificationUrl = `${process.env.FRONTEND_URL}/register/verify-email/verify?token=${verificationToken}`;
+  const emailBody = fillTemplate(verificationEmail, [['{{verification_link}}', verificationUrl]]);
 
   const mailOptions = {
     from: process.env.FROM_EMAIL as string,
     to,
     subject: 'Dollars for Your Thoughts ($4YT) - Verify Your Email Address',
-    html: `<p>To verify your email address for your Dollars for Your Thoughts ($4YT) account, please click the link below:</p><a href="${verificationUrl}">Verify Email</a>`,
-    attachments: [], 
+    html: emailBody 
   };
 
   try {
@@ -33,13 +37,13 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
 
 export const sendResetPasswordEmail = async (to: string, resetToken: string) => {
   const resetUrl = `${process.env.FRONTEND_URL}/api/v2/auth/password?token=${resetToken}`;
+  const emailBody = fillTemplate(resetPasswordEmail, [['{{verification_link}}', resetUrl]]);
 
   const mailOptions = {
     from: process.env.FROM_EMAIL as string,
     to,
     subject: 'Dollars for Your Thoughts ($4YT) - Reset Your Password',
-    html: `<p>To reset your password of your Dollars for Your Thoughts ($4YT) account, please click the link below:</p><a href="${resetUrl}">Reset Password</a>`,
-    attachments: [], 
+    html: emailBody
   };
 
   try {

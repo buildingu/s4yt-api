@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        font-family: 'Oswald', Arial, sans-serif;
+        text-align: center;
+        font-size: 16px;
+        color: #814D08;
+      }
+      .email-container {
+        width: 100%;
+        max-width: 572px;
+        margin: auto;
+        background: url('https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657510/instructions_back2_1_pjoty3.png') center center / 100% 100% no-repeat;
+        padding: 50px 20px;
+        min-height: 400px;
+      }
+      .logo {
+        width: 150px;
+      }
+      .content {
+        padding: 20px;
+      }
+      .verify-button {
+        display: inline-block;
+        background-color: #5a4b3f;
+        color: #F8DA82;
+        padding: 12px 70px;
+        font-size: 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        margin-top: 20px;
+      }
+      .verify-button:hover {
+        background-color: #F9BE49;
+        color: #5a4b3f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <img src="https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657955/m3gda9qmpumhn8qgadsq.png" alt="Dollars for Your Thoughts Logo" class="logo">
+      <div class="content">
+        <h2>Welcome,</h2>
+        <p>To verify your email address for your Dollars for Your Thoughts (<strong>$4YT</strong>) account, please click the button below.</p>
+        <a href="{{verification_link}}" class="verify-button">Verify</a>
+      </div>
+    </div>
+  </body>
+</html>
