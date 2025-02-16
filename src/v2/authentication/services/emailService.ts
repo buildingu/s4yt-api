@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const verificationEmail = loadEmailTemplate('verification.html');
-const resetPasswordEmail = loadEmailTemplate('verification.html');
+const resetPasswordEmail = loadEmailTemplate('resetPassword.html');
 
 export const sendVerificationEmail = async (to: string, verificationToken: string) => {
   const verificationUrl = `${process.env.FRONTEND_URL}/register/verify-email/verify?token=${verificationToken}`;
@@ -40,8 +40,8 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
 };
 
 export const sendResetPasswordEmail = async (to: string, resetToken: string) => {
-  const resetUrl = `${process.env.FRONTEND_URL}/api/v2/auth/password?token=${resetToken}`;
-  const emailBody = fillTemplate(resetPasswordEmail, [['{{verification_link}}', resetUrl]]);
+  const resetUrl = `${process.env.FRONTEND_URL}/password?token=${resetToken}`;
+  const emailBody = fillTemplate(resetPasswordEmail, [['{{reset_link}}', resetUrl]]);
 
   const mailOptions = {
     from: process.env.FROM_EMAIL as string,
