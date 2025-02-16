@@ -363,6 +363,8 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       //Frontend needs to inform user to re-verify email
     }
 
+    // FIXME: You're sending back the entire user including the _id, __v, everything. You need to just send back the UserCredentials. So, what you should do is make a util or something that 
+    // forms the correct object just like you were doing from the login. Or you can .clone() the findById query and use projection.
     await user.save();
 
     const updatedUser: any = user.toObject();
