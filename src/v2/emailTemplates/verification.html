@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+      
       body {
         margin: 0;
         padding: 0;
-        background-color: #f4f4f4;
         font-family: 'Oswald', Arial, sans-serif;
         text-align: center;
         font-size: 16px;
         color: #814D08;
       }
+      h2 {
+        color: #814d08;
+      }
+      #title{
+        font-size: 30px;
+        padding-top: 20px;
+      }
       .email-container {
-        width: 100%;
-        max-width: 572px;
-        margin: auto;
-        background: url('https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657510/instructions_back2_1_pjoty3.png') center center / 100% 100% no-repeat;
+        width: 572px;
+        min-width: 572px; /* Prevents shrinking */
+        max-width: 572px; /* Prevents expansion */
         padding: 50px 20px;
         min-height: 400px;
       }
@@ -43,13 +50,26 @@
     </style>
   </head>
   <body>
-    <div class="email-container">
-      <img src="https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657955/m3gda9qmpumhn8qgadsq.png" alt="Dollars for Your Thoughts Logo" class="logo">
-      <div class="content">
-        <h2>Welcome,</h2>
-        <p>To verify your email address for your Dollars for Your Thoughts (<strong>$4YT</strong>) account, please click the button below.</p>
-        <a href="{{verification_link}}" class="verify-button">Verify</a>
-      </div>
-    </div>
+    <table width="100%" bgcolor="#f4f4f4">
+      <tr>
+        <td align="center">
+          <table width="580" cellpadding="0" cellspacing="0" border="0" class="email-container"
+            style="background: url('https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657510/instructions_back2_1_pjoty3.png'); 
+                  background-size: cover; 
+                  background-position: center; 
+                  min-height: 400px;" 
+            role="presentation">
+            <tr>
+              <td align="center" style="padding: 0px 20px;">
+                <img src="https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657955/m3gda9qmpumhn8qgadsq.png" alt="Dollars for Your Thoughts Logo" class="logo">
+                <p id="title">Welcome</p>
+                <p>To verify your email address for your Dollars for Your Thoughts (<b>$4YT</b>) account, please click the button below.</p>
+                <a href="{{verification_link}}" class="verify-button">Verify</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
