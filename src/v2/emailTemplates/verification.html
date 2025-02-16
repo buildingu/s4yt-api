@@ -3,67 +3,36 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
-      
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Oswald', Arial, sans-serif;
-        text-align: center;
-        font-size: 16px;
-        color: #814D08;
-      }
-      h2 {
-        color: #814d08;
-      }
-      #title{
-        font-size: 30px;
-        padding-top: 20px;
-      }
-      .email-container {
-        width: 572px;
-        min-width: 572px; /* Prevents shrinking */
-        max-width: 572px; /* Prevents expansion */
-        padding: 50px 20px;
-        min-height: 400px;
-      }
-      .logo {
-        width: 150px;
-      }
-      .content {
-        padding: 20px;
-      }
       .verify-button {
         display: inline-block;
         background-color: #5a4b3f;
-        color: #F8DA82;
+        color: #F8DA82 !important;
         padding: 12px 70px;
         font-size: 18px;
         border-radius: 8px;
-        text-decoration: none;
-        margin-top: 20px;
+        text-decoration: none !important;
+        margin-top: 5px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
       }
+
       .verify-button:hover {
         background-color: #F9BE49;
-        color: #5a4b3f;
+        color: #5a4b3f !important;
       }
     </style>
   </head>
-  <body>
-    <table width="100%" bgcolor="#f4f4f4">
+  <body style="margin: 0; padding: 0; font-family: 'Oswald', Arial, sans-serif; text-align: center; font-size: 16px; color: #814D08;">
+    <table width="100%">
       <tr>
         <td align="center">
-          <table width="580" cellpadding="0" cellspacing="0" border="0" class="email-container"
-            style="background: url('https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657510/instructions_back2_1_pjoty3.png'); 
-                  background-size: cover; 
-                  background-position: center; 
-                  min-height: 400px;" 
-            role="presentation">
+          <table width="580" cellpadding="0" cellspacing="0" border="0" style="width: 572px; min-width: 572px; max-width: 572px; padding: 30px 10px; min-height: 400px; background: url('https://res.cloudinary.com/dxjvwsspl/image/upload/v1739740005/instructions_back2_1_kjaxwm.png'); background-size: cover; background-position: center;" role="presentation">
             <tr>
               <td align="center" style="padding: 0px 20px;">
-                <img src="https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657955/m3gda9qmpumhn8qgadsq.png" alt="Dollars for Your Thoughts Logo" class="logo">
-                <p id="title">Welcome</p>
-                <p>To verify your email address for your Dollars for Your Thoughts (<b>$4YT</b>) account, please click the button below.</p>
+                <img src="https://res.cloudinary.com/dxjvwsspl/image/upload/v1739657955/m3gda9qmpumhn8qgadsq.png" alt="Dollars for Your Thoughts Logo" style="width: 150px;">
+                <p style="font-size: 25px; padding-top: 0px;"><b>Welcome</b></p>
+                <p style="font-size: 20px;"><b>To verify your email address for your Dollars for Your Thoughts ($4YT) account, please click the button below.</b></p>
                 <a href="{{verification_link}}" class="verify-button">Verify</a>
               </td>
             </tr>
