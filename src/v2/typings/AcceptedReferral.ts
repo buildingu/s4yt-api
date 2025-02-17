@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
 export interface AcceptedReferral {
-  invited_user: { type: Types.ObjectId, ref: 'User' };
+  invited_user: Types.ObjectId;
   coins: number;
 }

@@ -113,10 +113,9 @@ export const sendBusinessesInfo = async (req: Request, res: Response, next: Next
 export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
     const { questionId } = req.params;
-    const { userId, text, submit } = req.body;
-    const boolSubmit = submit === 'true';
+    const { userId, text } = req.body;
 
-    const answer = await gameService.saveAnswer(questionId, userId, text, boolSubmit);
+    const answer = await gameService.saveAnswer(questionId, userId, text);
     res.status(200).json(answer);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -126,10 +125,9 @@ export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
 export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) => {
   try {
     const { answerId } = req.params;
-    const { text, submit } = req.body;
-    const boolSubmit = submit === 'true';
+    const { text } = req.body;
 
-    const answer = await gameService.updateAnswer(answerId, text, boolSubmit);
+    const answer = await gameService.updateAnswer(answerId, text);
     res.json(answer);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

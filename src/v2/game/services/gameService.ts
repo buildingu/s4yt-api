@@ -200,7 +200,7 @@ export const sendBusinessesInfo = async () => {
   }
 };
 
-export const saveAnswer = async (questionId: string, userId: string, text: string, submit: boolean = false) => {
+export const saveAnswer = async (questionId: string, userId: string, text: string) => {
   const question = await Question.findById(questionId);
   if (!question) {
     throw new Error('Question not found');
@@ -224,8 +224,7 @@ export const saveAnswer = async (questionId: string, userId: string, text: strin
     question,
     business,
     user,
-    text,
-    status: submit ? 'Submitted' : 'Draft'
+    text
   });
 
   await answer.save();
@@ -235,17 +234,15 @@ export const saveAnswer = async (questionId: string, userId: string, text: strin
     question: question.id,
     business,
     user: user._id,
-    text,
-    status: answer.status
+    text
   }
 
   return responseObj;
 } 
 
-export const updateAnswer = async (answerId: string, text: string, submit: boolean = false) => {
+export const updateAnswer = async (answerId: string, text: string) => {
   const updateData = {
-    text,
-    ...(submit && { status: 'Submitted'})
+    text
   };
 
   const answer = await Answer.findByIdAndUpdate(answerId, updateData, { new: true });

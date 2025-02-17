@@ -19,11 +19,6 @@ const answerSchema = new mongoose.Schema({
   text: { 
     type: String, 
     required: true 
-  },
-  status: {
-    type: String,
-    enum: ['New', 'Draft', 'Submitted'],
-    default: 'New'
   }
 });
 
