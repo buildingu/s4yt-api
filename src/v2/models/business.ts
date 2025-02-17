@@ -9,7 +9,8 @@ const businessSchema = new mongoose.Schema({
   meet_members_interested: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   attachment: { type: String, default: null },
   video_urls: [{ type: String, default: null }],
-  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+  challenge: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
+  chests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chest' }],
   winners: [
     {
       winnerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
