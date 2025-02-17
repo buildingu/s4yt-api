@@ -8,7 +8,8 @@ const businessSchema = new Schema({
   business_user_id: { type: Types.ObjectId, ref: 'User', required: true },
   attend_meeting: {type: Boolean, default: false },
   attachment: { type: String, default: null },
-  video_urls: [{ type: String, default: null }],
+  video_url: { type: String, default: null },
+  video_title: { type: String, default: null},
   challenge: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
   chests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chest' }],
   winners: [
