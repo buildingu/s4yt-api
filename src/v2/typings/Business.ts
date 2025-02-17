@@ -8,8 +8,10 @@ export interface Business {
   description?: string;
   attend_meeting: boolean;
   attachment?: string;
-  video_urls?: string[];
-  questions: Types.ObjectId[];
+  video_url?: string;
+  video_title?: string;
+  challenge: Types.ObjectId;
+  chests: Types.ObjectId[];
   winners: [
     {
       winnerId: string;
@@ -18,7 +20,7 @@ export interface Business {
   ],
   award: number;
   awardedTotal: number;
-  deleted: boolean
+  deleted: boolean;
 }
 
 export interface BusinessInfo {
