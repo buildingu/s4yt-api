@@ -6,7 +6,7 @@ export interface SaveAnswerRequestDto extends Request {
     text: string;
   },
   params: {
-    questionId: string;
+    challengeId: string;
   }
 }
 

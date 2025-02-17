@@ -112,10 +112,10 @@ export const sendBusinessesInfo = async (req: Request, res: Response, next: Next
 
 export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
-    const { questionId } = req.params;
+    const { challengeId } = req.params;
     const { userId, text } = req.body;
 
-    const answer = await gameService.saveAnswer(questionId, userId, text);
+    const answer = await gameService.saveAnswer(challengeId, userId, text);
     res.status(200).json(answer);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

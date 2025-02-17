@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const answerSchema = new mongoose.Schema({
-  question: { 
+  challenge: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Question', 
+    ref: 'Challenge', 
     required: true 
   },
   business: { 
@@ -16,7 +16,7 @@ const answerSchema = new mongoose.Schema({
     ref: 'User', 
     required: true
   },
-  text: { 
+  link: { 
     type: String, 
     required: true 
   }

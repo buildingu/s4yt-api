@@ -8,13 +8,13 @@ export interface UpdateBusinessRequestDto extends Request {
   }
 }
 
-export interface GetQuestionsRequestDto extends Request {
+export interface GetChallengesRequestDto extends Request {
   params: {
     businessId: string;
   }
 }
 
-export interface AddQuestionRequestDto extends Request {
+export interface AddChallengeRequestDto extends Request {
   body: {
     text: string;
     description: string;
@@ -26,7 +26,7 @@ export interface AddQuestionRequestDto extends Request {
 
 export interface GetAnswersRequestDto extends Request {
   params: {
-    questionId: string;
+    challengeId: string;
   }
 }
 

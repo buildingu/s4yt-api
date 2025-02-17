@@ -1,5 +1,5 @@
 import Business from "../../models/business";
-import Question from "../../models/question";
+import Challenge from "../../models/challenge";
 import RaffleItem from "../../models/raffleItem";
 import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
@@ -25,6 +25,7 @@ export const getRaffleItemsService = async () => {
 };
 
 // TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to sliver and gold coin changes.
+// { item_id: string, silver: bool }
 export const getRaffleIndicatorCoinsService = async () => {
   try {
     const raffleItems = await RaffleItem.find().populate('stake.user');
@@ -178,7 +179,7 @@ export const sendBusinessesInfo = async () => {
       throw new Error('Businesses not found');
     }
 
-    // Count the number of submitted answers to all business questions
+    // Count the number of submitted answers to all business challenges
     const results = [];
     for (const business of allBus) {
       const numAnswers = await Answer.countDocuments({ business: business._id, status: 'Submitted'});
@@ -200,15 +201,15 @@ export const sendBusinessesInfo = async () => {
   }
 };
 
-export const saveAnswer = async (questionId: string, userId: string, text: string) => {
-  const question = await Question.findById(questionId);
-  if (!question) {
-    throw new Error('Question not found');
+export const saveAnswer = async (challengeId: string, userId: string, text: string) => {
+  const challenge = await Challenge.findById(challengeId);
+  if (!challenge) {
+    throw new Error('Challenge not found');
   }
 
-  const { business } = question;
+  const { business } = challenge;
   if (!business) {
-    throw new Error('Question is not associated with any Business');
+    throw new Error('Challenge is not associated with any Business');
   }
 
   const user = await User.findById(userId);
@@ -221,7 +222,7 @@ export const saveAnswer = async (questionId: string, userId: string, text: strin
   }
 
   const answer = new Answer({
-    question,
+    challenge,
     business,
     user,
     text
@@ -231,7 +232,7 @@ export const saveAnswer = async (questionId: string, userId: string, text: strin
 
   const responseObj = {
     _id: answer.id,
-    question: question.id,
+    challenge: challenge.id,
     business,
     user: user._id,
     text
@@ -306,14 +307,14 @@ export const sendBusinessChallengeWinners = async () => {
     /*let results = [];
     for (const business of allBus) {
       let businessResults = [];
-      const questions = business.questions;
+      const challenges = business.challenges;
 
-      for (const questionId of questions) {
-        const question = await Question.findById(questionId);
+      for (const challengeId of challenges) {
+        const challenge = await Challenge.findById(challengeId);
 
-        if (!question) continue;
+        if (!challenge) continue;
 
-        for (const prize of question.prize_allocation) {
+        for (const prize of challenge.prize_allocation) {
           const user = await User.findById(prize.winner);
           if (!user) continue;
 

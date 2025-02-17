@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
-const questionSchema = new mongoose.Schema({
+const challengeSchema = new mongoose.Schema({
   text: { type: String, required: true },
   description: String,
   business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' }
 });
 
-const Question = mongoose.model('Question', questionSchema);
+const ChallengeModel = mongoose.model('Challenge', challengeSchema);
 
-export default Question;
+export default ChallengeModel;

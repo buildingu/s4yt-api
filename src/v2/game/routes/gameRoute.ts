@@ -14,7 +14,7 @@ router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBus
 router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
 
-router.post("/questions/:questionId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);
+router.post("/challenges/:challengeId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);
 router.patch("/answers/:answerId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateAnswer);
 
 router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleInfo); // Sends us the raffle items and stuff.
