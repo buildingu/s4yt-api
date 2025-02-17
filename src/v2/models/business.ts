@@ -1,10 +1,9 @@
-import { randomUUID } from 'crypto';
 import mongoose, { Schema, Types } from 'mongoose';
 import { Business } from '../typings/Business';
 
 const businessSchema = new Schema<Business>({
   name: { type: String, required: true },
-  business_id: { type: String, default: () => randomUUID()},
+  admin_business_id: { type: String, default: ''},
   logo_s4yt: { type: String, default: null },
   logo_normal: { type: String, default: null },
   description: { type: String, default: null },

@@ -39,7 +39,6 @@ export const loginAdmin = async (email: string, password: string): Promise<Login
   };
 };
 
-
 export const retrieveAllUsers = async () => {
   const users = await User.find({});
   return users;

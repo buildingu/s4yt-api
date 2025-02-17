@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 export interface Business {
   name: string;
-  business_id: string;
+  admin_business_id: string;
   logo_s4yt?: string;
   logo_normal?: string;
   description?: string;
@@ -12,7 +12,7 @@ export interface Business {
   questions: Types.ObjectId[];
   winners: [
     {
-      winnerId: Types.ObjectId[];
+      winnerId: string;
       award: number;
     }
   ],
