@@ -7,9 +7,10 @@ export default interface User {
   country?: string;
   email: string;
   education?: typeof userEducation[number] | null;
+  school?: string | null;
   name?: string;
   password: string;
-  chests_submitted: Map<string, boolean>;
+  chests_submitted: Map<string, number>;
   region?: string | null;
   is_email_verified: boolean;
   email_verification_token: string;

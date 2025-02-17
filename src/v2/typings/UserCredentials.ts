@@ -7,7 +7,7 @@ export default interface UserCredentials {
   email: string;
   name?: string;
   referral_link: string;
-  chests_submitted: Record<string, boolean>;
+  chests_submitted: Record<string, number>;
   region?: string | null;
   roles: typeof userRoles[number];
 }

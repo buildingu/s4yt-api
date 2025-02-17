@@ -7,6 +7,7 @@ import { verify } from "crypto";
 const router = Router();
 
 router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTreasureMap);
+router.get("/chests", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getChests);
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
 router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).

@@ -11,6 +11,7 @@ import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
+import ChestModel from "../../models/chest";
 
 export const getRaffleItemsService = async () => {
   try {
@@ -140,12 +141,12 @@ export const assignCoinsToUser = async (
 
     // Check if chest has already been submitted, to prevent potential abuse
     if (user.chests_submitted.has(chestId)) {
-      throw new HttpError('Chest has already been submitted', 200);
+      throw new HttpError('Chest has already been submitted', 409);
     }
 
-    user.chests_submitted.set(chestId, true);
+    user.chests_submitted.set(chestId, count);
 
-    await awardCoinsToUser(user, count, source);
+    await awardCoinsToUser(user, count, source, true);
     await user.save();
 
     return user;
@@ -153,6 +154,19 @@ export const assignCoinsToUser = async (
     throw resolveErrorHandler(error);
   }
 };
+
+export const getChests = async () => {
+  try {
+    const chests = await ChestModel.find({}, '-_id -__v')
+      .populate({
+         path: 'group',
+         select: '-_id -__v'
+      });
+    return chests;
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+}
 
 export const sendBusinessesInfo = async () => {
   try {

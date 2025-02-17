@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
-import * as playerService from '../../business/services/playerService';
-import { CreateBusinessRequestDto } from '../dtos/AdminDto';
+import { CreateBusinessRequestDto, CreateChestRequestDto } from '../dtos/AdminDto';
 
 // export const uploadImage = async (req: Request, res: Response) => {
 //   try {
@@ -12,7 +11,15 @@ import { CreateBusinessRequestDto } from '../dtos/AdminDto';
 //     res.status(500).send(error.message);
 //   }
 // };
-
+export const adminLogin = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const response = await superAdminService.loginAdmin(email, password);
+    res.status(200).json(response);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+}
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await superAdminService.retrieveAllUsers();
@@ -65,6 +72,17 @@ export const editBusinessQuestion = async (req: Request, res: Response) => {
     const { questionId, questionData } = req.body;
     await superAdminService.editQuestion(questionId, questionData);
     res.status(200).send('Question edited successfully');
+  } catch (error: any) {
+    res.status(500).send(error.message);
+  }
+};
+
+export const createChests = async (req: CreateChestRequestDto, res: Response) => {
+  try {
+    for (const chestGroupData of req.body) {
+      await superAdminService.createChest(chestGroupData);
+    }
+    res.status(200).send('Chests created successfully');
   } catch (error: any) {
     res.status(500).send(error.message);
   }

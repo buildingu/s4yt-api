@@ -56,6 +56,8 @@ jobs:
           pm2 stop s4yt-api
           git clean -f .env 
           git pull origin main
+          npm i
+          npm run build
 
           echo "MONGODB_URI=${{ secrets.MONGODB_URI}}" > .env
           echo "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}" >> .env

@@ -49,7 +49,7 @@ export const validatePassword = (password: string) => {
   ) {
     return {
       valid: false,
-      message: `password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
+      message: `Password must be between ${passwordMinLength} and ${passwordMaxLength} characters`,
     };
   }
 
@@ -57,11 +57,11 @@ export const validatePassword = (password: string) => {
     return {
       valid: false,
       message:
-        "password must contain at least one number, one lowercase and one uppercase letter, and one special character",
+        "Password must contain at least one number, one lowercase and one uppercase letter, and one special character",
     };
   }
 
-  return { valid: true, message: "password is valid" };
+  return { valid: true, message: "Password is valid" };
 };
 
 const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
@@ -80,7 +80,7 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   invitingUser.accepted_referrals.push(acceptedReferral._id);
 
   // Give and track bonus coins
-  awardCoinsToUser(invitingUser, amount, 'referral');
+  awardCoinsToUser(invitingUser, amount, 'referral', true);
 
   await invitingUser.save();
 
@@ -88,14 +88,18 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
 };
 
 export const register = async (userData: any) => {
-  try {
+  try {   
     if (!emailPattern.test(userData.email)) {
-      throw new HttpError("Invalid email or password.", 400);
+      throw new HttpError("Invalid email.", 400);
     }
 
     const existingUser = await getUser(userData.email);
     if (existingUser) {
-      throw new HttpError("User already exists.", 400);
+      throw new HttpError("User already exists.", 409);
+    }
+
+    if (userData.password !== userData.password_confirmation) {
+      throw new HttpError("Passwords do not match.", 400);
     }
 
     const { valid, message } = validatePassword(userData.password);
@@ -118,13 +122,14 @@ export const register = async (userData: any) => {
       chests_submitted: {},
     });
 
-    awardCoinsToUser(newUser, 50, 'register');
+    awardCoinsToUser(newUser, 3, 'register', false);
     handleReferralBonus(newUser, inviterReferralCode, 5);
-    await newUser.save();
 
     if (process.env.SEND_EMAILS === 'true') {
       await sendVerificationEmail(newUser.email, newUser.email_verification_token);
     }
+
+    await newUser.save();
 
     return newUser;
   } catch (error) {
@@ -229,7 +234,7 @@ export const login = async (loginData: { email: string; password: string }) => {
 
 export const verifyEmail = async (token: string) => {
   try {
-    const user = await UserModel.findOne({ emailVerificationToken: token });
+    const user = await UserModel.findOne({ email_verification_token: token });
     if (!user) {
       throw new HttpError("User not found.", 404);
     }
@@ -264,9 +269,14 @@ export const initiatePasswordReset = async (email: string) => {
 
 export const resetPassword = async (token: string, newPassword: string) => {
   try {
-    const user = await UserModel.findOne({ resetPasswordToken: token });
+    const user = await UserModel.findOne({ reset_password_token: token });
     if (!user) {
       throw new HttpError("Invalid or expired password reset token.", 401);
+    }
+
+    const { valid, message } = validatePassword(newPassword);
+    if (!valid) {
+      throw new HttpError(message, 400);
     }
 
     const hashedPassword = await hash(newPassword, 12);
@@ -279,17 +289,22 @@ export const resetPassword = async (token: string, newPassword: string) => {
 };
 
 export const updatePassword = async (
-  userId: string,
+  userId: string | undefined,
   oldPassword: string,
-  newPassword: string
+  password: string,
+  passwordConfirmation: string
 ) => {
   try {
     if (!oldPassword) {
       throw new HttpError("Current password is missing.", 400);
     }
 
-    if (!newPassword) {
-      throw new HttpError("New password is missing.", 400);
+    if (password !== passwordConfirmation) {
+      throw new HttpError("Passwords do not match.", 400);
+    }
+
+    if (!userId) {
+      throw new HttpError("User not found.", 404);
     }
 
     const user = await UserModel.findById(userId);
@@ -302,7 +317,12 @@ export const updatePassword = async (
       throw new HttpError("Invalid credentials.", 401);
     }
 
-    const hashedNewPassword = await hash(newPassword, 12);
+    const { valid, message } = validatePassword(password);
+    if (!valid) {
+      throw new HttpError(message, 400);
+    }
+
+    const hashedNewPassword = await hash(password, 12);
     user.password = hashedNewPassword;
     user.token_version = user.token_version ? user.token_version + 1 : 1;
     await user.save();
@@ -329,6 +349,8 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       user.region = profileUpdates.region;
     if (profileUpdates.hasOwnProperty("education"))
       user.education = profileUpdates.education;
+    if (profileUpdates.hasOwnProperty("school"))
+      user.school = profileUpdates.school;
 
     if (user.isModified("email")) {
       if (!emailPattern.test(user.email)) {
@@ -341,6 +363,8 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       //Frontend needs to inform user to re-verify email
     }
 
+    // FIXME: You're sending back the entire user including the _id, __v, everything. You need to just send back the UserCredentials. So, what you should do is make a util or something that 
+    // forms the correct object just like you were doing from the login. Or you can .clone() the findById query and use projection.
     await user.save();
 
     const updatedUser: any = user.toObject();

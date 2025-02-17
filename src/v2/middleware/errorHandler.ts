@@ -21,6 +21,7 @@ export const resolveErrorHandler = (error: unknown, errorPatternChecks?: ErrorPa
   }
 
   const err = error as Error;
+  console.log(`Unexpected ${err.name}: ${err.message}`);
 
   if (errorPatternChecks) {
     for (const check of errorPatternChecks) {

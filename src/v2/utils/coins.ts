@@ -9,17 +9,20 @@ export const awardCoinsToUser = async (
   user: HydratedDocument<User>,
   count: number,
   source: typeof coinSources[number],
+  sendEvent: boolean
 ) => {
   user.coins += count;
   trackCoins(user, count, source);
 
-  socketEmit.send({
-    target: user.email,
-    event: 'coin_changed',
-    data: {
-      coins: count
-    }
-  });
+  if (sendEvent) {
+    socketEmit.send({
+      target: user.email,
+      event: 'coin_change',
+      data: {
+        coins: count
+      }
+    });
+  }
 }
 
 // Adds a coin transaction to a User's coin_transactions list
