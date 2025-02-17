@@ -1,8 +1,8 @@
 import { Request } from 'express';
-import { BusinessInfo } from '../../typings/Business';
+import { BusinessInfoBasic } from '../../typings/Business';
 
 export interface UpdateBusinessRequestDto extends Request {
-  body: BusinessInfo;
+  body: BusinessInfoBasic;
   params: {
     businessId: string;
   }

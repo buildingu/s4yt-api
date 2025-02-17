@@ -21,7 +21,7 @@ export interface Business {
   deleted: boolean;
 }
 
-export interface BusinessInfo {
+export interface BusinessInfoBasic {
   name: string;
   logoS4yt: string;
   description: string;
