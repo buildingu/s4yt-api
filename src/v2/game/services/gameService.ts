@@ -1,6 +1,5 @@
 import Business from "../../models/business";
 import Question from "../../models/question";
-import Sponsor from "../../models/sponsor";
 import RaffleItem from "../../models/raffleItem";
 import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
@@ -12,6 +11,8 @@ import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
+
+// FIXME: Fix raffle related services to conform to new RaffleSchema
 
 export const getRaffleItemsService = async () => {
   try {
@@ -29,8 +30,9 @@ export const getRaffleIndicatorCoinsService = async () => {
     const raffleItems = await RaffleItem.find().populate('stake.user');
     const indicators = raffleItems.map(item => ({
       itemId: item._id,
-      goldCoin: item.stake.some(stake => stake.coin_staked > 0),
-      silverCoin: item.stake.every(stake => stake.coin_staked === 0)
+      // FIXME
+      //goldCoin: item.stake.some(stake => stake.coin_staked > 0),
+      //silverCoin: item.stake.every(stake => stake.coin_staked === 0)
     }));
     return indicators;
   } catch (error: any) {
@@ -44,14 +46,15 @@ export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: m
     const raffleItems = await RaffleItem.find({});
 
     const winners = raffleItems.map((item): { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } | null => {
-      const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
-      let randomPoint = Math.random() * totalStakes;
-      for (const stake of item.stake) {
+      // FIXME
+      //const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
+      //let randomPoint = Math.random() * totalStakes;
+      /*for (const stake of item.stake) {
         randomPoint -= stake.coin_staked;
         if (randomPoint <= 0) {
           return { raffleItemId: item._id, winnerUserId: stake.user };
         }
-      }
+      }*/
       return null;
     }).filter((winner): winner is { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } => winner !== null);
 
@@ -170,7 +173,7 @@ export const getChests = async () => {
 
 export const sendBusinessesInfo = async () => {
   try {
-    const allBus = await Business.find();
+    const allBus = await Business.find({}, '-_v -admin_business_id -challenge -chests -winners', { lean: true });
     if (!allBus) {
       throw new Error('Businesses not found');
     }
@@ -178,16 +181,10 @@ export const sendBusinessesInfo = async () => {
     // Count the number of submitted answers to all business questions
     const results = [];
     for (const business of allBus) {
-      const numAnswers = await Answer.countDocuments({ business: business.id, status: 'Submitted'});
+      const numAnswers = await Answer.countDocuments({ business: business._id, status: 'Submitted'});
 
       const busInfo = {
-        id: business.id,
-        name: business.name,
-        logoS4yt: business.logo_s4yt,
-        logoNormal: business.logo_normal,
-        description: business.description,
-        attachment: business.attachment,
-        videoUrls: business.video_urls,
+        ...business,
         numAnswers
       };
 
@@ -308,7 +305,8 @@ export const sendBusinessChallengeWinners = async () => {
       throw new Error('Businesses not found');
     }
 
-    let results = [];
+    // FIXME
+    /*let results = [];
     for (const business of allBus) {
       let businessResults = [];
       const questions = business.questions;
@@ -336,7 +334,7 @@ export const sendBusinessChallengeWinners = async () => {
       
       results.push(businessResults)
     }
-    return results;
+    return results;*/
   };
 
 export const getCoinsGainedHistory = async (userId: string): Promise<CoinTransaction[]> => {
@@ -376,17 +374,19 @@ export const getTreasureMapData = async (userId: Types.ObjectId) => {
     const raffleItems = await RaffleItem.find({ active: true });
     const raffleData = raffleItems.map(item => ({
       id: item.id,
-      name: item.name_raffle_item,
-      image: item.image,
-      quantity: item.qty
+      // FIXME
+      //name: item.name_raffle_item,
+      //image: item.image,
+      //quantity: item.qty
     }));
 
-    const sponsors = await Sponsor.find({});
+    // FIXME
+    /*const sponsors = await Sponsor.find({});
     const sponsorData = sponsors.map(sponsor => ({
       id: sponsor.id,
       name: sponsor.name,
       logo: sponsor.logo_path, 
-    }));
+    }));*/
 
     const treasureMapData = {
       user: {
@@ -394,7 +394,8 @@ export const getTreasureMapData = async (userId: Types.ObjectId) => {
         coins: user.coins, 
       },
       raffle: raffleData,
-      sponsors: sponsorData,
+      // FIXME
+      //sponsors: sponsorData,
     };
 
     return treasureMapData;

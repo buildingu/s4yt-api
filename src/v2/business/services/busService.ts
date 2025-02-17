@@ -19,7 +19,8 @@ export const addQuestionToBusiness = async (businessId: string, questionData: an
   const question = new Question({ ...questionData, business: businessId });
   await question.save();
 
-  business.questions.push(question._id);
+  // FIXME
+  //business.questions.push(question._id);
   await business.save();
 
   return question;

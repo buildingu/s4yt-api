@@ -138,6 +138,7 @@ export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) =
 
 export const addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // TODO: There is only one meeting now
     const { businessId } = req.params;
     const { userId, rsvpType } = req.body;
 

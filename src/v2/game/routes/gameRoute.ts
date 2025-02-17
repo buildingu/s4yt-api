@@ -10,6 +10,7 @@ router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTr
 router.get("/chests", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getChests);
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
+// TODO: There is only one meeting now
 router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
 

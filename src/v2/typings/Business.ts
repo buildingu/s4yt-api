@@ -6,8 +6,6 @@ export interface Business {
   logo_s4yt?: string;
   logo_normal?: string;
   description?: string;
-  attend_meeting: boolean;
-  attachment?: string;
   video_url?: string;
   video_title?: string;
   challenge: Types.ObjectId;

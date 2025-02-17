@@ -11,6 +11,7 @@ export default interface User {
   name?: string;
   password: string;
   chests_submitted: Map<string, number>;
+  attend_meeting: boolean;
   region?: string | null;
   is_email_verified: boolean;
   email_verification_token: string;
