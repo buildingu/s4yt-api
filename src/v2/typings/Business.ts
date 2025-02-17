@@ -10,6 +10,7 @@ export interface Business {
   video_url?: string;
   video_title?: string;
   challenge_question: Types.ObjectId;
+  chests: Types.ObjectId[];
   winners: [
     {
       winnerId: string;

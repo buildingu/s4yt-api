@@ -10,7 +10,8 @@ const businessSchema = new Schema<Business>({
   description: { type: String, default: null },
   video_url: { type: String, default: null },
   video_title: { type: String, default: null },
-  challenge_question: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
+  challenge_question: { type: Schema.Types.ObjectId, ref: 'Question' },
+  chests: [{ type: Schema.Types.ObjectId, ref: 'Chest' }],
   winners: [
     {
       winnerId: { type: Types.ObjectId, ref: 'User' },

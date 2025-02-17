@@ -4,7 +4,6 @@ import { randomUUID } from 'crypto';
 
 const chestSchema = new Schema<Chest>({
   chest_id: { type: String, default: () => randomUUID()},
-  business: { type: Schema.Types.ObjectId, ref: 'Business' },
   group: [{ type: Types.ObjectId, ref: 'MultipleChoice' }],
   deleted: { type: Boolean, default: false }
 });
