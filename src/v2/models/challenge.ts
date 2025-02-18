@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 const challengeSchema = new mongoose.Schema({
-  text: { type: String, required: true },
-  description: String,
+  title: { type: String, required: true },
+  description: { type: String, required: true },
   business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' }
 });
 
