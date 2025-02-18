@@ -3,7 +3,7 @@ name: Deploy Server
 on:
   push:
     branches:
-      - main2
+      - main
 
 jobs:
   deploy:
@@ -55,8 +55,7 @@ jobs:
           # Clean untracked files (removes .env and package-lock.json)
           pm2 stop s4yt-api
           git clean -f .env 
-          git switch main2
-          git pull origin main2
+          git pull origin main
           npm i
           npm run build
 
