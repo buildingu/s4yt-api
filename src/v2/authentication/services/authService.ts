@@ -186,13 +186,13 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     const isMatch = await compare(loginData.password, user.password);
     if (!isMatch) {
-      throw new HttpError("Invalid credentials.", 401);
+      throw new HttpError("Invalid credentials.", 400);
     }
 
     if (!user.is_email_verified) {
       throw new HttpError(
         "Email is not verified. Please check your email to verify your account. If you lost your verification link, press Resend Verification Email above to get a new link.",
-        401
+        400
       );
     }
 
@@ -336,7 +336,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     const user = await UserModel.findById(userId);
     let needsReverification = false;
     if (!user) {
-      throw new HttpError("User not found.", 401);
+      throw new HttpError("User not found.", 404);
     }
 
     if (profileUpdates.hasOwnProperty("name")) user.name = profileUpdates.name;
@@ -363,6 +363,8 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       //Frontend needs to inform user to re-verify email
     }
 
+    // FIXME: You're sending back the entire user including the _id, __v, everything. You need to just send back the UserCredentials. So, what you should do is make a util or something that 
+    // forms the correct object just like you were doing from the login. Or you can .clone() the findById query and use projection.
     await user.save();
 
     const updatedUser: any = user.toObject();
