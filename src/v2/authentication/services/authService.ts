@@ -267,11 +267,15 @@ export const initiatePasswordReset = async (email: string) => {
   }
 };
 
-export const resetPassword = async (token: string, newPassword: string) => {
+export const resetPassword = async (token: string, newPassword: string, newPasswordConfirmation: string) => {
   try {
     const user = await UserModel.findOne({ reset_password_token: token });
     if (!user) {
       throw new HttpError("Invalid or expired password reset token.", 401);
+    }
+
+    if (newPassword !== newPasswordConfirmation) {
+      throw new HttpError("Passwords do not match.", 400);
     }
 
     const { valid, message } = validatePassword(newPassword);

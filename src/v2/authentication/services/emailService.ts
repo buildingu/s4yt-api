@@ -40,7 +40,7 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
 };
 
 export const sendResetPasswordEmail = async (to: string, resetToken: string) => {
-  const resetUrl = `${process.env.FRONTEND_URL}/password?token=${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/password-reset?token=${resetToken}`;
   const emailBody = fillTemplate(resetPasswordEmail, [['{{reset_link}}', resetUrl]]);
 
   const mailOptions = {

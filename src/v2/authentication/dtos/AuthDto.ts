@@ -51,6 +51,8 @@ export interface UpdatePasswordRequestDto extends Request {
 export interface ResetPasswordRequestDto extends Request {
   body: {
     token: string;
-    newPassword: string;
+    old_password: string;
+    password: string;
+    password_confirmation: string;
   }
 }
