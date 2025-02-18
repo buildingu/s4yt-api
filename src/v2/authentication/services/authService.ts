@@ -143,7 +143,7 @@ export const resendVerificationEmail = async (email: string) => {
     if (!user) {
       throw new HttpError("User does not exist.", 404);
     } else if (!user.email_verification_token) {
-      throw new HttpError("User is already verified.", 204);
+      throw new HttpError("User is already verified.", 409);
     }
     await sendVerificationEmail(user.email, user.email_verification_token);
   } catch (error) {
