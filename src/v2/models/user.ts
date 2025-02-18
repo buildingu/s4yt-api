@@ -25,7 +25,6 @@ const userSchema = new Schema<User & Document>({
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },
   reset_password_token: { type: String, default: null },
-  token_version: { type: Number, default: 0 },
   role: { 
     type: String, 
     enum: userRoles, 
@@ -37,7 +36,6 @@ const userSchema = new Schema<User & Document>({
   accepted_referrals: [{ type: Types.ObjectId, ref: 'AcceptedReferral' }],
   kicked: { type: Boolean, default: false },
   banned_until: { type: Date, default: null },
-  show_instructions: { type: Boolean, default: true },
 }, {
   timestamps: {
     createdAt: 'created_at', // Use `created_at` to store the created date

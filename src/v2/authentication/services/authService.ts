@@ -324,7 +324,6 @@ export const updatePassword = async (
 
     const hashedNewPassword = await hash(password, 12);
     user.password = hashedNewPassword;
-    user.token_version = user.token_version ? user.token_version + 1 : 1;
     await user.save();
   } catch (error) {
     throw resolveErrorHandler(error);

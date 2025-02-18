@@ -16,13 +16,11 @@ export default interface User {
   is_email_verified: boolean;
   email_verification_token: string;
   reset_password_token: string;
-  token_version: number;
   role: typeof userRoles[number];
   referral_code: string;
   accepted_referrals: Types.ObjectId[];
   kicked?: boolean; 
   banned_until?: Date;
   coins: number;
-  coin_transactions: CoinTransaction[],
-  show_instructions: boolean;
+  coin_transactions: CoinTransaction[]
 }
