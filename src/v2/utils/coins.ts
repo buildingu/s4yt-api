@@ -5,7 +5,7 @@ import { socketEmit } from "./socket-emitter";
 
 // Adds coins to user's balance given a legitimate source and adds it to their coin history
 // NOTE: `await user.save()` must be called after calling this function, since it doesn't update the user's data to the db itself
-export const awardCoinsToUser = async (
+export const awardCoinsToUser = (
   user: HydratedDocument<User>,
   count: number,
   source: typeof coinSources[number],

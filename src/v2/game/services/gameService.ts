@@ -150,7 +150,7 @@ export const assignCoinsToUser = async (
 
     user.chests_submitted.set(chestId, count);
 
-    await awardCoinsToUser(user, count, source, true);
+    awardCoinsToUser(user, count, source, true);
     await user.save();
 
     return user;
