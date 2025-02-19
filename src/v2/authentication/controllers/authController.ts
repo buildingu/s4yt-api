@@ -7,7 +7,6 @@ import {
   GetUserRequestDto,
   ResetPasswordRequestDto,
   ResendVerificationEmailRequestDto,
-  UpdateProfileRequestDto,
 } from "../dtos/AuthDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 
@@ -169,7 +168,7 @@ export const resetPassword = async (
 };
 
 export const updateProfile = async (
-  req: UpdateProfileRequestDto,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

@@ -335,13 +335,9 @@ export const sendBusinessChallengeWinners = async () => {
     return results;*/
   };
 
-export const getCoinsGainedHistory = async (userId: string) => {
+export const getCoinsGainedHistory = async (userId: string): Promise<CoinTransaction[]> => {
   try {
-    const user = await UserModel.findById(userId, 'coin_transactions').populate({
-      path: 'coin_transactions',
-      select: '-_id -__v'
-    });
-
+    const user = await UserModel.findById(userId, 'coin_transactions');
     if (!user) {
       throw new HttpError('User not found', 404);
     }
