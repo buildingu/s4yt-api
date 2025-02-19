@@ -120,6 +120,8 @@ export const register = async (userData: any) => {
       is_email_verified: false,
       email_verification_token: crypto.randomBytes(20).toString("hex"),
       chests_submitted: {},
+      coin_transactions: [],
+      accepted_referrals: [],
     });
 
     await awardCoinsToUser(newUser, 3, 'register', false);
