@@ -1,6 +1,5 @@
 import Business from "../../models/business";
-import Question from "../../models/question";
-import Sponsor from "../../models/sponsor";
+import Challenge from "../../models/challenge";
 import RaffleItem from "../../models/raffleItem";
 import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
@@ -13,6 +12,8 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 
+// FIXME: Fix raffle related services to conform to new RaffleSchema
+
 export const getRaffleItemsService = async () => {
   try {
     const raffleItems = await RaffleItem.find({});
@@ -24,13 +25,15 @@ export const getRaffleItemsService = async () => {
 };
 
 // TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to sliver and gold coin changes.
+// { item_id: string, silver: bool }
 export const getRaffleIndicatorCoinsService = async () => {
   try {
     const raffleItems = await RaffleItem.find().populate('stake.user');
     const indicators = raffleItems.map(item => ({
       itemId: item._id,
-      goldCoin: item.stake.some(stake => stake.coin_staked > 0),
-      silverCoin: item.stake.every(stake => stake.coin_staked === 0)
+      // FIXME
+      //goldCoin: item.stake.some(stake => stake.coin_staked > 0),
+      //silverCoin: item.stake.every(stake => stake.coin_staked === 0)
     }));
     return indicators;
   } catch (error: any) {
@@ -44,14 +47,15 @@ export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: m
     const raffleItems = await RaffleItem.find({});
 
     const winners = raffleItems.map((item): { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } | null => {
-      const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
-      let randomPoint = Math.random() * totalStakes;
-      for (const stake of item.stake) {
+      // FIXME
+      //const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
+      //let randomPoint = Math.random() * totalStakes;
+      /*for (const stake of item.stake) {
         randomPoint -= stake.coin_staked;
         if (randomPoint <= 0) {
           return { raffleItemId: item._id, winnerUserId: stake.user };
         }
-      }
+      }*/
       return null;
     }).filter((winner): winner is { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } => winner !== null);
 
@@ -170,24 +174,18 @@ export const getChests = async () => {
 
 export const sendBusinessesInfo = async () => {
   try {
-    const allBus = await Business.find();
+    const allBus = await Business.find({}, '-_v -admin_business_id -challenge -chests -winners', { lean: true });
     if (!allBus) {
       throw new Error('Businesses not found');
     }
 
-    // Count the number of submitted answers to all business questions
+    // Count the number of submitted answers to all business challenges
     const results = [];
     for (const business of allBus) {
-      const numAnswers = await Answer.countDocuments({ business: business.id, status: 'Submitted'});
+      const numAnswers = await Answer.countDocuments({ business: business._id, status: 'Submitted'});
 
       const busInfo = {
-        id: business.id,
-        name: business.name,
-        logoS4yt: business.logo_s4yt,
-        logoNormal: business.logo_normal,
-        description: business.description,
-        attachment: business.attachment,
-        videoUrls: business.video_urls,
+        ...business,
         numAnswers
       };
 
@@ -203,15 +201,15 @@ export const sendBusinessesInfo = async () => {
   }
 };
 
-export const saveAnswer = async (questionId: string, userId: string, text: string, submit: boolean = false) => {
-  const question = await Question.findById(questionId);
-  if (!question) {
-    throw new Error('Question not found');
+export const saveAnswer = async (challengeId: string, userId: string, text: string) => {
+  const challenge = await Challenge.findById(challengeId);
+  if (!challenge) {
+    throw new Error('Challenge not found');
   }
 
-  const { business } = question;
+  const { business } = challenge;
   if (!business) {
-    throw new Error('Question is not associated with any Business');
+    throw new Error('Challenge is not associated with any Business');
   }
 
   const user = await User.findById(userId);
@@ -224,31 +222,28 @@ export const saveAnswer = async (questionId: string, userId: string, text: strin
   }
 
   const answer = new Answer({
-    question,
+    challenge,
     business,
     user,
-    text,
-    status: submit ? 'Submitted' : 'Draft'
+    text
   });
 
   await answer.save();
 
   const responseObj = {
     _id: answer.id,
-    question: question.id,
+    challenge: challenge.id,
     business,
     user: user._id,
-    text,
-    status: answer.status
+    text
   }
 
   return responseObj;
 } 
 
-export const updateAnswer = async (answerId: string, text: string, submit: boolean = false) => {
+export const updateAnswer = async (answerId: string, text: string) => {
   const updateData = {
-    text,
-    ...(submit && { status: 'Submitted'})
+    text
   };
 
   const answer = await Answer.findByIdAndUpdate(answerId, updateData, { new: true });
@@ -308,17 +303,18 @@ export const sendBusinessChallengeWinners = async () => {
       throw new Error('Businesses not found');
     }
 
-    let results = [];
+    // FIXME
+    /*let results = [];
     for (const business of allBus) {
       let businessResults = [];
-      const questions = business.questions;
+      const challenges = business.challenges;
 
-      for (const questionId of questions) {
-        const question = await Question.findById(questionId);
+      for (const challengeId of challenges) {
+        const challenge = await Challenge.findById(challengeId);
 
-        if (!question) continue;
+        if (!challenge) continue;
 
-        for (const prize of question.prize_allocation) {
+        for (const prize of challenge.prize_allocation) {
           const user = await User.findById(prize.winner);
           if (!user) continue;
 
@@ -336,7 +332,7 @@ export const sendBusinessChallengeWinners = async () => {
       
       results.push(businessResults)
     }
-    return results;
+    return results;*/
   };
 
 export const getCoinsGainedHistory = async (userId: string): Promise<CoinTransaction[]> => {
@@ -376,17 +372,19 @@ export const getTreasureMapData = async (userId: Types.ObjectId) => {
     const raffleItems = await RaffleItem.find({ active: true });
     const raffleData = raffleItems.map(item => ({
       id: item.id,
-      name: item.name_raffle_item,
-      image: item.image,
-      quantity: item.qty
+      // FIXME
+      //name: item.name_raffle_item,
+      //image: item.image,
+      //quantity: item.qty
     }));
 
-    const sponsors = await Sponsor.find({});
+    // FIXME
+    /*const sponsors = await Sponsor.find({});
     const sponsorData = sponsors.map(sponsor => ({
       id: sponsor.id,
       name: sponsor.name,
       logo: sponsor.logo_path, 
-    }));
+    }));*/
 
     const treasureMapData = {
       user: {
@@ -394,7 +392,8 @@ export const getTreasureMapData = async (userId: Types.ObjectId) => {
         coins: user.coins, 
       },
       raffle: raffleData,
-      sponsors: sponsorData,
+      // FIXME
+      //sponsors: sponsorData,
     };
 
     return treasureMapData;

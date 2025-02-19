@@ -22,7 +22,8 @@ const calculateChances = (stakes: Stake[]): Chance[] => {
 const selectWinners = async (): Promise<void> => {
   const raffleItems = await RaffleItemModel.find({}).populate('stakes.user');
 
-  for (const raffleItem of raffleItems) {
+  // fIXME
+  /*for (const raffleItem of raffleItems) {
     const stakes = raffleItem.stake as Stake[];
     const chances = calculateChances(stakes);
     chances.sort((a, b) => b.chance - a.chance);
@@ -41,7 +42,7 @@ const selectWinners = async (): Promise<void> => {
         break;
       }
     }
-  }
+  }*/
 };
 
 export const RaffleService = {

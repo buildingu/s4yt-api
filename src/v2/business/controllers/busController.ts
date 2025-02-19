@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as businessService from '../services/busService';
-import { AddQuestionRequestDto, GetAnswersRequestDto, GetQuestionsRequestDto, UpdateBusinessRequestDto, AwardRequestDto, SelectWinnersRequestDto, GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
+import { AddChallengeRequestDto, GetAnswersRequestDto, GetChallengesRequestDto, UpdateBusinessRequestDto, AwardRequestDto, SelectWinnersRequestDto, GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
 
 export const updateBusinessInfo = async (req: UpdateBusinessRequestDto, res: Response) => {
   try {
@@ -13,33 +13,33 @@ export const updateBusinessInfo = async (req: UpdateBusinessRequestDto, res: Res
   }
 };
 
-export const addQuestion = async (req: AddQuestionRequestDto, res: Response) => {
+export const addChallenge = async (req: AddChallengeRequestDto, res: Response) => {
   try {
     const { businessId } = req.params;
-    const questionData = req.body;
-    const updatedBusiness = await businessService.addQuestionToBusiness(businessId, questionData);
+    const challengeData = req.body;
+    const updatedBusiness = await businessService.addChallengeToBusiness(businessId, challengeData);
     res.status(201).json(updatedBusiness);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const updateQuestion = async (req: Request, res: Response) => {
+export const updateChallenge = async (req: Request, res: Response) => {
   try {
-    const { questionId } = req.params;
+    const { challengeId } = req.params;
     const updateData = req.body;
-    const updatedQuestion = await businessService.updateBusinessQuestion(questionId, updateData);
-    res.json(updatedQuestion);
+    const updatedChallenge = await businessService.updateBusinessChallenge(challengeId, updateData);
+    res.json(updatedChallenge);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const getQuestions = async (req: GetQuestionsRequestDto, res: Response) => {
+export const getChallenges = async (req: GetChallengesRequestDto, res: Response) => {
   try {
     const { businessId } = req.params;
-    const questions = await businessService.getBusinessQuestions(businessId);
-    res.json(questions);
+    const challenges = await businessService.getBusinessChallenges(businessId);
+    res.json(challenges);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -47,8 +47,8 @@ export const getQuestions = async (req: GetQuestionsRequestDto, res: Response) =
 
 export const getAnswers = async (req: GetAnswersRequestDto, res: Response) => {
   try {
-    const { questionId } = req.params;
-    const answers = await businessService.getAnswersToQuestion(questionId);
+    const { challengeId } = req.params;
+    const answers = await businessService.getAnswersToChallenge(challengeId);
     res.status(200).json(answers);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

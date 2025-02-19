@@ -1,20 +1,20 @@
 import { Request } from 'express';
-import { BusinessInfo } from '../../typings/Business';
+import { BusinessInfoBasic } from '../../typings/Business';
 
 export interface UpdateBusinessRequestDto extends Request {
-  body: BusinessInfo;
+  body: BusinessInfoBasic;
   params: {
     businessId: string;
   }
 }
 
-export interface GetQuestionsRequestDto extends Request {
+export interface GetChallengesRequestDto extends Request {
   params: {
     businessId: string;
   }
 }
 
-export interface AddQuestionRequestDto extends Request {
+export interface AddChallengeRequestDto extends Request {
   body: {
     text: string;
     description: string;
@@ -26,7 +26,7 @@ export interface AddQuestionRequestDto extends Request {
 
 export interface GetAnswersRequestDto extends Request {
   params: {
-    questionId: string;
+    challengeId: string;
   }
 }
 

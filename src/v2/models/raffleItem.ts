@@ -1,27 +1,21 @@
-import { Document, model, Schema, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
+import { RaffleItem } from '../typings/RaffleItem';
+import { randomUUID } from 'crypto';
 
-interface Stake {
-  user: Types.ObjectId;
-  coin_staked: number;
-}
-
-interface IRaffleItem extends Document {
-  name_raffle_item: string;
-  image: string;
-  qty: number;
-  stake: Stake[];
-}
-
-const raffleItemSchema = new Schema<IRaffleItem>({
-  name_raffle_item: { type: String, required: true },
-  image: { type: String, required: true },
-  qty: { type: Number, required: true },
-  stake: [{
+const raffleItemSchema = new Schema<RaffleItem>({
+  item_id: { type: String, default: () => randomUUID() },
+  raffle_partner: { type: Schema.Types.ObjectId, ref: 'RafflePartner'},
+  name: { type: String, required: true },
+  description: { type: String },
+  image_src: { type: String, required: true },
+  stock: { type: Number, required: true },
+  entries: [{
     user: { type: Schema.Types.ObjectId, ref: 'User' },
-    coin_staked: { type: Number, required: true }
-  }]
+    coins: { type: Number, required: true }
+  }],
+  deleted: { type: Boolean, default: false }
 });
 
-const RaffleItemModel = model<IRaffleItem>('RaffleItem', raffleItemSchema);
+const RaffleItemModel = model<RaffleItem>('RaffleItem', raffleItemSchema);
 
 export default RaffleItemModel;

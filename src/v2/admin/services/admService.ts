@@ -1,5 +1,5 @@
 import User from '../../models/user';
-import Question from '../../models/question';
+import Challenge from '../../models/challenge';
 import Business from '../../models/business';
 import ChestModel from '../../models/chest';
 import MultipleChoiceModel from '../../models/multipleChoice';
@@ -39,7 +39,6 @@ export const loginAdmin = async (email: string, password: string): Promise<Login
   };
 };
 
-
 export const retrieveAllUsers = async () => {
   const users = await User.find({});
   return users;
@@ -75,18 +74,18 @@ export const createBusiness = async (name: string, logo: string, description: st
   await business.save();
 }
 
-export const editQuestion = async (questionId: string, questionData: any) => {
-  const question = await Question.findByIdAndUpdate(questionId, questionData, { new: true });
-  if (!question) {
-    throw new Error('Question not found');
+export const editChallenge = async (challengeId: string, challengeData: any) => {
+  const challenge = await Challenge.findByIdAndUpdate(challengeId, challengeData, { new: true });
+  if (!challenge) {
+    throw new Error('Challenge not found');
   }
-  return question;
+  return challenge;
 };
 
 export const createChest = async (chestGroupData: any) => {
   const chestGroup = await Promise.all(
-    chestGroupData.map(async (questionData: any) => {
-      const multipleChoice = new MultipleChoiceModel(questionData);
+    chestGroupData.map(async (challengeData: any) => {
+      const multipleChoice = new MultipleChoiceModel(challengeData);
       await multipleChoice.save();
       return multipleChoice;
     })

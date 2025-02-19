@@ -67,11 +67,11 @@ export const getAllBusinesses = async (req: Request, res: Response) => {
   }
 };
 
-export const editBusinessQuestion = async (req: Request, res: Response) => {
+export const editBusinessChallenge = async (req: Request, res: Response) => {
   try {
-    const { questionId, questionData } = req.body;
-    await superAdminService.editQuestion(questionId, questionData);
-    res.status(200).send('Question edited successfully');
+    const { challengeId, challengeData } = req.body;
+    await superAdminService.editChallenge(challengeId, challengeData);
+    res.status(200).send('Challenge edited successfully');
   } catch (error: any) {
     res.status(500).send(error.message);
   }

@@ -4,17 +4,15 @@ export interface SaveAnswerRequestDto extends Request {
   body: {
     userId: string;
     text: string;
-    submit: string;
   },
   params: {
-    questionId: string;
+    challengeId: string;
   }
 }
 
 export interface UpdateAnswerRequestDto extends Request {
   body: {
     text: string;
-    submit: string;
   },
   params: {
     answerId: string;

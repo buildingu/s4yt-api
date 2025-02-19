@@ -1,5 +1,5 @@
 import Business from '../../models/business';
-import Question from '../../models/question'; 
+import Challenge from '../../models/challenge'; 
 import Answer from '../../models/answer';
 
 export const updateBusinessInfo = async (businessId: string, businessInfo: any) => {
@@ -10,41 +10,42 @@ export const updateBusinessInfo = async (businessId: string, businessInfo: any) 
   return business;
 };
 
-export const addQuestionToBusiness = async (businessId: string, questionData: any) => {
+export const addChallengeToBusiness = async (businessId: string, challengeData: any) => {
   const business = await Business.findById(businessId);
   if (!business) {
     throw new Error('Business not found');
   }
 
-  const question = new Question({ ...questionData, business: businessId });
-  await question.save();
+  const challenge = new Challenge({ ...challengeData, business: businessId });
+  await challenge.save();
 
-  business.questions.push(question._id);
+  // FIXME
+  //business.challenges.push(challenge._id);
   await business.save();
 
-  return question;
+  return challenge;
 };
 
-export const updateBusinessQuestion = async (questionId: string, updateData: any) => {
-  const question = await Question.findByIdAndUpdate(questionId, updateData, { new: true });
-  if (!question) {
-    throw new Error('Question not found');
+export const updateBusinessChallenge = async (challengeId: string, updateData: any) => {
+  const challenge = await Challenge.findByIdAndUpdate(challengeId, updateData, { new: true });
+  if (!challenge) {
+    throw new Error('Challenge not found');
   }
-  return question;
+  return challenge;
 };
 
-export const getBusinessQuestions = async (businessId: string) => {
-  const questions = await Question.find({ business: businessId });
-  if (!questions) {
-    throw new Error('No questions found for this business');
+export const getBusinessChallenges = async (businessId: string) => {
+  const challenges = await Challenge.find({ business: businessId });
+  if (!challenges) {
+    throw new Error('No challenges found for this business');
   }
-  return questions;
+  return challenges;
 };
 
-export const getAnswersToQuestion = async (questionId: string) => {
-  const answers = await Answer.find({ question: questionId });
+export const getAnswersToChallenge = async (challengeId: string) => {
+  const answers = await Answer.find({ challenge: challengeId });
   if (!answers.length) {
-    throw new Error('No answers found for this question');
+    throw new Error('No answers found for this challenge');
   }
   return answers;
 };
@@ -58,7 +59,7 @@ export const updateAwardAmount = async (businessId: string, award: number) => {
   }
 
   business.award = award;
-  business.awardedTotal = business.winners.reduce((sum, w) => sum + w.award, 0); 
+  business.awarded_total = business.winners.reduce((sum, w) => sum + w.award, 0); 
   await business.save();
 
   return business;
@@ -87,21 +88,21 @@ export const selectWinners = async (
     throw new Error('Business not found');
   }
 
-  let totalAwarded = business.awardedTotal;
+  let totalAwarded = business.awarded_total;
 
   for (const { winnerId, award } of winners) {
-    if (business.winners.some(w => w?.winnerId?.toString() === winnerId )) {
+    if (business.winners.some(w => w?.winner_id?.toString() === winnerId )) {
       throw new Error(`Winner ${winnerId} has already been awarded.`);
     }
     /*if (totalAwarded + award > business.award) {
       throw new Error('Insufficient award balance');
     }*/ 
     // TODO: fix this
-    business.winners.push({ winnerId, award });
+    business.winners.push({ winner_id: winnerId, award });
     // totalAwarded += award;
   }
 
-  business.awardedTotal = totalAwarded;
+  business.awarded_total = totalAwarded;
   await business.save();
 
   return business.winners;
