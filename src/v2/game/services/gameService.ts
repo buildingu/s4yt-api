@@ -14,7 +14,7 @@ import ChestModel from "../../models/chest";
 
 // FIXME: Fix raffle related services to conform to new RaffleSchema
 
-export const getRaffleItemsService = async () => {
+export const getRaffleItems = async () => {
   try {
     const raffleItems = await RaffleItem.find({});
     
@@ -24,14 +24,13 @@ export const getRaffleItemsService = async () => {
   }
 };
 
-// TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to sliver and gold coin changes.
+// TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to silver and gold coin changes.
 // { item_id: string, silver: bool }
-export const getRaffleIndicatorCoinsService = async () => {
+/*export const getRaffleIndicatorCoins = async () => {
   try {
     const raffleItems = await RaffleItem.find().populate('stake.user');
     const indicators = raffleItems.map(item => ({
       itemId: item._id,
-      // FIXME
       //goldCoin: item.stake.some(stake => stake.coin_staked > 0),
       //silverCoin: item.stake.every(stake => stake.coin_staked === 0)
     }));
@@ -39,10 +38,9 @@ export const getRaffleIndicatorCoinsService = async () => {
   } catch (error: any) {
     throw new Error(`Error retrieving raffle coin indicators: ${error.message}`);
   }
-};
+};*/
 
-
-export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
+export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
   try {
     const raffleItems = await RaffleItem.find({});
 
@@ -65,6 +63,7 @@ export const getRaffleWinnersService = async (): Promise<Array<{ raffleItemId: m
   }
 };
 
+// TODO: Figure out if admin panel is managing raffle partners
 export const createRafflePartner = async (rafflePartnerData: RafflePartner)=>{
   try {
     const newPartner = new RafflePartnerModel(rafflePartnerData);

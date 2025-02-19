@@ -48,7 +48,7 @@ export const getRafflePartner = async (req: Request, res: Response, next: NextFu
 // Controller to send raffle items info
 export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const raffleItems = await gameService.getRaffleItemsService();
+    const raffleItems = await gameService.getRaffleItems();
     res.json(raffleItems);
   } catch (error: any) {
     next(error);
@@ -56,19 +56,19 @@ export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunc
 };
 
 // Controller to send raffle coin indicators
-export const sendRaffleIndicatorCoins = async (req: Request, res: Response, next: NextFunction) => {
+/*export const sendRaffleIndicatorCoins = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const indicators = await gameService.getRaffleIndicatorCoinsService();
     res.json(indicators);
   } catch (error: any) {
     next(error);
   }
-};
+};*/
 
 // Controller to send raffle winners
 export const sendRaffleWinners = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const winners = await gameService.getRaffleWinnersService();
+    const winners = await gameService.getRaffleWinners();
     res.json(winners);
   } catch (error: any) {
     next(error);

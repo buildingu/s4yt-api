@@ -12,8 +12,7 @@ const raffleItemSchema = new Schema<RaffleItem>({
   entries: [{
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     coins: { type: Number, required: true }
-  }],
-  deleted: { type: Boolean, default: false }
+  }]
 });
 
 const RaffleItemModel = model<RaffleItem>('RaffleItem', raffleItemSchema);

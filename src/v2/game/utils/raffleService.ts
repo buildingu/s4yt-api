@@ -1,5 +1,4 @@
 import RaffleItemModel from '../../models/raffleItem';
-import { RaffleWinnerModel } from '../../models/raffleWinner';
 import mongoose from 'mongoose';
 
 interface Stake {
