@@ -80,7 +80,7 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode
   invitingUser.accepted_referrals.push(acceptedReferral._id);
 
   // Give and track bonus coins
-  awardCoinsToUser(invitingUser, amount, 'referral', true);
+  await awardCoinsToUser(invitingUser, amount, 'referral', true);
 
   await invitingUser.save();
 
@@ -122,8 +122,8 @@ export const register = async (userData: any) => {
       chests_submitted: {},
     });
 
-    awardCoinsToUser(newUser, 3, 'register', false);
-    handleReferralBonus(newUser, inviterReferralCode, 5);
+    await awardCoinsToUser(newUser, 3, 'register', false);
+    await handleReferralBonus(newUser, inviterReferralCode, 5);
 
     if (process.env.SEND_EMAILS === 'true') {
       await sendVerificationEmail(newUser.email, newUser.email_verification_token);
@@ -205,7 +205,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
       chests_submitted: user.chests_submitted,
       region: user.region || null,
-      roles: user.role || null,
+      roles: user.role || null
     };
 
     const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
@@ -365,17 +365,22 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       needsReverification = true;
       //Frontend needs to inform user to re-verify email
     }
-
-    // FIXME: You're sending back the entire user including the _id, __v, everything. You need to just send back the UserCredentials. So, what you should do is make a util or something that 
-    // forms the correct object just like you were doing from the login. Or you can .clone() the findById query and use projection.
+    
     await user.save();
 
-    const updatedUser: any = user.toObject();
-    delete updatedUser.password;
-    delete updatedUser.emailVerificationToken;
-    delete updatedUser.resetPasswordToken;
+    const updatedUserCredentials: UserCredentials = {
+      city: user.city || null,
+      country: user.country || "",
+      education: user.education || null,
+      email: user.email,
+      name: user.name || "",
+      referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
+      chests_submitted: Object.fromEntries(user.chests_submitted),
+      region: user.region || null,
+      roles: user.role || null
+    };
 
-    return [updatedUser, needsReverification];
+    return [updatedUserCredentials, needsReverification];
   } catch (error) {
     throw resolveErrorHandler(error);
   }

@@ -15,6 +15,7 @@ export interface RegisterRequestDto extends Request {
     password_confirmation: string;
     referral_code: string;
     education: string;
+    school: string;
     country: string;
     region: string;
     city: string;
@@ -37,6 +38,18 @@ export interface EmailVerificationRequestDto extends Request {
 export interface ResendVerificationEmailRequestDto extends Request {
   body: {
     email: string;
+  }
+}
+
+export interface UpdateProfileRequestDto extends Request {
+  body: {
+    name: string;
+    email: string;
+    education: string;
+    school: string;
+    country: string;
+    region: string;
+    city: string;
   }
 }
 

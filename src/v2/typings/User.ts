@@ -1,5 +1,4 @@
 import { Types } from 'mongoose';
-import { CoinTransaction } from './CoinTransaction';
 import { userEducation, userRoles } from './userEnums';
 
 export default interface User {
@@ -17,7 +16,7 @@ export default interface User {
   reset_password_token: string;
   role: typeof userRoles[number];
   coins: number;
-  coin_transactions: CoinTransaction[];
+  coin_transactions: Types.ObjectId[];
   referral_code: string;
   accepted_referrals: Types.ObjectId[];
   kicked?: boolean; 
