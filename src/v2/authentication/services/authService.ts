@@ -143,7 +143,7 @@ export const resendVerificationEmail = async (email: string) => {
     if (!user) {
       throw new HttpError("User does not exist.", 404);
     } else if (!user.email_verification_token) {
-      throw new HttpError("User is already verified.", 204);
+      throw new HttpError("User is already verified.", 409);
     }
     await sendVerificationEmail(user.email, user.email_verification_token);
   } catch (error) {
@@ -267,11 +267,15 @@ export const initiatePasswordReset = async (email: string) => {
   }
 };
 
-export const resetPassword = async (token: string, newPassword: string) => {
+export const resetPassword = async (token: string, newPassword: string, newPasswordConfirmation: string) => {
   try {
     const user = await UserModel.findOne({ reset_password_token: token });
     if (!user) {
       throw new HttpError("Invalid or expired password reset token.", 401);
+    }
+
+    if (newPassword !== newPasswordConfirmation) {
+      throw new HttpError("Passwords do not match.", 400);
     }
 
     const { valid, message } = validatePassword(newPassword);
