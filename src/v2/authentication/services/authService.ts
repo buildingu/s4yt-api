@@ -240,13 +240,14 @@ export const verifyEmail = async (token: string) => {
     }
 
     if (user.is_email_verified) {
-      // User is already verified. Return a success response
-      return user;
+      // User is already verified.
+      // Return false to indicate to the controller that this is a redundant verification request.
+      return false;
     }
 
     user.is_email_verified = true;
     await user.save();
-    return user;
+    return true;
   } catch (error) {
     throw resolveErrorHandler(error);
   }

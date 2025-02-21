@@ -61,9 +61,11 @@ export const emailVerify = async (
 ) => {
   try {
     const token = req.body.token;
-    await authService.verifyEmail(token as string);
+    const newVerification = await authService.verifyEmail(token as string);
     return res.status(200).json({
-      message: "Email was successfully verified.",
+      message: newVerification 
+        ? "Email was successfully verified."
+        : "Email was already verified. You can log into your account."
     });
   } catch (error: any) {
     next(error);
