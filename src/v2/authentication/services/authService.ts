@@ -139,7 +139,7 @@ export const register = async (userData: any) => {
 
 export const resendVerificationEmail = async (email: string) => {
   try {
-    const user = await UserModel.findOne({ email }, "-_id email email_verification_token", { lean: true });
+    const user = await UserModel.findOne({ email }, "-_id email is_email_verified email_verification_token", { lean: true });
     if (!user) {
       throw new HttpError("User does not exist.", 404);
     } else if (user.is_email_verified) {
