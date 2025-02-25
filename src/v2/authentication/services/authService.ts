@@ -382,7 +382,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
       chests_submitted: Object.fromEntries(user.chests_submitted),
       region: user.region || null,
-      roles: user.role || null
+      role: user.role || null
     };
 
     return [updatedUserCredentials, needsReverification];
