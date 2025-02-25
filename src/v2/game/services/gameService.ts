@@ -64,44 +64,6 @@ export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose
   }
 };
 
-// TODO: Figure out if admin panel is managing raffle partners
-export const createRafflePartner = async (rafflePartnerData: RafflePartner)=>{
-  try {
-    const newPartner = new RafflePartnerModel(rafflePartnerData);
-    await newPartner.save();
-    return newPartner;
-  } catch(error) {
-    throw resolveErrorHandler(error, [
-      {
-        errorName: 'ValidationError',
-        errorMessage: 'Missing or incorrect parameters.',
-        httpStatusCode: 400
-      }
-    ]);
-  }
-}
-
-export const editRafflePartner = async (id: string, updatedData: Partial<RafflePartner>) => {
-  try {
-    const updatedPartner = await RafflePartnerModel.findByIdAndUpdate(id, updatedData, {
-      new: true, 
-      runValidators: true,
-    });
-    if (!updatedPartner) {
-      throw new HttpError('Raffle partner not found.', 404);
-    }
-    return updatedPartner;
-  } catch (error) {
-    throw resolveErrorHandler(error, [
-      {
-        errorName: 'CastError',
-        errorMessage: 'Raffle partner not found.',
-        httpStatusCode: 404
-      }
-    ]);
-  }
-};
-
 export const getAllRafflePartners = async () => {
   try {
     const partners = await RafflePartnerModel.find();
@@ -173,6 +135,7 @@ export const getChests = async () => {
 }
 
 export const sendBusinessesInfo = async () => {
+  // FIXME: This is old code, needs to be checked and maybe updated
   try {
     const allBus = await Business.find({}, '-_v -admin_business_id -challenge -chests -winners', { lean: true });
     if (!allBus) {
@@ -360,45 +323,3 @@ export const getCoinsTotal = async (userId: string) => {
     throw resolveErrorHandler(error);
   }
 };
-
-// Don't call this TreasureMap the TreasureMap is actually the main page that shows all the links to go to the raffle, learn and earn, or where ever (home). (I know I think this is old).
-export const getTreasureMapData = async (userId: Types.ObjectId) => {
-  try {
-    // Fetch user details to determine which elements to show on the treasure map
-    const user = await User.findById(userId);
-    if (!user) throw new Error("User not found");
-
-    // Fetch raffle items and information
-    const raffleItems = await RaffleItem.find({ active: true });
-    const raffleData = raffleItems.map(item => ({
-      id: item.id,
-      // FIXME
-      //name: item.name_raffle_item,
-      //image: item.image,
-      //quantity: item.qty
-    }));
-
-    // FIXME
-    /*const sponsors = await Sponsor.find({});
-    const sponsorData = sponsors.map(sponsor => ({
-      id: sponsor.id,
-      name: sponsor.name,
-      logo: sponsor.logo_path, 
-    }));*/
-
-    const treasureMapData = {
-      user: {
-        name: user.name,
-        coins: user.coins, 
-      },
-      raffle: raffleData,
-      // FIXME
-      //sponsors: sponsorData,
-    };
-
-    return treasureMapData;
-  } catch (error: any) {
-    throw new Error(`Error retrieving treasure map data: ${error.message}`);
-  }
-};
-

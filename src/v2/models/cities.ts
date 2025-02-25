@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-// Unused
+// Deprecated
 const citySchema = new Schema({
   name: { type: String, required: true },
   region: { type: String, required: true },

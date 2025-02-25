@@ -2,15 +2,6 @@ import { Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
 import { CreateBusinessRequestDto, CreateChestRequestDto } from '../dtos/AdminDto';
 
-// export const uploadImage = async (req: Request, res: Response) => {
-//   try {
-//     const { image } = req.body; // Assuming image is in the request body
-//     await playerService.uploadImage(image);
-//     res.status(201).send('Image uploaded successfully');
-//   } catch (error: any) {
-//     res.status(500).send(error.message);
-//   }
-// };
 export const adminLogin = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
