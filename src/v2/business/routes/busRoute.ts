@@ -11,9 +11,9 @@ router.get('/challenges/:businessId', verifyAccessToken, businessController.getC
 router.get('/answers/:challengeId', verifyAccessToken, businessController.getAnswers);
 
 
-router.post('/:businessId/award', businessController.updateAward);
+//router.post('/:businessId/award', businessController.updateAward);
 router.get('/:businessId/award', businessController.getAwardDetails);
-router.post('/:businessId/winners', businessController.selectWinners);
+//router.post('/:businessId/winners', businessController.selectWinners);
 router.get('/:businessId/event-results', businessController.getEventResults);
 
 

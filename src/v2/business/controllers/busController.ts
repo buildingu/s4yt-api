@@ -56,7 +56,7 @@ export const getAnswers = async (req: GetAnswersRequestDto, res: Response) => {
 };
 
 
-
+/*
 export const updateAward = async (req: AwardRequestDto, res: Response) => {
   try {
     const { businessId } = req.params;
@@ -68,7 +68,7 @@ export const updateAward = async (req: AwardRequestDto, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+*/
 
 export const getAwardDetails = async (req: GetAwardRequestDto, res: Response) => {
   try {
@@ -81,7 +81,7 @@ export const getAwardDetails = async (req: GetAwardRequestDto, res: Response) =>
   }
 };
 
-
+/*
 export const selectWinners = async (req: SelectWinnersRequestDto, res: Response) => {
   try {
     const { businessId } = req.params;
@@ -93,7 +93,7 @@ export const selectWinners = async (req: SelectWinnersRequestDto, res: Response)
     res.status(500).json({ message: error.message });
   }
 };
-
+*/
 
 export const getEventResults = async (req: GetEventResultsRequestDto, res: Response) => {
   try {

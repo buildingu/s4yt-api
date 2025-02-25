@@ -1,7 +1,8 @@
 import Business from "../../models/business";
 import Challenge from "../../models/challenge";
 import RaffleItem from "../../models/raffleItem";
-import { RafflePartner, RafflePartnerModel } from "../../models/rafflePartner";
+import { RafflePartner } from "../../typings/RafflePartner";
+import { RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
 import { Types } from "mongoose";

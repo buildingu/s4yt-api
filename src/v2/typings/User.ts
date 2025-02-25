@@ -1,6 +1,19 @@
 import { Types } from 'mongoose';
 import { CoinTransaction } from './CoinTransaction';
-import { userEducation, userRoles } from './userEnums';
+
+export const userRoles = [
+  'Admin',
+  'Player',
+  'Business'
+] as const;
+
+export const userEducation = [
+  'Grade 9',
+  'Grade 10',
+  'Grade 11',
+  'Grade 12',
+  'Other'
+] as const;
 
 export default interface User {
   email: string;

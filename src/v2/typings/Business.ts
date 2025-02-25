@@ -1,22 +1,21 @@
 import { Types } from 'mongoose';
 
 export interface Business {
+  admin_business_id: Types.ObjectId;
   name: string;
-  business_user_id: Types.ObjectId;
-  admin_business_id: string;
   logo?: string;
+  link?: string;
   description?: string;
   video_url?: string;
   video_title?: string;
   challenge_question: Types.ObjectId;
-  chests: Types.ObjectId[];
   winners: [
     {
-      winner_id: string;
+      user_id: Types.ObjectId;
       award: number;
     }
   ],
-  award: number;
+  award_limit: number;
   awarded_total: number;
   deleted: boolean;
 }

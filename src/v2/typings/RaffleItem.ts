@@ -1,25 +1,15 @@
-import { Types } from "mongoose";
-
-export interface Stake {
-  user: Types.ObjectId;
-  coins: number;
-}
+import { Types } from 'mongoose';
 
 export interface RaffleItem {
   item_id: string;
+  raffle_partner: Types.ObjectId;
   name: string;
   description: string;
   image_src: string;
   stock: number;
-  raffle_partner: {
-    logo_url: string;
-    organization_name: string;
-    resource_link: string;
-    education_category: string;
-  };
-
-  entries: Stake[];
-  // TODO: derive total coins, silver/gold status from entries in response  
-
-  deleted: boolean;
+  entries: [{ // TODO: derive total coins, silver/gold status from entries in response  
+    user: Types.ObjectId;
+    coins: number;
+  }],
+  winners: Types.ObjectId[];
 }

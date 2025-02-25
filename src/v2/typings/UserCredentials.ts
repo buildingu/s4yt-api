@@ -1,4 +1,4 @@
-import { userEducation, userRoles } from './userEnums';
+import { userEducation, userRoles } from './User';
 
 export default interface UserCredentials {
   city?: string | null;

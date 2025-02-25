@@ -12,7 +12,8 @@ const raffleItemSchema = new Schema<RaffleItem>({
   entries: [{
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     coins: { type: Number, required: true }
-  }]
+  }],
+  winners: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const RaffleItemModel = model<RaffleItem>('RaffleItem', raffleItemSchema);

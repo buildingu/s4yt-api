@@ -50,9 +50,7 @@ export const getAnswersToChallenge = async (challengeId: string) => {
   return answers;
 };
 
-
-
-export const updateAwardAmount = async (businessId: string, award: number) => {
+/*export const updateAwardAmount = async (businessId: string, award: number) => {
   const business = await Business.findById(businessId);
   if (!business) {
     throw new Error('Business not found');
@@ -63,8 +61,7 @@ export const updateAwardAmount = async (businessId: string, award: number) => {
   await business.save();
 
   return business;
-};
-
+};*/
 
 export const getAwardDetails = async (businessId: string) => {
   const business = await Business.findById(businessId);
@@ -73,13 +70,13 @@ export const getAwardDetails = async (businessId: string) => {
   }
 
   return {
-    totalAward: business.award,
-    //remainingAward: business.award - business.awardedTotal // TODO: fix this
+    totalAward: business.award_limit,
+    remainingAward: business.award_limit - business.awarded_total
   };
 };
 
 
-export const selectWinners = async (
+/*export const selectWinners = async (
   businessId: string,
   winners: { winnerId: string; award: number }[]
 ) => {
@@ -96,7 +93,7 @@ export const selectWinners = async (
     }
     /*if (totalAwarded + award > business.award) {
       throw new Error('Insufficient award balance');
-    }*/ 
+    }
     // TODO: fix this
     business.winners.push({ winner_id: winnerId, award });
     // totalAwarded += award;
@@ -106,8 +103,7 @@ export const selectWinners = async (
   await business.save();
 
   return business.winners;
-};
-
+};*/
 
 export const getEventResults = async (businessId: string) => {
   const business = await Business.findById(businessId);
@@ -116,8 +112,8 @@ export const getEventResults = async (businessId: string) => {
   }
 
   return {
-    totalAward: business.award,
-    // remainingAward: business.award - business.awardedTotal, // TODO: fix this
+    totalAward: business.award_limit,
+    remainingAward: business.award_limit - business.awarded_total,
     winners: business.winners
   };
 };

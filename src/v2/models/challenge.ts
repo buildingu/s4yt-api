@@ -1,11 +1,14 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { Challenge } from '../typings/Challenge';
 
-const challengeSchema = new mongoose.Schema({
+// Challenge Question
+const challengeSchema = new Schema<Challenge>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' }
+  business: { type: Schema.Types.ObjectId, ref: 'Business' },
+  deleted: { type: Boolean, default: false }
 });
 
-const ChallengeModel = mongoose.model('Challenge', challengeSchema);
+const ChallengeModel = model('Challenge', challengeSchema);
 
 export default ChallengeModel;
