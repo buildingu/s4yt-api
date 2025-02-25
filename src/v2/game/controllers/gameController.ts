@@ -28,7 +28,7 @@ export const getRafflePartner = async (req: Request, res: Response, next: NextFu
 export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const raffleItems = await gameService.getRaffleItems();
-    res.json(raffleItems);
+    res.status(200).json(raffleItems);
   } catch (error: any) {
     next(error);
   }

@@ -19,6 +19,17 @@ export const getRaffleItems = async () => {
   try {
     const raffleItems = await RaffleItem.find({});
     
+/*
+  item_id
+  raffle_partner - this needs to be populated
+  name
+  description
+  image_src
+  stock
+  entries - see if the current user is among the entries in the array, if so, send back the number of coin they staked, otherwise, send the number 0 back
+  isSilver - if entries is empty, then this is "true", otherwise it's "false"
+*/
+
     return raffleItems;
   } catch (error: any) {
     throw new Error(`Error retrieving raffle items: ${error.message}`);
@@ -26,7 +37,7 @@ export const getRaffleItems = async () => {
 };
 
 // TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to silver and gold coin changes.
-// { item_id: string, silver: bool }
+// { item_id: string, isSilver: bool }
 /*export const getRaffleIndicatorCoins = async () => {
   try {
     const raffleItems = await RaffleItem.find().populate('stake.user');
