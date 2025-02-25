@@ -9,5 +9,5 @@ export default interface UserCredentials {
   referral_link: string;
   chests_submitted: Record<string, number>;
   region?: string | null;
-  role: typeof userRoles[number];
+  roles: typeof userRoles[number];
 }
