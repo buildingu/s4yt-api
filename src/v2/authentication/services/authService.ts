@@ -13,6 +13,7 @@ import { isoTimestamps } from "../../configs/timestamps";
 import { HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
 import { awardCoinsToUser } from "../../utils/coins";
+import { createUserCredentials } from "../utils/userCredentials";
 const { sign } = jwt;
 
 const emailPattern =
@@ -177,7 +178,6 @@ export const login = async (loginData: { email: string; password: string }) => {
     const user = await UserModel.findOne(
       { email: loginData.email },
       "city coins country education email is_email_verified name password referral_code chests_submitted region role",
-      { lean: true }
     );
 
     if (!user) {
@@ -196,18 +196,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       );
     }
 
-    const userCredentials: UserCredentials = {
-      city: user.city || null,
-      country: user.country || "",
-      education: user.education || null,
-      email: user.email,
-      name: user.name || "",
-      referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
-      chests_submitted: user.chests_submitted,
-      region: user.region || null,
-      role: user.role || null
-    };
-
+    const userCredentials = createUserCredentials(user);
     const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
       expiresIn: "7d",
     });
@@ -373,17 +362,7 @@ export const updateProfile = async (userId: string, profileUpdates: any) => {
     
     await user.save();
 
-    const updatedUserCredentials: UserCredentials = {
-      city: user.city || null,
-      country: user.country || "",
-      education: user.education || null,
-      email: user.email,
-      name: user.name || "",
-      referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
-      chests_submitted: Object.fromEntries(user.chests_submitted),
-      region: user.region || null,
-      role: user.role || null
-    };
+    const updatedUserCredentials = createUserCredentials(user);
 
     return [updatedUserCredentials, needsReverification];
   } catch (error) {
