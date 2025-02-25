@@ -205,7 +205,7 @@ export const login = async (loginData: { email: string; password: string }) => {
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
       chests_submitted: user.chests_submitted,
       region: user.region || null,
-      roles: user.role || null
+      role: user.role || null
     };
 
     const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
