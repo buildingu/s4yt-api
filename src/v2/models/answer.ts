@@ -1,27 +1,23 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { Answer } from '../typings/Answer';
 
-const answerSchema = new mongoose.Schema({
-  challenge: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Challenge', 
-    required: true 
-  },
-  business: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Business', 
-    required: true 
-  },
+const answerSchema = new Schema<Answer>({
   user: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type: Schema.Types.ObjectId, 
     ref: 'User', 
     required: true
   },
-  link: { 
-    type: String, 
+  challenge_id: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'Challenge', 
     required: true 
-  }
+  },
+  rating: Number,
+  submission_link: String,
+  timestamp: Date,
+  deleted: { type: Boolean, default: false }
 });
 
-const Answer = mongoose.model('Answer', answerSchema);
+const Answer = model('Answer', answerSchema);
 
 export default Answer;

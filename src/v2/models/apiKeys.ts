@@ -1,4 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
+
+// Deprecated
 const apiKeySchema = new Schema({
   key: { type: String, required: true, unique: true },  
   createdAt: { type: Date, default: Date.now }, 

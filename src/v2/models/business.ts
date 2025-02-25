@@ -1,10 +1,10 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 import { Business } from '../typings/Business';
 
+// NOTE: Businesses are Challenge Partner, *not* Raffle Partners
 const businessSchema = new Schema<Business>({
+  admin_business_id: { type: Schema.Types.ObjectId, ref: 'AdminBusiness' },
   name: { type: String, required: true },
-  business_user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  admin_business_id: { type: String, default: ''},
   logo: { type: String, default: null },
   description: { type: String, default: null },
   video_url: { type: String, default: null },
@@ -12,15 +12,15 @@ const businessSchema = new Schema<Business>({
   challenge_question: { type: Schema.Types.ObjectId, ref: 'Challenge' },
   winners: [
     {
-      winner_id: { type: Types.ObjectId, ref: 'User' },
+      user_id: { type: Types.ObjectId, ref: 'User' },
       award: { type: Number, default: 0, min: 0 }
     }
   ],
-  award: { type: Number, default: 0, min: 0 },
+  award_limit: { type: Number, default: 0, min: 0 },
   awarded_total: { type: Number, default: 0, min: 0 },
   deleted: { type: Boolean, default: false }
 }, {collection : 'businesses'});
 
-const Business = mongoose.model('Business', businessSchema);
+const Business = model('Business', businessSchema);
 
 export default Business;

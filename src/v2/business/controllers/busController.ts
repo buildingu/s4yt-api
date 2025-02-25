@@ -1,39 +1,6 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import * as businessService from '../services/busService';
-import { AddChallengeRequestDto, GetAnswersRequestDto, GetChallengesRequestDto, UpdateBusinessRequestDto, AwardRequestDto, SelectWinnersRequestDto, GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
-
-export const updateBusinessInfo = async (req: UpdateBusinessRequestDto, res: Response) => {
-  try {
-    const { businessId } = req.params;
-    const businessInfo = req.body;
-    const updatedBusiness = await businessService.updateBusinessInfo(businessId, businessInfo);
-    res.json(updatedBusiness);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const addChallenge = async (req: AddChallengeRequestDto, res: Response) => {
-  try {
-    const { businessId } = req.params;
-    const challengeData = req.body;
-    const updatedBusiness = await businessService.addChallengeToBusiness(businessId, challengeData);
-    res.status(201).json(updatedBusiness);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const updateChallenge = async (req: Request, res: Response) => {
-  try {
-    const { challengeId } = req.params;
-    const updateData = req.body;
-    const updatedChallenge = await businessService.updateBusinessChallenge(challengeId, updateData);
-    res.json(updatedChallenge);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
+import { GetAnswersRequestDto, GetChallengesRequestDto, GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
 
 export const getChallenges = async (req: GetChallengesRequestDto, res: Response) => {
   try {
@@ -55,21 +22,6 @@ export const getAnswers = async (req: GetAnswersRequestDto, res: Response) => {
   }
 };
 
-
-
-export const updateAward = async (req: AwardRequestDto, res: Response) => {
-  try {
-    const { businessId } = req.params;
-    const { award } = req.body;
-
-    const updatedBusiness = await businessService.updateAwardAmount(businessId, award);
-    res.json(updatedBusiness);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-
 export const getAwardDetails = async (req: GetAwardRequestDto, res: Response) => {
   try {
     const { businessId } = req.params;
@@ -80,20 +32,6 @@ export const getAwardDetails = async (req: GetAwardRequestDto, res: Response) =>
     res.status(500).json({ message: error.message });
   }
 };
-
-
-export const selectWinners = async (req: SelectWinnersRequestDto, res: Response) => {
-  try {
-    const { businessId } = req.params;
-    const { winners } = req.body;
-
-    const updatedWinners = await businessService.selectWinners(businessId, winners);
-    res.json(updatedWinners);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 
 export const getEventResults = async (req: GetEventResultsRequestDto, res: Response) => {
   try {

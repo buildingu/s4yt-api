@@ -1,9 +1,8 @@
-import { Document, model, Schema, Types } from 'mongoose';
-import User from '../typings/User';
-import { userEducation, userRoles } from '../typings/userEnums';
+import { model, Schema, Types } from 'mongoose';
+import User, { userEducation, userRoles } from '../typings/User';
 import { coinTransactionSchema } from './coinTransaction';
 
-const userSchema = new Schema<User & Document>({
+const userSchema = new Schema<User>({
   email: {
     type: String,
     lowercase: true,
@@ -43,6 +42,6 @@ const userSchema = new Schema<User & Document>({
   }
 });
 
-const UserModel = model<User & Document>('User', userSchema);
+const UserModel = model('User', userSchema);
 
 export default UserModel;

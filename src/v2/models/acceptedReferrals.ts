@@ -1,7 +1,7 @@
-import { HydratedDocument, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { AcceptedReferral } from '../typings/AcceptedReferral';
 
-export const acceptedReferralSchema = new Schema<HydratedDocument<AcceptedReferral>>({
+export const acceptedReferralSchema = new Schema<AcceptedReferral>({
   invited_user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   coins: { type: Number, required: true }
 }, {
@@ -11,4 +11,4 @@ export const acceptedReferralSchema = new Schema<HydratedDocument<AcceptedReferr
   }
 });
 
-export const AcceptedReferralModel = model<HydratedDocument<AcceptedReferral>>('AcceptedReferral', acceptedReferralSchema);
+export const AcceptedReferralModel = model('AcceptedReferral', acceptedReferralSchema);

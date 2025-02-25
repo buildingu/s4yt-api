@@ -6,7 +6,6 @@ import { verify } from "crypto";
 
 const router = Router();
 
-router.get('/treasure-map', verifyTokens.verifyAccessToken, gameController.getTreasureMap);
 router.get("/chests", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getChests);
 
 router.get("/businesses", verifyTokens.verifyAccessToken, gameController.sendBusinessesInfo);
@@ -27,8 +26,6 @@ router.get("/player/coins/history", verifyTokens.verifyAccessToken, gameControll
 router.get("/player/coins/total", verifyTokens.verifyAccessToken, gameController.sendCoinsTotal);
 router.get("/results", verifyTokens.verifyAccessToken, gameController.displayEventResults);
 
-router.post('/raffle/partners', verifyTokens.verifyAccessToken, gameController.addPartner);
-router.patch('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.updatePartner); 
 router.get('/raffle/partners', verifyTokens.verifyAccessToken, gameController.getRafflePartners);
 router.get('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.getRafflePartner);
 export default router;

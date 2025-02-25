@@ -5,27 +5,6 @@ import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto }
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
-export const addPartner = async (req: Request, res: Response, next: NextFunction) => {
-  try{
-    const rafflePartnerData = req.body;
-    const partner = await gameService.createRafflePartner(rafflePartnerData);
-    res.json(partner);
-  }catch(error: any){
-   next(error);
-  }
-};
-
-export const updatePartner = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = req.params.id; 
-    const updatedData = req.body; 
-    const updatedPartner = await gameService.editRafflePartner(id, updatedData);
-    res.json(updatedPartner); 
-  } catch (error: any) {
-    next(error); 
-  }
-};
-
 export const getRafflePartners = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const partners = await gameService.getAllRafflePartners(); 
@@ -205,25 +184,5 @@ export const sendCoinsTotal = async (
     return res.status(200).json(coinTotal);
   } catch (error: any) {
     next(error);
-  }
-};
-
-export const getTreasureMap = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.decodedClaims?.userId;
-    if (!userId) {
-      return res.status(401).json({ message: "User is not authenticated." });
-    }
-
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-    
-    const treasureMapData = await gameService.getTreasureMapData(userObjectId);
-    res.json(treasureMapData);
-  } catch (error) {
-    if (error instanceof mongoose.Error.CastError) {
-      res.status(400).json({ message: "Invalid user ID format." });
-    } else {
-      next(error);
-    }
   }
 };

@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-const { Schema, model, Document } = mongoose;
+import { Schema, model } from 'mongoose';
+import { Region } from '../typings/Region';
 
-const regionSchema = new Schema({
+const regionSchema = new Schema<Region>({
   countryName: { type: String, required: true },
   abbr: { type: String, required: true },
   regions: [
@@ -13,5 +13,5 @@ const regionSchema = new Schema({
   ],
 });
 
-const Regions = model("Region", regionSchema);
+const Regions = model('Region', regionSchema);
 export default Regions;

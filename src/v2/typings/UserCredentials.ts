@@ -1,4 +1,4 @@
-import { userEducation, userRoles } from './userEnums';
+import { userEducation, userRoles } from './User';
 
 export default interface UserCredentials {
   city?: string | null;
@@ -9,5 +9,5 @@ export default interface UserCredentials {
   referral_link: string;
   chests_submitted: Record<string, number>;
   region?: string | null;
-  roles: typeof userRoles[number];
+  role: typeof userRoles[number];
 }

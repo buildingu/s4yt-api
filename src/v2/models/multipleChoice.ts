@@ -1,7 +1,9 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { MultipleChoice } from '../typings/MultipleChoice';
 
 const multipleChoiceSchema = new Schema<MultipleChoice>({
+  business_id: { type: Schema.Types.ObjectId, ref: 'AdminBusiness'},
+  chest_id: { type: Schema.Types.ObjectId, ref: 'Chest'},
   question: {type: String, required: true},
   answers: {
     choices: { type: Map, of: String },
@@ -10,6 +12,6 @@ const multipleChoiceSchema = new Schema<MultipleChoice>({
   }
 });
 
-const MultipleChoiceModel = mongoose.model('MultipleChoice', multipleChoiceSchema);
+const MultipleChoiceModel = model('MultipleChoice', multipleChoiceSchema);
 
 export default MultipleChoiceModel;
