@@ -1,5 +1,6 @@
 [
   {
+    "_id": "BD0E80D09F7874BB32716E97",
     "name": "Foo Shirts",
     "description": "Makes shirts",
     "logo": "https://fastly.picsum.photos/id/525/200/200.jpg?hmac=_RnAIjIviTYNBh6qG-zjQg_m2UBgAnnh96jDb8ZDKSI",
@@ -9,6 +10,7 @@
     "deleted": false
   },
   {
+    "_id": "14FD10C6B0EB4A54F9445632",
     "name": "Bar Soaps",
     "description": "Makes sustainable soaps",
     "logo": "https://fastly.picsum.photos/id/551/200/200.jpg?hmac=vxRitsvMJEbK15DKl4ZRj7NQWF6RTfzBvievdi9q96s",

@@ -3,38 +3,15 @@ import path from 'path';
 import { fileURLToPath } from 'url'; 
 import dotenv from 'dotenv';
 import { RafflePartnerModel } from '../models/rafflePartner.js';
-import mongoose from 'mongoose';
+import connectDB from '../db/db.js';
 
 dotenv.config();
-
-const connectDB = async () => {
-  mongoose.set('strictQuery', false);
-  
-  if (!process.env.MONGODB_URI) {
-    console.error('MongoDB URI is not defined.');
-    return;
-  }
-
-  mongoose.connect(process.env.MONGODB_URI);
-
-  const connection = mongoose.connection;
-
-  connection.once('open', () => {
-    console.log('MongoDB connected');
-  });
-
-  connection.on('error', (error) => {
-    console.error('Error connecting to MongoDB database: ', error);
-  });
-
-  return connection;
-};
 
 const seedDatabase = async () => {
   let dbConnection;
 
   try {
-    dbConnection = await connectDB();
+    dbConnection = connectDB();
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
