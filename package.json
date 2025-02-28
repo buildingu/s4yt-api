@@ -17,6 +17,7 @@
     "dev": "cross-env NODE_ENV=development nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
     "check-ts": "npx tsc --noEmit",
+    "seedDB": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/v2/seeders/seeder.ts",
     "build": "webpack --config webpack.config.cjs",
     "serve": "cross-env NODE_ENV=production node ./build/server.cjs",
     "clean": "rm -rf node_modules"
