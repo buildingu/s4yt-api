@@ -6,7 +6,12 @@
     "description": "Comfy T-shirt",
     "image_src": "https://fastly.picsum.photos/id/140/200/200.jpg?hmac=EslZ18xRW6ewC17GDNdn7zvrEZUx37IhZq5iWo9b4g8",
     "stock": 5,
-    "entries": [],
+    "entries": [
+      {
+        "user": "07aff947d30cd81a0f0dddf2",
+        "coins": 2
+      }
+    ],
     "winners": []
   },
   {
@@ -16,7 +21,16 @@
     "description": "Never need to buy soap again",
     "image_src": "https://fastly.picsum.photos/id/511/200/200.jpg?hmac=QTzrMGu9nrJDRE4TMoboI_EAM5ZdwXF09ylHr7LFZCg",
     "stock": 2,
-    "entries": [],
+    "entries": [
+      {
+        "user": "07aff947d30cd81a0f0dddf2",
+        "coins": 3
+      },
+      {
+        "user": "db854a2890cff8d13dbd88a4",
+        "coins": 1
+      }
+    ],
     "winners": []
   },
   {
