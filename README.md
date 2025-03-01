@@ -177,6 +177,23 @@ For example:
 - Source file: `src/v2/seeder.ts`
 - Build file: `build/v2/seeder.js`
 
+---
+
+# Seeding the Database
+
+To seed the database, simply run:
+
+```bash
+npm run seedDB
+```
+
+The following collections will be *cleared* and seeded with test data:
+
+- Raffle Items
+- Raffle Partners
+- Users
+
+The raw data can be found in `src/v2/seeders/data`. New entries can be added to raw data as long as they conform to the model schemas found in `src/v2/models`.
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

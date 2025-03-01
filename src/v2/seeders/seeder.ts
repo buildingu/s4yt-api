@@ -19,9 +19,9 @@ const seedDatabase = async () => {
     const __dirname = path.dirname(__filename);
 
     // Load seed data
-    const rafflePartnerFilePath = path.join(__dirname, 'rafflePartners.json');
-    const raffleItemFilePath = path.join(__dirname, 'raffleItems.json');
-    const userFilePath = path.join(__dirname, 'users.json');
+    const rafflePartnerFilePath = path.join(__dirname, 'data/rafflePartners.json');
+    const raffleItemFilePath = path.join(__dirname, 'data/raffleItems.json');
+    const userFilePath = path.join(__dirname, 'data/users.json');
 
     const rafflePartnerData = JSON.parse(fs.readFileSync(rafflePartnerFilePath, 'utf-8'));
     const raffleItemData = JSON.parse(fs.readFileSync(raffleItemFilePath, 'utf-8'));
