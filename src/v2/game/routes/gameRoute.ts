@@ -22,6 +22,7 @@ router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleI
 router.get("/raffle/winners", verifyTokens.verifyAccessToken, gameController.sendRaffleWinners); // To do this you'll create a randomizer with better odds for someone with more coins added to that item and find the winner for each raffle item I think or do it whatever way you like.
 
 router.get("/raffle/items", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getRaffleItemsTransformed);
+router.post('/raffle/items', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateStakedCoins);
 
 router.post("/player/coins/chest", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addChestCoins); // This is for awarding coins to the player earned from chests in "Learn and Earn"
 router.get("/player/coins/history", verifyTokens.verifyAccessToken, gameController.sendCoinsGainedHistory); // You have to keep track of how the coins were gained (referral, quiz, or whatever) and just send use the type(where it was from) and the coins.
@@ -31,5 +32,4 @@ router.get("/results", verifyTokens.verifyAccessToken, gameController.displayEve
 router.get('/raffle/partners', verifyTokens.verifyAccessToken, gameController.getRafflePartners);
 router.get('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.getRafflePartner);
 
-router.post('/raffle/items', gameController.updateStakedCoins)
 export default router;
