@@ -21,5 +21,4 @@ router.get("/player/referrals", verifyTokens.verifyAccessToken, authController.s
 
 router.post("/logout", verifyCsrfToken, authController.logout); // We didn't actually have a logout route, but it makes sense.
 router.delete("/user/:email", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.deleteUser); // This one I just added also because why not (if they delete their account any coins they put in the raffle or challenge submission should be delete from them too).
-// router.get("/user", authController.getUser);
 export default router;

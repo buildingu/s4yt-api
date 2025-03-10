@@ -1,11 +1,9 @@
 import Business from "../../models/business";
 import Challenge from "../../models/challenge";
 import RaffleItem from "../../models/raffleItem";
-import { RafflePartner } from "../../typings/RafflePartner";
 import { RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
-import { Types } from "mongoose";
 import Answer from "../../models/answer";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
@@ -59,9 +57,8 @@ export const getRaffleItems = async () => {
 
 export const getRaffleItemsTransformed = async (userId: string | undefined) => {
   try {
-
     if (!userId) {
-      throw new Error(`User not found`);
+      throw new HttpError('User not found', 404);
     };
 
     const raffleItems = await RaffleItem.find({})
@@ -84,8 +81,8 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
         isSilver: userEntry?.coins === 0 ? true : false,
       };
     });
-  } catch (error: any) {
-    throw new Error(`Error retrieving transformed raffle items: ${error.message}`);
+  } catch (error) {
+    throw resolveErrorHandler(error); //new Error(`Error retrieving transformed raffle items: ${error.message}`);
   }
 };
 

@@ -23,9 +23,20 @@ const raffleItemSchema = new Schema<RaffleItem>({
   description
   image_src
   stock
-  entries - see if the current user is among the entries in the array, if so, send back the number of coin they staked, otherwise, send the number 0 back
-  isSilver - if entries is empty, then this is "true", otherwise it's "false"
+  coins - see if the current user is among the entries in the array, if so, send back the number of coin they staked, otherwise, send the number 0 back
+  silver - if entries is empty, then this is "true", otherwise it's "false"
 */
+
+/*event: raffle_gold_silver*/
+
+/*
+setRaffle POST - request - sends diffs
+item_id
+coins
+*/
+
+/* Attend meeting POST request */
+/* meet: boolean */
 
 const RaffleItemModel = model<RaffleItem>('RaffleItem', raffleItemSchema);
 
