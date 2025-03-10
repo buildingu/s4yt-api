@@ -1,24 +1,37 @@
 import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
 import mongoose from "mongoose";
-import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
+import {
+  AddChestCoinsRequestDto,
+  SaveAnswerRequestDto,
+  UpdateAnswerRequestDto,
+  UpdateStakedCoinsDto,
+} from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
-export const getRafflePartners = async (req: Request, res: Response, next: NextFunction) => {
+export const getRafflePartners = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const partners = await gameService.getAllRafflePartners(); 
-    res.json(partners); 
+    const partners = await gameService.getAllRafflePartners();
+    res.json(partners);
   } catch (error: any) {
-    next(error); 
+    next(error);
   }
 };
 
-export const getRaffleItemsTransformed = async (req: Request, res: Response, next: NextFunction) => {
+export const getRaffleItemsTransformed = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     // console.log(userId)
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
-    console.log("userId", userId)
+    // console.log("userId", userId);
     const raffleItems = await gameService.getRaffleItemsTransformed(userId);
     res.json(raffleItems);
   } catch (error: any) {
@@ -26,21 +39,39 @@ export const getRaffleItemsTransformed = async (req: Request, res: Response, nex
   }
 };
 
-
-
-
-export const getRafflePartner = async (req: Request, res: Response, next: NextFunction) => {
+export const updateStakedCoins = async (req: UpdateStakedCoinsDto, res: Response, next: NextFunction) => {
   try {
-    const id = req.params.id; 
-    const partner = await gameService.getRafflePartner(id);
-    res.json(partner); 
+    // const { amount, chestId } = req.body; --example
+    const { item_id, coins } = req.body;
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    console.log("userId", userId);
+    const result = await gameService.updateStakedCoins(item_id, parseInt(coins), userId);
+    res.json(result);
   } catch (error: any) {
-    next(error); 
+    next(error);
+  }
+}
+
+export const getRafflePartner = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id;
+    const partner = await gameService.getRafflePartner(id);
+    res.json(partner);
+  } catch (error: any) {
+    next(error);
   }
 };
 
 // Controller to send raffle items info
-export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
+export const sendRaffleInfo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const raffleItems = await gameService.getRaffleItems();
     res.status(200).json(raffleItems);
@@ -60,7 +91,11 @@ export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunc
 };*/
 
 // Controller to send raffle winners
-export const sendRaffleWinners = async (req: Request, res: Response, next: NextFunction) => {
+export const sendRaffleWinners = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const winners = await gameService.getRaffleWinners();
     res.json(winners);
@@ -70,15 +105,24 @@ export const sendRaffleWinners = async (req: Request, res: Response, next: NextF
 };
 
 // Controller to add "Learn and Earn" chest coins to a user's total
-export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response, next: NextFunction) => {
+export const addChestCoins = async (
+  req: AddChestCoinsRequestDto,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError("User is not authenticated", 401);
     }
-  
+
     const { amount, chestId } = req.body;
-    const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
+    const user = await gameService.assignCoinsToUser(
+      userId,
+      parseInt(amount),
+      "chest",
+      { chestId }
+    );
 
     res.status(200).json({ chests_submitted: user.chests_submitted });
   } catch (error: any) {
@@ -86,16 +130,24 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
   }
 };
 
-export const getChests = async (req: Request, res: Response, next: NextFunction) => {
-  try { 
+export const getChests = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
     const chests = await gameService.getChests();
     res.status(200).json(chests);
   } catch (error: any) {
     next(error);
   }
-}
+};
 
-export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
+export const sendBusinessesInfo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const allBusinesses = await gameService.sendBusinessesInfo();
     res.json(allBusinesses);
@@ -116,7 +168,10 @@ export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   }
 };
 
-export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) => {
+export const updateAnswer = async (
+  req: UpdateAnswerRequestDto,
+  res: Response
+) => {
   try {
     const { answerId } = req.params;
     const { text } = req.body;
@@ -128,7 +183,11 @@ export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) =
   }
 };
 
-export const addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
+export const addMeetUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     // TODO: There is only one meeting now
     const { businessId } = req.params;
@@ -174,7 +233,7 @@ export const sendCoinsGainedHistory = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError("User is not authenticated", 401);
     }
 
     const coinHistory = await gameService.getCoinsGainedHistory(userId);
@@ -192,7 +251,7 @@ export const sendCoinsTotal = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError("User is not authenticated", 401);
     }
 
     const coinTotal = await gameService.getCoinsTotal(userId);
