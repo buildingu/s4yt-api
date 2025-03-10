@@ -62,7 +62,10 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
     };
 
     const raffleItems = await RaffleItem.find({})
-      .populate('raffle_partner')
+      .populate({
+        path: 'raffle_partner',
+        select: '-_id -__v',
+      })
       .lean();
 
     return raffleItems.map(item => {
@@ -77,8 +80,8 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
         description: item.description,
         image_src: item.image_src,
         stock: item.stock,
-        entries: userEntry ? userEntry?.coins : 0,
-        isSilver: userEntry?.coins === 0 ? true : false,
+        coins: userEntry ? userEntry?.coins : 0,
+        silver: userEntry?.coins === 0 ? true : false,
       };
     });
   } catch (error) {
@@ -86,14 +89,32 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
   }
 };
 
+export const updateStakedCoins = async (item_id: string, coins: number, userId: string | undefined) => {
+  try {
 
+    if (!userId) {
+      throw new Error(`User not found`);
+    };
 
+    const raffleItem = await RaffleItem.findById(item_id)
 
+    raffleItem?.entries.map(item => {
+      if (item.user.toString() === userId) {
+        item.coins = coins
+      }
+    })
 
+    if (!raffleItem) {
+      throw new Error('Raffle item not found.');
+    }
 
-
-
-
+    return (
+      {message: `Route works ${item_id} and ${coins} and ${raffleItem}`}
+    );
+  } catch (error: any) {
+    throw new Error(`Error updating staked coins: ${error.message}`);
+  }
+}
 
 export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
   try {

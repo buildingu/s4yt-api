@@ -25,3 +25,10 @@ export interface AddChestCoinsRequestDto extends Request {
     amount: string;
   }
 }
+
+export interface UpdateStakedCoinsDto extends Request {
+  body: {
+    item_id: string;
+    coins: string;
+  }
+}
