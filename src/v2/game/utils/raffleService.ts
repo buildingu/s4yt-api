@@ -10,6 +10,8 @@ interface Chance extends Stake {
   chance: number;
 }
 
+
+
 const calculateChances = (stakes: Stake[]): Chance[] => {
   const totalStakes = stakes.reduce((acc, stake) => acc + stake.coin_staked, 0);
   return stakes.map(stake => ({

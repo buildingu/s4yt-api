@@ -21,6 +21,8 @@ router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleI
 // *There is a socket to listen for the placement of coins on items so we can update in real-time.*
 router.get("/raffle/winners", verifyTokens.verifyAccessToken, gameController.sendRaffleWinners); // To do this you'll create a randomizer with better odds for someone with more coins added to that item and find the winner for each raffle item I think or do it whatever way you like.
 
+router.get("/raffle/items", gameController.getRaffleItemsTransformed);
+
 router.post("/player/coins/chest", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addChestCoins); // This is for awarding coins to the player earned from chests in "Learn and Earn"
 router.get("/player/coins/history", verifyTokens.verifyAccessToken, gameController.sendCoinsGainedHistory); // You have to keep track of how the coins were gained (referral, quiz, or whatever) and just send use the type(where it was from) and the coins.
 router.get("/player/coins/total", verifyTokens.verifyAccessToken, gameController.sendCoinsTotal);

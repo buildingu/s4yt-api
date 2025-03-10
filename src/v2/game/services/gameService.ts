@@ -52,6 +52,52 @@ export const getRaffleItems = async () => {
   }
 };*/
 
+// interface UserEntry {
+//   user: mongoose.Types.ObjectId | string;
+//   coins: number;
+// }
+
+export const getRaffleItemsTransformed = async (userId: string | undefined) => {
+  try {
+
+    if (!userId) {
+      throw new Error(`User not found`);
+    };
+
+    const raffleItems = await RaffleItem.find({})
+      .populate('raffle_partner')
+      .lean();
+
+    return raffleItems.map(item => {
+      const userEntry = item.entries?.find(entry => 
+        entry.user.toString() === userId
+      );
+
+      return {
+        item_id: item.item_id,
+        raffle_partner: item.raffle_partner,
+        name: item.name,
+        description: item.description,
+        image_src: item.image_src,
+        stock: item.stock,
+        entries: userEntry ? userEntry?.coins : 0,
+        isSilver: userEntry?.coins === 0 ? true : false,
+      };
+    });
+  } catch (error: any) {
+    throw new Error(`Error retrieving transformed raffle items: ${error.message}`);
+  }
+};
+
+
+
+
+
+
+
+
+
+
 export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
   try {
     const raffleItems = await RaffleItem.find({});

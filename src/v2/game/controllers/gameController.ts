@@ -14,6 +14,21 @@ export const getRafflePartners = async (req: Request, res: Response, next: NextF
   }
 };
 
+export const getRaffleItemsTransformed = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // console.log(userId)
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    console.log("userId", userId)
+    const raffleItems = await gameService.getRaffleItemsTransformed(userId);
+    res.json(raffleItems);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+
+
+
 export const getRafflePartner = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id; 
