@@ -120,9 +120,7 @@ export const updateStakedCoins = async (item_id: string, coins: number, userId: 
     await raffleItem.save();
 
     return {
-      message: 'Coins updated successfully.',
-      data: raffleItem,
-      userId: userId
+      message: 'Coins updated successfully.'
     };
   } catch (error: any) {
     throw new Error(`Error updating staked coins: ${error.message}`);
