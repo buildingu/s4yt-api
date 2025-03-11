@@ -31,5 +31,5 @@ router.get("/results", verifyTokens.verifyAccessToken, gameController.displayEve
 router.get('/raffle/partners', verifyTokens.verifyAccessToken, gameController.getRafflePartners);
 router.get('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.getRafflePartner);
 
-router.post('/raffle/items', gameController.updateStakedCoins)
+router.post('/raffle/items', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateStakedCoins)
 export default router;
