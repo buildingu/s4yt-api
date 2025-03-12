@@ -78,16 +78,6 @@ export const sendRaffleInfo = async (
   }
 };
 
-// Controller to send raffle coin indicators
-/*export const sendRaffleIndicatorCoins = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const indicators = await gameService.getRaffleIndicatorCoinsService();
-    res.json(indicators);
-  } catch (error: any) {
-    next(error);
-  }
-};*/
-
 // Controller to send raffle winners
 export const sendRaffleWinners = async (
   req: Request,

@@ -11,46 +11,18 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 import { UpdateStakedCoins } from "../../typings/RaffleItem";
-
+import { socketEmit } from "../../utils/socket-emitter";
 
 // FIXME: Fix raffle related services to conform to new RaffleSchema
 
 export const getRaffleItems = async () => {
   try {
     const raffleItems = await RaffleItem.find({});
-    
-/*
-  item_id
-  raffle_partner - this needs to be populated
-  name
-  description
-  image_src
-  stock
-  entries - see if the current user is among the entries in the array, if so, send back the number of coin they staked, otherwise, send the number 0 back
-  isSilver - if entries is empty, then this is "true", otherwise it's "false"
-*/
-
     return raffleItems;
   } catch (error: any) {
     throw new Error(`Error retrieving raffle items: ${error.message}`);
   }
 };
-
-// TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to silver and gold coin changes.
-// { item_id: string, isSilver: bool }
-/*export const getRaffleIndicatorCoins = async () => {
-  try {
-    const raffleItems = await RaffleItem.find().populate('stake.user');
-    const indicators = raffleItems.map(item => ({
-      itemId: item._id,
-      //goldCoin: item.stake.some(stake => stake.coin_staked > 0),
-      //silverCoin: item.stake.every(stake => stake.coin_staked === 0)
-    }));
-    return indicators;
-  } catch (error: any) {
-    throw new Error(`Error retrieving raffle coin indicators: ${error.message}`);
-  }
-};*/
 
 // interface UserEntry {
 //   user: mongoose.Types.ObjectId | string;
@@ -97,13 +69,14 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
       throw new Error(`User not found`);
     }
 
+    const goldSilverUpdates = [];
+
     for (const stake of raffle) { 
       const { raffle_item_id, coins } = stake;
       if (!raffle_item_id) {
         continue;
       }
 
-    
       const raffleItem = await RaffleItem.findById(raffle_item_id);
 
       if (!raffleItem) {
@@ -125,7 +98,18 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
 
       await raffleItem.save();
 
+      // Record updated gold/silver state of raffle item
+      goldSilverUpdates.push({
+        raffle_item_id: raffleItem.item_id,
+        silver: raffleItem.entries.reduce((total, entry) => total + entry.coins, 0) === 0
+      });
     }
+
+    socketEmit.send({
+      target: 'all',
+      event: 'raffle_gold_silver',
+      data: goldSilverUpdates
+    });
 
     return {
       message: 'Coins updated successfully.',
