@@ -91,30 +91,39 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
 
 export const updateStakedCoins = async (item_id: string, coins: number, userId: string | undefined) => {
   try {
-
     if (!userId) {
       throw new Error(`User not found`);
-    };
+    }
 
-    const raffleItem = await RaffleItem.findById(item_id)
-
-    raffleItem?.entries.map(item => {
-      if (item.user.toString() === userId) {
-        item.coins = coins
-      }
-    })
-
+    const raffleItem = await RaffleItem.findById(item_id);
+    
     if (!raffleItem) {
       throw new Error('Raffle item not found.');
     }
 
-    return (
-      {message: `Route works ${item_id} and ${coins} and ${raffleItem}`}
+    const entryIndex = raffleItem.entries.findIndex(
+      entry => entry.user.toString() === userId
     );
+
+    if (entryIndex !== -1) {
+      raffleItem.entries[entryIndex].coins = coins;
+    } else {
+      raffleItem.entries.push({
+        user: new mongoose.Types.ObjectId(userId),
+        coins: coins
+      });
+    }
+
+    await raffleItem.save();
+
+    return {
+      message: 'Coins updated successfully.'
+    };
   } catch (error: any) {
     throw new Error(`Error updating staked coins: ${error.message}`);
   }
 }
+
 
 export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
   try {
