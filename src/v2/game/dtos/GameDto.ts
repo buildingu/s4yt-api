@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { UpdateStakedCoins } from '../../typings/RaffleItem';
 
 export interface SaveAnswerRequestDto extends Request {
   body: {
@@ -28,7 +29,8 @@ export interface AddChestCoinsRequestDto extends Request {
 
 export interface UpdateStakedCoinsDto extends Request {
   body: {
-    item_id: string;
-    coins: string;
+    raffle: [
+      UpdateStakedCoins
+    ]
   }
 }

@@ -12,6 +12,8 @@ import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
+import { UpdateStakedCoins } from "../../typings/RaffleItem";
+
 
 // FIXME: Fix raffle related services to conform to new RaffleSchema
 
@@ -92,35 +94,44 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
   }
 };
 
-export const updateStakedCoins = async (item_id: string, coins: number, userId: string | undefined) => {
+export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId: string | undefined) => {
   try {
     if (!userId) {
       throw new Error(`User not found`);
     }
 
-    const raffleItem = await RaffleItem.findById(item_id);
+    for (const stake of raffle) { 
+      const { raffle_item_id, coins } = stake;
+      if (!raffle_item_id) {
+        continue;
+      }
+
     
-    if (!raffleItem) {
-      throw new Error('Raffle item not found.');
+      const raffleItem = await RaffleItem.findById(raffle_item_id);
+
+      if (!raffleItem) {
+        continue;
+      }
+
+      const entryIndex = raffleItem.entries.findIndex(
+        entry => entry.user.toString() === userId
+      );
+
+      if (entryIndex !== -1) {
+        raffleItem.entries[entryIndex].coins = coins;
+      } else {
+        raffleItem?.entries.push({
+          user: new mongoose.Types.ObjectId(userId),
+          coins: coins
+        });
+      }
+
+      await raffleItem.save();
+
     }
-
-    const entryIndex = raffleItem.entries.findIndex(
-      entry => entry.user.toString() === userId
-    );
-
-    if (entryIndex !== -1) {
-      raffleItem.entries[entryIndex].coins = coins;
-    } else {
-      raffleItem.entries.push({
-        user: new mongoose.Types.ObjectId(userId),
-        coins: coins
-      });
-    }
-
-    await raffleItem.save();
 
     return {
-      message: 'Coins updated successfully.'
+      message: 'Coins updated successfully.',
     };
   } catch (error: any) {
     throw new Error(`Error updating staked coins: ${error.message}`);
