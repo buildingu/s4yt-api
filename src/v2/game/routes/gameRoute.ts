@@ -16,6 +16,7 @@ router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController
 router.post("/challenges/:challengeId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);
 router.patch("/answers/:answerId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateAnswer);
 
+// FIXME: Why is this /raffle even a route when we use /raffle/items?
 router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleInfo); // Sends us the raffle items and stuff.
 // router.get("/raffle/coins", verifyTokens.verifyAccessToken, gameController.sendRaffleIndicatorCoins); // This gives use the gold and sliver coins, which is the gold coin means someone placed a coin(s) on that raffle item and the sliver coins means none.
 // *There is a socket to listen for the placement of coins on items so we can update in real-time.*
