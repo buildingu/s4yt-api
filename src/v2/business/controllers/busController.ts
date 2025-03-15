@@ -1,33 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import * as businessService from '../services/busService';
-import { GetAnswersRequestDto, GetChallengesRequestDto, GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
+import { GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
+import { CustomJwtPayload } from "../../typings/express/Request";
+import { HttpError } from "../../middleware/errorHandler";
 
 export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const allBusinesses = await businessService.sendBusinessesInfo();
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+
+    const allBusinesses = await businessService.sendBusinessesInfo(userId);
     res.json(allBusinesses);
   } catch (error: any) {
     next(error);
-  }
-};
-
-export const getChallenges = async (req: GetChallengesRequestDto, res: Response) => {
-  try {
-    const { businessId } = req.params;
-    const challenges = await businessService.getBusinessChallenges(businessId);
-    res.json(challenges);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getAnswers = async (req: GetAnswersRequestDto, res: Response) => {
-  try {
-    const { challengeId } = req.params;
-    const answers = await businessService.getAnswersToChallenge(challengeId);
-    res.status(200).json(answers);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
   }
 };
 

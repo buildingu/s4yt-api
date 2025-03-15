@@ -14,8 +14,12 @@ const answerSchema = new Schema<Answer>({
   },
   rating: Number,
   submission_link: String,
-  timestamp: Date,
   deleted: { type: Boolean, default: false }
+}, {
+  timestamps: {
+    createdAt: 'timestamp',
+    updatedAt: false
+  }
 });
 
 const Answer = model('Answer', answerSchema);

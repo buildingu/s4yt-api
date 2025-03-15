@@ -1,22 +1,24 @@
 import Business from '../../models/business';
-import Challenge from '../../models/challenge'; 
 import Answer from '../../models/answer';
 import { HttpError } from '../../middleware/errorHandler';
 import { BusinessInfo } from '../../typings/Business';
+import { Challenge } from '../../typings/Challenge';
 
-export const sendBusinessesInfo = async () => {
+export const sendBusinessesInfo = async (userId: string) => {
   try {
     const allBusinesses = await Business
-      .find({}, 'name logo link description challenge_question video_url video_title', { lean: true })
-      .populate('challenge_question', '_id title description');
+      .find({}, 'name logo link description challenge_question video_url video_title', { lean: true})
+      .populate<{ challenge_question: Challenge }>({
+        path: 'challenge_question',
+        model: 'Challenge',
+        select: '_id title description',
+        options: { lean: true }
+      });
 
     if (!allBusinesses) {
       throw new HttpError('Businesses not found', 404);
     }
 
-    console.log(allBusinesses);
-
-    // Count the number of submitted answers to all business challenges
     const results = [];
     for (const business of allBusinesses) {
       const {
@@ -28,23 +30,23 @@ export const sendBusinessesInfo = async () => {
         video_url,
         video_title
       } = business;
-      //const numAnswers = await Answer.countDocuments({ business: business._id, status: 'Submitted'});
+      
+      // Count the number of submitted answers to all business challenges
+      const answers = await Answer.find({ challenge_id: challenge_question._id }, '', { lean: true });
+      const answersCount = answers.length;
+      const answerSubmitted = answers.findIndex(answer => answer.user.toString() === userId) !== -1;
 
-/*
-  challenge_question: {
-    title: string;
-    description: string;
-    answers_count: number;
-    answer_submitted: boolean;
-  };
-  */
-
-      const busInfo /*: BusinessInfo*/ = {
+      const busInfo: BusinessInfo = {
         name,
         logo: logo || '',
         link: link || '',
         description: description || '',
-        challenge_question,
+        challenge_question: {
+          title: challenge_question.title,
+          description: challenge_question.description,
+          answers_count: answersCount,
+          answer_submitted: answerSubmitted
+        },
         video_url: video_url || '',
         video_title: video_title || ''
       };
@@ -59,22 +61,6 @@ export const sendBusinessesInfo = async () => {
         error.message
     );
   }
-};
-
-export const getBusinessChallenges = async (businessId: string) => {
-  const challenges = await Challenge.find({ business: businessId });
-  if (!challenges) {
-    throw new Error('No challenges found for this business');
-  }
-  return challenges;
-};
-
-export const getAnswersToChallenge = async (challengeId: string) => {
-  const answers = await Answer.find({ challenge: challengeId });
-  if (!answers.length) {
-    throw new Error('No answers found for this challenge');
-  }
-  return answers;
 };
 
 export const getAwardDetails = async (businessId: string) => {
