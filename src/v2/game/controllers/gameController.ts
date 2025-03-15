@@ -80,15 +80,6 @@ export const getChests = async (req: Request, res: Response, next: NextFunction)
   }
 }
 
-export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const allBusinesses = await gameService.sendBusinessesInfo();
-    res.json(allBusinesses);
-  } catch (error: any) {
-    next(error);
-  }
-};
-
 export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
     const { challengeId } = req.params;

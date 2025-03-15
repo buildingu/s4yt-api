@@ -20,8 +20,17 @@ export interface Business {
   deleted: boolean;
 }
 
-export interface BusinessInfoBasic {
+export interface BusinessInfo {
   name: string;
-  logoS4yt: string;
+  logo: string;
+  link: string;
   description: string;
+  challenge_question: {
+    title: string;
+    description: string;
+    answers_count: number;
+    answer_submitted: boolean;
+  };
+  video_url: string;
+  video_title: string;
 }

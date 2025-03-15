@@ -145,36 +145,6 @@ export const getChests = async () => {
   }
 }
 
-export const sendBusinessesInfo = async () => {
-  // FIXME: This is old code, needs to be checked and maybe updated
-  try {
-    const allBus = await Business.find({}, '-_v -admin_business_id -challenge -chests -winners', { lean: true });
-    if (!allBus) {
-      throw new Error('Businesses not found');
-    }
-
-    // Count the number of submitted answers to all business challenges
-    const results = [];
-    for (const business of allBus) {
-      const numAnswers = await Answer.countDocuments({ business: business._id, status: 'Submitted'});
-
-      const busInfo = {
-        ...business,
-        numAnswers
-      };
-
-      results.push(busInfo);
-    }
-  
-    return results;
-  } catch (error: any) {
-    throw new Error(
-      "sendBusinessesInfo service error; getting businesses info:\n" +
-        error.message
-    );
-  }
-};
-
 export const saveAnswer = async (challengeId: string, userId: string, text: string) => {
   const challenge = await Challenge.findById(challengeId);
   if (!challenge) {

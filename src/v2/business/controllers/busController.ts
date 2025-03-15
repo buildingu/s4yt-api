@@ -1,6 +1,15 @@
-import { Response } from 'express';
+import { Request, Response, NextFunction } from "express";
 import * as businessService from '../services/busService';
 import { GetAnswersRequestDto, GetChallengesRequestDto, GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
+
+export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const allBusinesses = await businessService.sendBusinessesInfo();
+    res.json(allBusinesses);
+  } catch (error: any) {
+    next(error);
+  }
+};
 
 export const getChallenges = async (req: GetChallengesRequestDto, res: Response) => {
   try {

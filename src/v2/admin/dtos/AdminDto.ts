@@ -1,9 +1,4 @@
 import { Request } from 'express';
-import { BusinessInfoBasic } from '../../typings/Business';
-
-export interface CreateBusinessRequestDto extends Request {
-  body: BusinessInfoBasic;
-}
 
 export interface CreateChestRequestDto extends Request {
   body: any;

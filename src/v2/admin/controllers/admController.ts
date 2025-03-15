@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
-import { CreateBusinessRequestDto, CreateChestRequestDto } from '../dtos/AdminDto';
+import { CreateChestRequestDto } from '../dtos/AdminDto';
 
 export const adminLogin = async (req: Request, res: Response) => {
   try {
@@ -36,16 +36,6 @@ export const banUser = async (req: Request, res: Response) => {
     res.json({ message: 'User has been banned successfully.' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
-  }
-};
-
-export const createBusiness = async (req: CreateBusinessRequestDto, res: Response) => {
-  try {
-    const { name, logoS4yt, description } = req.body;
-    await superAdminService.createBusiness(name, logoS4yt, description);
-    res.status(200).send('Business created successfully');
-  } catch (error: any) {
-    res.status(500).send(error.message);
   }
 };
 
