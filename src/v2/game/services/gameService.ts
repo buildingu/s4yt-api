@@ -13,6 +13,7 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 import { UpdateStakedCoins } from "../../typings/RaffleItem";
+import { socketEmit } from "../../utils/socket-emitter";
 
 
 // FIXME: Fix raffle related services to conform to new RaffleSchema
@@ -104,6 +105,8 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
       throw new Error(`User not found`);
     }
 
+    const goldSilverUpdates = [];
+
     for (const stake of raffle) { 
       const { raffle_item_id, coins } = stake;
       if (!raffle_item_id) {
@@ -132,7 +135,18 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
 
       await raffleItem.save();
 
+      // Record updated gold/silver state of raffle item
+      goldSilverUpdates.push({
+        raffle_item_id: raffleItem.item_id,
+        silver: raffleItem.entries.reduce((total, entry) => total + entry.coins, 0) === 0
+      });
     }
+
+    socketEmit.send({
+      target: 'all',
+      event: 'raffle_gold_silver',
+      data: goldSilverUpdates
+    });
 
     return {
       message: 'Coins updated successfully.',
