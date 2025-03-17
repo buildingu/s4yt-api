@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
-import { AddChestCoinsRequestDto, SaveAnswerRequestDto } from "../dtos/GameDto";
+import { AddChestCoinsRequestDto, RSVPMeetUpRequestDto, SaveAnswerRequestDto } from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
@@ -96,14 +96,16 @@ export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   }
 };
 
-export const addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
+export const rsvpMeetUp = async (req: RSVPMeetUpRequestDto, res: Response, next: NextFunction) => {
   try {
-    // TODO: There is only one meeting now
-    const { businessId } = req.params;
-    const { userId, rsvpType } = req.body;
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+    const { attendMeeting } = req.body;
 
-    const addResult = await gameService.addMeetUp(businessId, userId, rsvpType);
-    return res.status(200).json({ message: "Player added to meeting" });
+    await gameService.rsvpMeetUp(userId, attendMeeting);
+    return res.status(200).json({ message: "RSVP status updated." });
   } catch (error: any) {
     next(error);
   }

@@ -7,6 +7,12 @@ export interface SaveAnswerRequestDto extends Request {
   }
 }
 
+export interface RSVPMeetUpRequestDto extends Request {
+  body: {
+    attendMeeting: boolean;
+  }
+}
+
 export interface AddChestCoinsRequestDto extends Request {
   body: {
     chestId: string;
