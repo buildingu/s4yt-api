@@ -69,26 +69,30 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
     const raffleItems = await RaffleItem.find({})
       .populate({
         path: 'raffle_partner',
-        select: '-_id -__v',
+        select: '-_id -__v -deleted -description',
       })
       .lean();
 
-    return raffleItems.map(item => {
-      const userEntry = item.entries?.find(entry => 
-        entry.user.toString() === userId
-      );
-
-      return {
-        item_id: item.item_id,
-        raffle_partner: item.raffle_partner,
-        name: item.name,
-        description: item.description,
-        image_src: item.image_src,
-        stock: item.stock,
-        coins: userEntry ? userEntry?.coins : 0,
-        silver: userEntry?.coins === 0 ? true : false,
-      };
-    });
+      return raffleItems.map(item => {
+        const userEntry = item.entries?.find(entry => 
+          entry.user.toString() === userId
+        );
+      
+        const anyCoinsStaked = item.entries?.some(entry => entry.coins > 0);
+      
+        return {
+          item_id: item.item_id,
+          raffle_partner: item.raffle_partner,
+          name: item.name,
+          description: item.description,
+          image_src: item.image_src,
+          stock: item.stock,
+          coins: userEntry ? userEntry.coins : 0,
+          silver: !anyCoinsStaked, // true if no coins were staked at all
+        };
+      });
+            
+    
   } catch (error: any) {
     throw new Error(`Error retrieving transformed raffle items: ${error.message}`);
   }
