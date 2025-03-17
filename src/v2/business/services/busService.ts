@@ -7,7 +7,7 @@ import { Challenge } from '../../typings/Challenge';
 export const sendBusinessesInfo = async (userId: string) => {
   try {
     const allBusinesses = await Business
-      .find({}, 'name logo link description challenge_question video_url video_title', { lean: true})
+      .find({}, 'name logo link description challenge_question video_url video_title', { lean: true })
       .populate<{ challenge_question: Challenge }>({
         path: 'challenge_question',
         model: 'Challenge',
