@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import { Challenge } from './Challenge';
 
 export interface Business {
   admin_business_id: Types.ObjectId;
@@ -8,7 +9,7 @@ export interface Business {
   description?: string;
   video_url?: string;
   video_title?: string;
-  challenge_question: Types.ObjectId;
+  challenge_question: Challenge;
   winners: [
     {
       user_id: Types.ObjectId;
@@ -26,6 +27,7 @@ export interface BusinessInfo {
   link: string;
   description: string;
   challenge_question: {
+    challenge_id: Types.ObjectId;
     title: string;
     description: string;
     answers_count: number;

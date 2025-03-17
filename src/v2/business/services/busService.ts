@@ -8,10 +8,10 @@ export const sendBusinessesInfo = async (userId: string) => {
   try {
     const allBusinesses = await Business
       .find({}, 'name logo link description challenge_question video_url video_title', { lean: true })
-      .populate<{ challenge_question: Challenge }>({
+      .populate({
         path: 'challenge_question',
         model: 'Challenge',
-        select: '_id title description',
+        select: 'title description',
         options: { lean: true }
       });
 
@@ -42,6 +42,7 @@ export const sendBusinessesInfo = async (userId: string) => {
         link: link || '',
         description: description || '',
         challenge_question: {
+          challenge_id: challenge_question._id,
           title: challenge_question.title,
           description: challenge_question.description,
           answers_count: answersCount,
