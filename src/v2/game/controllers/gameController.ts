@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
-import mongoose from "mongoose";
-import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
+import { AddChestCoinsRequestDto, SaveAnswerRequestDto } from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
@@ -82,23 +81,16 @@ export const getChests = async (req: Request, res: Response, next: NextFunction)
 
 export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
-    const { challengeId } = req.params;
-    const { userId, text } = req.body;
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+    const { challengeId, submissionLink } = req.body;
 
-    const answer = await gameService.saveAnswer(challengeId, userId, text);
-    res.status(200).json(answer);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) => {
-  try {
-    const { answerId } = req.params;
-    const { text } = req.body;
-
-    const answer = await gameService.updateAnswer(answerId, text);
-    res.json(answer);
+    await gameService.saveAnswer(challengeId, userId, submissionLink);
+    res
+      .status(200)
+      .json({ message: "Answer submitted." });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

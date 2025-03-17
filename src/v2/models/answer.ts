@@ -12,7 +12,7 @@ const answerSchema = new Schema<Answer>({
     ref: 'Challenge', 
     required: true 
   },
-  rating: Number,
+rating: { type: Number, default: 0 },
   submission_link: String,
   deleted: { type: Boolean, default: false }
 }, {

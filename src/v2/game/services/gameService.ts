@@ -145,63 +145,38 @@ export const getChests = async () => {
   }
 }
 
-export const saveAnswer = async (challengeId: string, userId: string, text: string) => {
-  const challenge = await Challenge.findById(challengeId);
-  if (!challenge) {
-    throw new Error('Challenge not found');
+export const saveAnswer = async (challengeId: string, userId: string, submissionLink: string) => {
+  try {
+    const challenge = await Challenge.findById(challengeId);
+    if (!challenge) {
+      throw new HttpError('Challenge not found', 404);
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new HttpError('User not found', 404);
+    }
+
+    if (!submissionLink) {
+      throw new HttpError('Submission link is required', 400);
+    }
+
+    console.log(challenge);
+    console.log(user);
+    console.log(submissionLink);
+
+    await Answer.findOneAndUpdate({
+      challenge_id: challenge,
+      user,
+    }, {
+      submission_link: submissionLink
+    }, {
+      upsert: true
+    });
+  } catch (error) {
+    throw resolveErrorHandler(error);
   }
-
-  const { business } = challenge;
-  if (!business) {
-    throw new Error('Challenge is not associated with any Business');
-  }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  if (!text) {
-    throw new Error('Answer text is required');
-  }
-
-  const answer = new Answer({
-    challenge,
-    business,
-    user,
-    text
-  });
-
-  await answer.save();
-
-  const responseObj = {
-    _id: answer.id,
-    challenge: challenge.id,
-    business,
-    user: user._id,
-    text
-  }
-
-  return responseObj;
 } 
-
-export const updateAnswer = async (answerId: string, text: string) => {
-  const updateData = {
-    text
-  };
-
-  const answer = await Answer.findByIdAndUpdate(answerId, updateData, { new: true });
-  if (!answer) {
-    throw new Error('Answer not found');
-  }
-
-  const responseObj = {
-    ...answer.toObject(),
-    __v: undefined
-  }
-
-  return responseObj;
-}
   
 export const addMeetUp = async (businessId: string, userId: string, rsvpType: string) => {
   try {

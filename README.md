@@ -196,6 +196,7 @@ The following collections will be *cleared* and seeded with test data:
 - Raffle Items
 - Raffle Partners
 
+All test Users have the password `Password1!`. 
 The raw data can be found in `src/v2/seeders/data`. New entries can be added to raw data as long as they conform to the model schemas found in `src/v2/models`.
 
 ## License

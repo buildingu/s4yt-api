@@ -6,8 +6,6 @@ import verifyCsrfToken from '../../csrf/middleware/verifyCsrfToken';
 const router = Router();
 
 router.get("/info", verifyCsrfToken, verifyAccessToken, businessController.sendBusinessesInfo);
-//router.get('/challenges/:businessId', verifyAccessToken, businessController.getChallenges);
-//router.get('/answers/:challengeId', verifyAccessToken, businessController.getAnswers);
 router.get('/:businessId/award', verifyAccessToken, businessController.getAwardDetails);
 router.get('/:businessId/event-results', verifyAccessToken, businessController.getEventResults);
 

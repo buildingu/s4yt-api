@@ -11,8 +11,7 @@ router.get("/chests", verifyCsrfToken, verifyTokens.verifyAccessToken, gameContr
 router.post("/businesses/:businessId/player/meet-ups", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.addMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/businesses/winners", verifyTokens.verifyAccessToken, gameController.sendBusinessChallengeWinners); // Challenge winners would be inputted in the admin panel I think.
 
-router.post("/challenges/:challengeId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);
-router.patch("/answers/:answerId", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateAnswer);
+router.post("/challenges", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.saveAnswer);
 
 router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleInfo); // Sends us the raffle items and stuff.
 // router.get("/raffle/coins", verifyTokens.verifyAccessToken, gameController.sendRaffleIndicatorCoins); // This gives use the gold and sliver coins, which is the gold coin means someone placed a coin(s) on that raffle item and the sliver coins means none.
