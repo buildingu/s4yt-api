@@ -100,7 +100,7 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
 
       // Record updated gold/silver state of raffle item
       goldSilverUpdates.push({
-        raffle_item_id: raffleItem.item_id,
+        item_id: raffleItem.item_id,
         silver: raffleItem.entries.reduce((total, entry) => total + entry.coins, 0) === 0
       });
     }
