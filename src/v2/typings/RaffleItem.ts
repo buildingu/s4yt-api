@@ -15,6 +15,6 @@ export interface RaffleItem {
 }
 
 export interface UpdateStakedCoins {
-  raffle_item_id: string;
+  item_id: string;
   coins: number;
 }

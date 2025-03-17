@@ -41,9 +41,9 @@ export const getRaffleItemsTransformed = async (
 
 export const updateStakedCoins = async (req: UpdateStakedCoinsDto, res: Response, next: NextFunction) => {
   try {
-    const { raffle } = req.body;
+    const { staked_items } = req.body;
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
-    const result = await gameService.updateStakedCoins(raffle, userId);
+    const result = await gameService.updateStakedCoins(staked_items, userId);
     res.json(result);
   } catch (error: any) {
     next(error);

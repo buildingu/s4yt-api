@@ -29,7 +29,7 @@ export interface AddChestCoinsRequestDto extends Request {
 
 export interface UpdateStakedCoinsDto extends Request {
   body: {
-    raffle: [
+    staked_items: [
       UpdateStakedCoins
     ]
   }
