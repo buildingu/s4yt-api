@@ -10,4 +10,5 @@ export default interface UserCredentials {
   chests_submitted: Record<string, number>;
   region?: string | null;
   role: typeof userRoles[number];
+  school?: string | null;
 }
