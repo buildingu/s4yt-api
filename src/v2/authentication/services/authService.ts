@@ -176,7 +176,7 @@ export const login = async (loginData: { email: string; password: string }) => {
   try {
     const user = await UserModel.findOne(
       { email: loginData.email },
-      "city coins country education email is_email_verified name password referral_code chests_submitted region role",
+      "city coins country education email is_email_verified name password referral_code chests_submitted region role school",
       { lean: true }
     );
 
@@ -205,7 +205,8 @@ export const login = async (loginData: { email: string; password: string }) => {
       referral_link: `${process.env.FRONTEND_URL}/register?referral_code=${user.referral_code}`,
       chests_submitted: user.chests_submitted,
       region: user.region || null,
-      roles: user.role || null
+      roles: user.role || null,
+      school: user.school || null
     };
 
     const jwtToken = sign({ userId: user._id }, process.env.JWT_SECRET!, {
