@@ -147,12 +147,12 @@ export const getChests = async () => {
 
 export const saveAnswer = async (challengeId: string, userId: string, submissionLink: string) => {
   try {
-    const challenge = await Challenge.findById(challengeId);
+    const challenge = await Challenge.exists({ _id: challengeId });
     if (!challenge) {
       throw new HttpError('Challenge not found', 404);
     }
 
-    const user = await User.findById(userId);
+    const user = await User.exists({ _id: userId }); // TODO: You should be using .exists when doing this because findOne is more expensive and gives you the entire document for no reason.
     if (!user) {
       throw new HttpError('User not found', 404);
     }
@@ -161,28 +161,28 @@ export const saveAnswer = async (challengeId: string, userId: string, submission
       throw new HttpError('Submission link is required', 400);
     }
 
-    await Answer.findOneAndUpdate({
-      challenge_id: challenge,
-      user,
-    }, {
-      submission_link: submissionLink
-    }, {
-      upsert: true
-    });
+    await Answer.updateOne(
+      { challenge_id: challengeId, user: userId },
+      { submission_link: submissionLink },
+      { upsert: true }
+    );
   } catch (error) {
     throw resolveErrorHandler(error);
   }
-} 
+}
   
 export const rsvpMeetUp = async (userId: string, attendMeeting: boolean) => {
   try {
-    const user = await User.findById(userId);
-    if (!user) {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { attend_meeting: attendMeeting },
+      { new: true, lean: true, projection: '-_id attend_meeting' }
+    );
+    if (!updatedUser) {
       throw new HttpError('User not found', 404);
     }
 
-    user.attend_meeting = attendMeeting;
-    await user.save();
+    return updatedUser;
   } catch (error) {
     throw resolveErrorHandler(error);
   }

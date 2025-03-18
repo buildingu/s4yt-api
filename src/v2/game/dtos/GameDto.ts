@@ -2,14 +2,14 @@ import { Request } from 'express';
 
 export interface SaveAnswerRequestDto extends Request {
   body: {
-    challengeId: string;
-    submissionLink: string;
+    challenge_id: string;
+    submission_link: string;
   }
 }
 
 export interface RSVPMeetUpRequestDto extends Request {
   body: {
-    attendMeeting: boolean;
+    attend_meeting: boolean;
   }
 }
 

@@ -81,13 +81,14 @@ export const getChests = async (req: Request, res: Response, next: NextFunction)
 
 export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
+    // FIXME: Why not have this userId logic in a middleware somewhere or in a existing one if you use this in a bunch of routes?
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
       throw new HttpError('User is not authenticated', 401);
     }
-    const { challengeId, submissionLink } = req.body;
+    const { challenge_id, submission_link } = req.body;
 
-    await gameService.saveAnswer(challengeId, userId, submissionLink);
+    await gameService.saveAnswer(challenge_id, userId, submission_link);
     res
       .status(200)
       .json({ message: "Answer submitted." });
@@ -102,10 +103,15 @@ export const rsvpMeetUp = async (req: RSVPMeetUpRequestDto, res: Response, next:
     if (!userId) {
       throw new HttpError('User is not authenticated', 401);
     }
-    const { attendMeeting } = req.body;
+    const { attend_meeting } = req.body;
 
-    await gameService.rsvpMeetUp(userId, attendMeeting);
-    return res.status(200).json({ message: "RSVP status updated." });
+    const updatedUser = await gameService.rsvpMeetUp(userId, attend_meeting);
+    return res
+      .status(200)
+      .json({
+        message: "RSVP status updated.",
+        attend_meeting: updatedUser.attend_meeting
+      });
   } catch (error: any) {
     next(error);
   }
