@@ -166,6 +166,10 @@ export const saveAnswer = async (challengeId: string, userId: string, submission
       { submission_link: submissionLink },
       { upsert: true }
     );
+
+    // event: business_challenge_submitted
+    //challenge_id:
+    //answers_sbutmitted:
   } catch (error) {
     throw resolveErrorHandler(error);
   }
