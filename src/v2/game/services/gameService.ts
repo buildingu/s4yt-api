@@ -168,8 +168,7 @@ export const saveAnswer = async (challengeId: string, userId: string, submission
     );
 
     // event: business_challenge_submitted
-    //challenge_id:
-    //answers_sbutmitted:
+    // Send me: { challenge_id, answers_count }
   } catch (error) {
     throw resolveErrorHandler(error);
   }
