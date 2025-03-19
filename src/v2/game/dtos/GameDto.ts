@@ -15,7 +15,7 @@ export interface RSVPMeetUpRequestDto extends Request {
 
 export interface AddChestCoinsRequestDto extends Request {
   body: {
-    chestId: string;
+    chest_id: string;
     amount: string;
   }
 }

@@ -61,8 +61,8 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
       throw new HttpError('User is not authenticated', 401);
     }
   
-    const { amount, chestId } = req.body;
-    const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
+    const { amount, chest_id } = req.body;
+    const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chest_id });
 
     res.status(200).json({ chests_submitted: user.chests_submitted });
   } catch (error: any) {
