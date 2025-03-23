@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 export interface RaffleItem {
   item_id: string;
@@ -17,4 +17,9 @@ export interface RaffleItem {
 export interface UpdateStakedCoins {
   item_id: string;
   coins: number;
+}
+
+export interface RaffleItemWinner {
+  item_id: mongoose.Types.ObjectId;
+  winner_id: mongoose.Types.ObjectId;
 }

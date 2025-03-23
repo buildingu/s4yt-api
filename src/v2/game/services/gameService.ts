@@ -12,7 +12,7 @@ import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
-import { UpdateStakedCoins } from "../../typings/RaffleItem";
+import { UpdateStakedCoins, RaffleItemWinner } from "../../typings/RaffleItem";
 import { socketEmit } from "../../utils/socket-emitter";
 
 
@@ -179,6 +179,57 @@ export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose
     throw new Error(`Error determining raffle winners: ${error.message}`);
   }
 };
+
+export const selectRaffleWinners = async (): Promise<Array<RaffleItemWinner>> => {
+  try {
+    const raffleItems = await RaffleItem.find({});
+
+    // Keep track of user ids that have already won
+    const usedUserIds = new Set<string>();
+
+
+    const winners = raffleItems.map((item) => {
+
+      // Filter out entries that already won
+      let eligibleEntries = item.entries.filter(entry => !usedUserIds.has(entry.user.toString()));
+
+      // If there are no eligible entries, fallback to all entries
+      if (eligibleEntries.length === 0) {
+        eligibleEntries = item.entries;
+      }
+
+      // If there are still no entries, return null
+      const totalStakes = eligibleEntries.reduce((acc, entry) => acc + entry.coins, 0);
+      if (totalStakes === 0) return null;
+
+      // Generate the random number
+      let randomPoint = Math.random() * totalStakes;
+
+      // System to select
+      for (const entry of eligibleEntries) {
+        randomPoint -= entry.coins;
+        if (randomPoint <= 0) {
+          usedUserIds.add(entry.user.toString()); 
+          return { item_id: item._id, winner_id: entry.user };
+        }
+      }
+
+      // Failsafe fallback
+      return {
+        item_id: item._id,
+        winner_id: eligibleEntries[eligibleEntries.length - 1].user
+      };
+    // Filter null results
+    }).filter((winner): winner is RaffleItemWinner => winner !== null);
+
+    
+    return winners;
+  } catch (error: any) {
+    throw new Error(`Error determining raffle winners: ${error.message}`);
+  }
+};
+
+
 
 export const getAllRafflePartners = async () => {
   try {

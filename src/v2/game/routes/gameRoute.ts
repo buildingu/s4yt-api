@@ -19,7 +19,7 @@ router.patch("/answers/:answerId", verifyCsrfToken, verifyTokens.verifyAccessTok
 router.get("/raffle", verifyTokens.verifyAccessToken, gameController.sendRaffleInfo); // Sends us the raffle items and stuff.
 // router.get("/raffle/coins", verifyTokens.verifyAccessToken, gameController.sendRaffleIndicatorCoins); // This gives use the gold and sliver coins, which is the gold coin means someone placed a coin(s) on that raffle item and the sliver coins means none.
 // *There is a socket to listen for the placement of coins on items so we can update in real-time.*
-router.get("/raffle/winners", verifyTokens.verifyAccessToken, gameController.sendRaffleWinners); // To do this you'll create a randomizer with better odds for someone with more coins added to that item and find the winner for each raffle item I think or do it whatever way you like.
+// router.get("/raffle/winners", verifyTokens.verifyAccessToken, gameController.sendRaffleWinners); // To do this you'll create a randomizer with better odds for someone with more coins added to that item and find the winner for each raffle item I think or do it whatever way you like.
 
 router.get("/raffle/items", verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.getRaffleItemsTransformed);
 
@@ -32,4 +32,7 @@ router.get('/raffle/partners', verifyTokens.verifyAccessToken, gameController.ge
 router.get('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameController.getRafflePartner);
 
 router.post('/raffle/items', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateStakedCoins)
+
+router.get('/raffle/winners', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.selectRaffleWinners);
+
 export default router;
