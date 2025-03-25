@@ -7,7 +7,7 @@ export interface RaffleItem {
   description: string;
   image_src: string;
   stock: number;
-  entries: [{ // TODO: derive total coins, silver/gold status from entries in response  
+  entries: [{
     user: Types.ObjectId;
     coins: number;
   }],

@@ -16,17 +16,6 @@ const raffleItemSchema = new Schema<RaffleItem>({
   winners: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 });
 
-/*
-  item_id
-  raffle_partner - this needs to be populated
-  name
-  description
-  image_src
-  stock
-  entries - see if the current user is among the entries in the array, if so, send back the number of coin they staked, otherwise, send the number 0 back
-  isSilver - if entries is empty, then this is "true", otherwise it's "false"
-*/
-
 const RaffleItemModel = model<RaffleItem>('RaffleItem', raffleItemSchema);
 
 export default RaffleItemModel;

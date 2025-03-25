@@ -13,44 +13,14 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 
-// FIXME: Fix raffle related services to conform to new RaffleSchema
-
 export const getRaffleItems = async () => {
   try {
     const raffleItems = await RaffleItem.find({});
-    
-/*
-  item_id
-  raffle_partner - this needs to be populated
-  name
-  description
-  image_src
-  stock
-  entries - see if the current user is among the entries in the array, if so, send back the number of coin they staked, otherwise, send the number 0 back
-  isSilver - if entries is empty, then this is "true", otherwise it's "false"
-*/
-
     return raffleItems;
   } catch (error: any) {
     throw new Error(`Error retrieving raffle items: ${error.message}`);
   }
 };
-
-// TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to silver and gold coin changes.
-// { item_id: string, isSilver: bool }
-/*export const getRaffleIndicatorCoins = async () => {
-  try {
-    const raffleItems = await RaffleItem.find().populate('stake.user');
-    const indicators = raffleItems.map(item => ({
-      itemId: item._id,
-      //goldCoin: item.stake.some(stake => stake.coin_staked > 0),
-      //silverCoin: item.stake.every(stake => stake.coin_staked === 0)
-    }));
-    return indicators;
-  } catch (error: any) {
-    throw new Error(`Error retrieving raffle coin indicators: ${error.message}`);
-  }
-};*/
 
 export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
   try {
@@ -152,7 +122,7 @@ export const saveAnswer = async (challengeId: string, userId: string, submission
       throw new HttpError('Challenge not found', 404);
     }
 
-    const user = await User.exists({ _id: userId }); // TODO: You should be using .exists when doing this because findOne is more expensive and gives you the entire document for no reason.
+    const user = await User.exists({ _id: userId });
     if (!user) {
       throw new HttpError('User not found', 404);
     }
