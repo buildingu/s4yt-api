@@ -188,7 +188,7 @@ export const selectRaffleWinners = async (): Promise<Array<RaffleItemWinner>> =>
     const usedUserIds = new Set<string>();
 
 
-    const winners = raffleItems.map((item) => {
+    const winners = raffleItems.map((item): RaffleItemWinner | null => {
 
       // Filter out entries that already won
       let eligibleEntries = item.entries.filter(entry => !usedUserIds.has(entry.user.toString()));
@@ -210,14 +210,14 @@ export const selectRaffleWinners = async (): Promise<Array<RaffleItemWinner>> =>
         randomPoint -= entry.coins;
         if (randomPoint <= 0) {
           usedUserIds.add(entry.user.toString()); 
-          return { item_id: item._id, winner_id: entry.user };
+          return { raffleItemId: item._id, winnerUserId: entry.user };
         }
       }
 
       // Failsafe fallback
       return {
-        item_id: item._id,
-        winner_id: eligibleEntries[eligibleEntries.length - 1].user
+        raffleItemId: item._id,
+        winnerUserId: eligibleEntries[eligibleEntries.length - 1].user
       };
     // Filter null results
     }).filter((winner): winner is RaffleItemWinner => winner !== null);

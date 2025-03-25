@@ -20,6 +20,6 @@ export interface UpdateStakedCoins {
 }
 
 export interface RaffleItemWinner {
-  item_id: mongoose.Types.ObjectId;
-  winner_id: mongoose.Types.ObjectId;
+  raffleItemId: mongoose.Types.ObjectId;
+  winnerUserId: mongoose.Types.ObjectId;
 }
