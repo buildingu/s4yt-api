@@ -5,6 +5,7 @@ const rafflePartnerSchema = new Schema<RafflePartner>({
   name: { type: String, required: true },
   description: { type: String, required: true },
   logo: { type: String, required: true },
+  resource_logo: { type: String, required: true },
   resource_name: { type: String, required: true },
   resource_link: { type: String, required: true },
   resource_category: { type: String, required: true },
