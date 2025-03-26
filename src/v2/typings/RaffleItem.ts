@@ -26,16 +26,16 @@ export interface RaffleItemWinner {
 }
 
 export interface Winner {
-  name: string | null;
-  education: string | null;
-  region: string | null;
-  country: string | null;
+  name?: string;
+  education?: string | null;
+  region?: string | null;
+  country?: string;
 }
 
 
 export interface RaffleWinners {
-  partner_name: string;
-  image_src: string;
-  logo: string;
-  winners: Array<Winner>;
+  partner_name?: string;
+  image_src?: string;
+  logo?: string;
+  winners: Winner[];
 }

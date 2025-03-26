@@ -89,7 +89,7 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
           image_src: item.image_src,
           stock: item.stock,
           coins: userEntry ? userEntry.coins : 0,
-          silver: !anyCoinsStaked, // true if no coins were staked at all
+          silver: !anyCoinsStaked,
         };
       });
             
@@ -246,45 +246,30 @@ export const selectRaffleWinners = async (): Promise<RaffleItemWinner[]> => {
   }
 };
 
-// NOT FINISHED
+// RETURN RAFFLE WINNERS
 export const getRaffleWinners = async (): Promise<RaffleWinners[]> => {
   try {
-    const raffleItems = await RaffleItem.find({});
+    const raffleItems = await RaffleItem.find({}, "image_src winners")
+      .populate("raffle_partner", "name logo")
+      .lean();
 
-    const partnersList: string[] = [];
-    const winnersList: RaffleWinners[] = [];
+    const winnersList = await Promise.all(raffleItems.map(async (item): Promise<RaffleWinners> => {
+      const partner = item.raffle_partner as {name?: string; logo?: string}
 
-    const winners: Winner[] = [];
+      const users = await UserModel.find({ "_id": { $in: item.winners } }, 'name education region country').lean();
 
-
-    await Promise.all(raffleItems.map(async item => {
-      if (item.raffle_partner) {
-        partnersList.push(item.raffle_partner.toString());
-      }
-
-      for (const winner of item.winners) {
-        console.log("This is da winner", winner);
-        const user = await UserModel.findById(winner);
-        if (!user) continue;
-        winners.push({
-          name: user?.name || null,
-          education: user?.education || null,
-          region: user?.region || null,
-          country: user?.country || null
-        })
-      }
-
-      winnersList.push({
-        partner_name: item?.name || 'Raffle Partner',
-        image_src: item?.image_src || 'https://via.placeholder.com/150',
-        logo: 'https://via.placeholder.com/150',
-        winners: winners
-      })
-      
-      
-
+      return {
+        partner_name: partner.name,
+        image_src: item.image_src,
+        logo: partner?.logo,
+        winners: users.map(user => ({
+          name: user.name,
+          education: user.education,
+          region: user.region,
+          country: user.country
+        }))
+      };
     }));
-
 
     return winnersList;
 
@@ -293,6 +278,23 @@ export const getRaffleWinners = async (): Promise<RaffleWinners[]> => {
   }
 };
 
+export const deleteRaffleWinners = async (): Promise<string> => {
+  try {
+    const raffleItems = await RaffleItem.find({})
+
+    await Promise.all(raffleItems.map(async (item) => {
+      await RaffleItem.updateOne(
+        { _id: item._id },
+        { $set: { winners: [] } }
+      ).then(() => {console.log("DELETED")})
+    }))
+
+    return "Deleted Successfully"
+
+  } catch (error: any) {
+    throw new Error(`Error deleting raffle winners: ${error.message}`)
+  }
+}
 
 
 export const getAllRafflePartners = async () => {
