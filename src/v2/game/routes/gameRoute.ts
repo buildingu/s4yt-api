@@ -34,5 +34,6 @@ router.get('/raffle/partners/:id', verifyTokens.verifyAccessToken, gameControlle
 router.post('/raffle/items', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.updateStakedCoins)
 
 router.get('/raffle/winners', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.selectRaffleWinners);
+router.get('/raffle/winners/send', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.sendRaffleWinners);
 
 export default router;

@@ -1,3 +1,4 @@
+import exp from 'constants';
 import mongoose, { Types } from 'mongoose';
 
 export interface RaffleItem {
@@ -22,4 +23,19 @@ export interface UpdateStakedCoins {
 export interface RaffleItemWinner {
   raffleItemId: mongoose.Types.ObjectId;
   winnerUserId: mongoose.Types.ObjectId;
+}
+
+export interface Winner {
+  name: string | null;
+  education: string | null;
+  region: string | null;
+  country: string | null;
+}
+
+
+export interface RaffleWinners {
+  partner_name: string;
+  image_src: string;
+  logo: string;
+  winners: Array<Winner>;
 }

@@ -12,7 +12,7 @@ import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
-import { UpdateStakedCoins, RaffleItemWinner } from "../../typings/RaffleItem";
+import { UpdateStakedCoins, RaffleItemWinner, RaffleWinners, Winner } from "../../typings/RaffleItem";
 import { socketEmit } from "../../utils/socket-emitter";
 
 
@@ -157,38 +157,41 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
 }
 
 
-export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
-  try {
-    const raffleItems = await RaffleItem.find({});
+// export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
+//   try {
+//     const raffleItems = await RaffleItem.find({});
 
-    const winners = raffleItems.map((item): { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } | null => {
-      // FIXME
-      //const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
-      //let randomPoint = Math.random() * totalStakes;
-      /*for (const stake of item.stake) {
-        randomPoint -= stake.coin_staked;
-        if (randomPoint <= 0) {
-          return { raffleItemId: item._id, winnerUserId: stake.user };
-        }
-      }*/
-      return null;
-    }).filter((winner): winner is { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } => winner !== null);
+//     const winners = raffleItems.map((item): { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } | null => {
+//       // FIXME
+//       //const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
+//       //let randomPoint = Math.random() * totalStakes;
+//       /*for (const stake of item.stake) {
+//         randomPoint -= stake.coin_staked;
+//         if (randomPoint <= 0) {
+//           return { raffleItemId: item._id, winnerUserId: stake.user };
+//         }
+//       }*/
+//       return null;
+//     }).filter((winner): winner is { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } => winner !== null);
 
-    return winners;
-  } catch (error: any) {
-    throw new Error(`Error determining raffle winners: ${error.message}`);
-  }
-};
+//     return winners;
+//   } catch (error: any) {
+//     throw new Error(`Error determining raffle winners: ${error.message}`);
+//   }
+// };
 
-export const selectRaffleWinners = async (): Promise<Array<RaffleItemWinner>> => {
-  try {
+export const selectRaffleWinners = async (): Promise<RaffleItemWinner[]> => {
+  try { 
     const raffleItems = await RaffleItem.find({});
 
     // Keep track of user ids that have already won
     const usedUserIds = new Set<string>();
 
+    // store winners
+    const winnersArray: RaffleItemWinner[] = [];
 
-    const winners = raffleItems.map((item): RaffleItemWinner | null => {
+
+    const winners = raffleItems.map( async (item): Promise<RaffleItemWinner | null> => {
 
       // Filter out entries that already won
       let eligibleEntries = item.entries.filter(entry => !usedUserIds.has(entry.user.toString()));
@@ -210,22 +213,83 @@ export const selectRaffleWinners = async (): Promise<Array<RaffleItemWinner>> =>
         randomPoint -= entry.coins;
         if (randomPoint <= 0) {
           usedUserIds.add(entry.user.toString()); 
-          return { raffleItemId: item._id, winnerUserId: entry.user };
+
+          const winner: RaffleItemWinner = {
+            raffleItemId: item._id,
+            winnerUserId: entry.user
+          };
+
+          item?.winners.push(entry.user);
+          winnersArray.push(winner)
+          
+          return winner;
         }
       }
 
-      // Failsafe fallback
-      return {
-        raffleItemId: item._id,
-        winnerUserId: eligibleEntries[eligibleEntries.length - 1].user
-      };
-    // Filter null results
-    }).filter((winner): winner is RaffleItemWinner => winner !== null);
-
+      return null;
+    })
     
-    return winners;
+    // wait for all to finish
+    const awaitedWinners = await Promise.all(winners);
+
+    // filter nulls
+    const finalWinners = awaitedWinners.filter((winner): winner is RaffleItemWinner => winner !== null);
+    
+    // save all
+    await Promise.all(raffleItems.map(item => {
+      item.save()
+    }));
+
+    return finalWinners;
   } catch (error: any) {
     throw new Error(`Error determining raffle winners: ${error.message}`);
+  }
+};
+
+// NOT FINISHED
+export const getRaffleWinners = async (): Promise<RaffleWinners[]> => {
+  try {
+    const raffleItems = await RaffleItem.find({});
+
+    const partnersList: string[] = [];
+    const winnersList: RaffleWinners[] = [];
+
+    const winners: Winner[] = [];
+
+
+    await Promise.all(raffleItems.map(async item => {
+      if (item.raffle_partner) {
+        partnersList.push(item.raffle_partner.toString());
+      }
+
+      for (const winner of item.winners) {
+        console.log("This is da winner", winner);
+        const user = await UserModel.findById(winner);
+        if (!user) continue;
+        winners.push({
+          name: user?.name || null,
+          education: user?.education || null,
+          region: user?.region || null,
+          country: user?.country || null
+        })
+      }
+
+      winnersList.push({
+        partner_name: item?.name || 'Raffle Partner',
+        image_src: item?.image_src || 'https://via.placeholder.com/150',
+        logo: 'https://via.placeholder.com/150',
+        winners: winners
+      })
+      
+      
+
+    }));
+
+
+    return winnersList;
+
+  } catch (error: any) {
+    throw new Error(`Error fetching raffle winners: ${error.message}`);
   }
 };
 
