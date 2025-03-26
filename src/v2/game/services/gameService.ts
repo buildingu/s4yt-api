@@ -253,25 +253,15 @@ export const getRaffleWinners = async (): Promise<RaffleWinners[]> => {
       .populate("raffle_partner", "name logo")
       .lean();
 
-    const winnersList = await Promise.all(raffleItems.map(async (item): Promise<RaffleWinners> => {
+    return await Promise.all(raffleItems.map(async (item): Promise<RaffleWinners> => {
       const partner = item.raffle_partner as {name?: string; logo?: string}
-
-      const users = await UserModel.find({ "_id": { $in: item.winners } }, 'name education region country').lean();
-
       return {
         partner_name: partner.name,
         image_src: item.image_src,
         logo: partner?.logo,
-        winners: users.map(user => ({
-          name: user.name,
-          education: user.education,
-          region: user.region,
-          country: user.country
-        }))
+        winners: await UserModel.find({ "_id": { $in: item.winners } }, 'name education region country').lean()
       };
     }));
-
-    return winnersList;
 
   } catch (error: any) {
     throw new Error(`Error fetching raffle winners: ${error.message}`);
