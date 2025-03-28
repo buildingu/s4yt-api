@@ -1,17 +1,15 @@
 import Business from "../../models/business";
 import Challenge from "../../models/challenge";
 import RaffleItem from "../../models/raffleItem";
-import { RafflePartner } from "../../typings/RafflePartner";
-import { RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
-import { Types } from "mongoose";
 import Answer from "../../models/answer";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
+import { BusinessChallengeWinners } from "../../typings/Challenge";
 
 export const getRaffleItems = async () => {
   try {
@@ -136,11 +134,33 @@ export const rsvpMeetUp = async (userId: string, attendMeeting: boolean) => {
 
 export const getEventResults = async () => { 
   // Get Business Challenge results
-  const businesses = await Business.find({}, 'name');
+  const businesses = await Business.find({}, 'name logo winners')
+    .lean()
+    .populate({
+      path: 'winners',
+      populate: {
+        path: 'user_id',
+        model: 'User',
+        select: '-_id name education region country',
+      },
+    });
 
-  const challengeWinners = businesses.map(business => {
+  const challengeWinners: BusinessChallengeWinners[] = businesses.map(business => {
+    const winners = business.winners.map(winner => {
+      const user = winner.user_id;
+      return {
+        award: winner.award,
+        name: user.name,
+        education: user.education,
+        region: user.region,
+        country: user.country,
+      }
+    });
+    
     return {
-      business_name: business.name
+      business_name: business.name,
+      logo: business.logo,
+      winners
     };
   });
   

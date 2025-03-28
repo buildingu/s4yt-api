@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { Challenge } from './Challenge';
+import User from './User';
 
 export interface Business {
   admin_business_id: Types.ObjectId;
@@ -12,7 +13,7 @@ export interface Business {
   challenge_question: Challenge;
   winners: [
     {
-      user_id: Types.ObjectId;
+      user_id: User;
       award: number;
     }
   ],
