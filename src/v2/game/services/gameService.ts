@@ -10,6 +10,7 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 import { BusinessChallengeWinners } from "../../typings/Challenge";
+import { socketEmit } from "../../utils/socket-emitter";
 
 export const getRaffleItems = async () => {
   try {
@@ -107,6 +108,17 @@ export const saveAnswer = async (challengeId: string, userId: string, submission
       { submission_link: submissionLink },
       { upsert: true }
     );
+
+    const answerCount = await Answer.countDocuments({ challenge_id: challengeId });
+
+    socketEmit.send({
+      target: 'all',
+      event: 'business_challenge_submitted',
+      data: {
+        challenge_id: challengeId,
+        answers_count: answerCount
+      }
+    });
 
     // event: business_challenge_submitted
     // Send me: { challenge_id, answers_count }
