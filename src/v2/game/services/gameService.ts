@@ -45,33 +45,6 @@ export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose
   }
 };
 
-export const getAllRafflePartners = async () => {
-  try {
-    const partners = await RafflePartnerModel.find();
-    return partners;
-  } catch (error) {
-    throw resolveErrorHandler(error);
-  }
-};
-
-export const getRafflePartner = async (id: string) => {
-  try {
-    const partner = await RafflePartnerModel.findById(id)
-    if (!partner) {
-      throw new HttpError('Raffle partner not found.', 404);
-    }
-    return partner;
-  } catch (error) {
-    throw resolveErrorHandler(error, [
-      {
-        errorName: 'CastError',
-        errorMessage: 'Raffle partner not found.',
-        httpStatusCode: 404
-      }
-    ]);
-  }
-};
-
 export const assignCoinsToUser = async (
   userId: string,
   count: number,
@@ -161,54 +134,20 @@ export const rsvpMeetUp = async (userId: string, attendMeeting: boolean) => {
   }
 };
 
-export const sendBusinessChallengeWinners = async () => {
-  try {
-    return null;
-  } catch (error: any) {
-    throw new Error(
-      "sendBusinessChallengeWinners service error; getting business challenge winners:\n" +
-        error.message
-    );
+export const getEventResults = async () => { 
+  // Get Business Challenge results
+  const businesses = await Business.find({}, 'name');
+
+  const challengeWinners = businesses.map(business => {
+    return {
+      business_name: business.name
+    };
+  });
+  
+  return {
+    challenge_winners: challengeWinners
   }
 };
-
-  export const getEventResults = async () => {
-    const allBus = await Business.find({});
-    if (!allBus) {
-      throw new Error('Businesses not found');
-    }
-
-    // FIXME
-    /*let results = [];
-    for (const business of allBus) {
-      let businessResults = [];
-      const challenges = business.challenges;
-
-      for (const challengeId of challenges) {
-        const challenge = await Challenge.findById(challengeId);
-
-        if (!challenge) continue;
-
-        for (const prize of challenge.prize_allocation) {
-          const user = await User.findById(prize.winner);
-          if (!user) continue;
-
-          let award = {
-            place: prize.place,
-            amount: prize.amount,
-            winner_name: user.name,
-            winner_region: user.region,
-            winner_country: user.country,
-          };
-          businessResults.push(award);
-        }
-        
-      }
-      
-      results.push(businessResults)
-    }
-    return results;*/
-  };
 
 export const getCoinsGainedHistory = async (userId: string): Promise<CoinTransaction[]> => {
   try {

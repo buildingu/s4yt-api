@@ -4,55 +4,6 @@ import { AddChestCoinsRequestDto, RSVPMeetUpRequestDto, SaveAnswerRequestDto } f
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
-export const getRafflePartners = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const partners = await gameService.getAllRafflePartners(); 
-    res.json(partners); 
-  } catch (error: any) {
-    next(error); 
-  }
-};
-
-export const getRafflePartner = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = req.params.id; 
-    const partner = await gameService.getRafflePartner(id);
-    res.json(partner); 
-  } catch (error: any) {
-    next(error); 
-  }
-};
-
-// Controller to send raffle items info
-export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const raffleItems = await gameService.getRaffleItems();
-    res.status(200).json(raffleItems);
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-// Controller to send raffle coin indicators
-/*export const sendRaffleIndicatorCoins = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const indicators = await gameService.getRaffleIndicatorCoinsService();
-    res.json(indicators);
-  } catch (error: any) {
-    next(error);
-  }
-};*/
-
-// Controller to send raffle winners
-export const sendRaffleWinners = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const winners = await gameService.getRaffleWinners();
-    res.json(winners);
-  } catch (error: any) {
-    next(error);
-  }
-};
-
 // Controller to add "Learn and Earn" chest coins to a user's total
 export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response, next: NextFunction) => {
   try {
@@ -81,7 +32,6 @@ export const getChests = async (req: Request, res: Response, next: NextFunction)
 
 export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
-    // FIXME: Why not have this userId logic in a middleware somewhere or in a existing one if you use this in a bunch of routes?
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
       throw new HttpError('User is not authenticated', 401);
@@ -112,18 +62,6 @@ export const rsvpMeetUp = async (req: RSVPMeetUpRequestDto, res: Response, next:
         message: "RSVP status updated.",
         attend_meeting: updatedUser.attend_meeting
       });
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-export const sendBusinessChallengeWinners = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    return res.status(200).json({ message: "" });
   } catch (error: any) {
     next(error);
   }
