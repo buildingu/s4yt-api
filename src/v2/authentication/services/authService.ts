@@ -115,22 +115,30 @@ export const register = async (userData: any) => {
     const newUser = new UserModel({
       ...userData,
       password: hashedPassword,
-      role: userData.role || "Player",
+      role: userData.role || 'Player',
       coin: userData.coin || 0,
       referral_code: newUserReferralCode,
       is_email_verified: false,
-      email_verification_token: crypto.randomBytes(20).toString("hex"),
+      email_verification_token: crypto.randomBytes(20).toString('hex'),
       chests_submitted: {},
     });
+
+    // Check if User is valid before handling coin award, referral, verification email, and saving to DB
+    const validationResults = newUser.validateSync();
+    
+    if (validationResults?.errors) {
+      const errorMessage = Object.values(validationResults.errors).join('\n');
+      throw new HttpError(errorMessage, 400);
+    }
 
     awardCoinsToUser(newUser, 3, 'register', false);
     await handleReferralBonus(newUser, inviterReferralCode, 5);
 
+    await newUser.save();
+
     if (process.env.SEND_EMAILS === 'true') {
       await sendVerificationEmail(newUser.email, newUser.email_verification_token);
     }
-
-    await newUser.save();
 
     return newUser;
   } catch (error) {
