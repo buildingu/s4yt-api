@@ -25,7 +25,6 @@ const userSchema = new Schema<User>({
   region: {
     type: String,
     default: null,
-    minlength: [2, 'Region name is too short. Minimum length is 2 characters.'],
     maxlength: [50, 'Region name is too long. Maximum length is 50 characters.']
   },
   city: { type: String, default: null },
