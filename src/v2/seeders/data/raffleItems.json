@@ -54,5 +54,22 @@
     "winners": [
       "acb5428155bf911a12d36b3b"
     ]
+  },
+  {
+    "item_id": "2b6b62bb-3901-48ee-82e3-973100d969bc",
+    "raffle_partner": "5C11037FCE0A02E3304C0592",
+    "name": "More Trinkets",
+    "description": "Trinkets galore!",
+    "image_src": "https://fastly.picsum.photos/id/174/200/200.jpg?hmac=drl_DcYoPvaGCAF7hzG6zjvSnt77TUxwZFQz_-FDLuI",
+    "stock": 35,
+    "entries": [
+      {
+        "user": "f53de04a0505b0daefad53aa",
+        "coins": 10
+      }
+    ],
+    "winners": [
+      "f53de04a0505b0daefad53aa"
+    ]
   }
 ]
