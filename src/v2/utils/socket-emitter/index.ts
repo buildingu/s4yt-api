@@ -55,19 +55,23 @@ export const socketEmit = {
       throw new Error("Socket.io is not initialized. Call initializeSocket first.");
     }
 
-    const socketId = clients.get(target);
-    console.log(socketId);
-    if (!socketId) {
-      console.error(`Client ${target} is not connected`);
-      return;
-    }
-
     // If you need to perform some computational or any logic on the data before
     // sending it, you can use the transformData callback for that.    
-     const payload = transformData ? transformData(data) : data;
+    const payload = transformData ? transformData(data) : data;
 
-    // Send the payload to the event the client will be listening on 
-    io.to(socketId).emit(event, payload);
-    console.log(`Data sent to client ${target}:`, payload);
+    if (target !== 'all') {
+      const socketId = clients.get(target);
+      if (!socketId) {
+        console.error(`Client ${target} is not connected`);
+        return;
+      }
+
+      // Send the payload to the event the client will be listening on 
+      io.to(socketId).emit(event, payload);
+      console.log(`Data sent to client ${target}:`, payload);
+    } else {
+      io.emit(event, payload);
+      console.log('Data broadcast to all clients:', payload);
+    }
   },
 };

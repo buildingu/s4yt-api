@@ -13,3 +13,8 @@ export interface RaffleItem {
   }],
   winners: Types.ObjectId[];
 }
+
+export interface UpdateStakedCoins {
+  raffle_item_id: string;
+  coins: number;
+}

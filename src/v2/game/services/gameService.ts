@@ -10,16 +10,98 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 import { BusinessChallengeWinners } from "../../typings/Challenge";
+import { UpdateStakedCoins } from "../../typings/RaffleItem";
 import { socketEmit } from "../../utils/socket-emitter";
 
-export const getRaffleItems = async () => {
+export const getRaffleItemsTransformed = async (userId: string | undefined) => {
   try {
-    const raffleItems = await RaffleItem.find({});
-    return raffleItems;
-  } catch (error: any) {
-    throw new Error(`Error retrieving raffle items: ${error.message}`);
+    if (!userId) {
+      throw new HttpError('User not found', 404);
+    };
+
+    const raffleItems = await RaffleItem.find({})
+      .populate({
+        path: 'raffle_partner',
+        select: '-_id -__v',
+      })
+      .lean();
+
+    return raffleItems.map(item => {
+      const userEntry = item.entries?.find(entry => 
+        entry.user.toString() === userId
+      );
+
+      return {
+        item_id: item.item_id,
+        raffle_partner: item.raffle_partner,
+        name: item.name,
+        description: item.description,
+        image_src: item.image_src,
+        stock: item.stock,
+        coins: userEntry ? userEntry?.coins : 0,
+        silver: userEntry?.coins === 0 ? true : false,
+      };
+    });
+  } catch (error) {
+    throw resolveErrorHandler(error); //new Error(`Error retrieving transformed raffle items: ${error.message}`);
   }
 };
+
+export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId: string | undefined) => {
+  try {
+    if (!userId) {
+      throw new Error(`User not found`);
+    }
+
+    const goldSilverUpdates = [];
+
+    for (const stake of raffle) { 
+      const { raffle_item_id, coins } = stake;
+      if (!raffle_item_id) {
+        continue;
+      }
+
+      const raffleItem = await RaffleItem.findById(raffle_item_id);
+
+      if (!raffleItem) {
+        continue;
+      }
+
+      const entryIndex = raffleItem.entries.findIndex(
+        entry => entry.user.toString() === userId
+      );
+
+      if (entryIndex !== -1) {
+        raffleItem.entries[entryIndex].coins = coins;
+      } else {
+        raffleItem?.entries.push({
+          user: new mongoose.Types.ObjectId(userId),
+          coins: coins
+        });
+      }
+
+      await raffleItem.save();
+
+      // Record updated gold/silver state of raffle item
+      goldSilverUpdates.push({
+        item_id: raffleItem.item_id,
+        silver: raffleItem.entries.reduce((total, entry) => total + entry.coins, 0) === 0
+      });
+    }
+
+    socketEmit.send({
+      target: 'all',
+      event: 'raffle_gold_silver',
+      data: goldSilverUpdates
+    });
+
+    return {
+      message: 'Coins updated successfully.',
+    };
+  } catch (error: any) {
+    throw new Error(`Error updating staked coins: ${error.message}`);
+  }
+}
 
 export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
   try {
@@ -119,9 +201,6 @@ export const saveAnswer = async (challengeId: string, userId: string, submission
         answers_count: answerCount
       }
     });
-
-    // event: business_challenge_submitted
-    // Send me: { challenge_id, answers_count }
   } catch (error) {
     throw resolveErrorHandler(error);
   }

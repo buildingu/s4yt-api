@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { UpdateStakedCoins } from '../../typings/RaffleItem';
 
 export interface SaveAnswerRequestDto extends Request {
   body: {
@@ -17,5 +18,13 @@ export interface AddChestCoinsRequestDto extends Request {
   body: {
     chest_id: string;
     amount: string;
+  }
+}
+
+export interface UpdateStakedCoinsDto extends Request {
+  body: {
+    staked_items: [
+      UpdateStakedCoins
+    ]
   }
 }

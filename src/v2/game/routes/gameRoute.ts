@@ -6,6 +6,8 @@ import * as gameController from "../controllers/gameController";
 const router = Router();
 
 router.get("/chests", verifyCsrfToken, verifyAccessToken, gameController.getChests);
+router.get("/raffle/items", verifyCsrfToken, verifyAccessToken, gameController.getRaffleItemsTransformed);
+router.post("/raffle/items", verifyCsrfToken, verifyAccessToken, gameController.updateStakedCoins);
 router.post("/challenges", verifyCsrfToken, verifyAccessToken, gameController.saveAnswer);
 router.patch("/meetup", verifyCsrfToken, verifyAccessToken, gameController.rsvpMeetUp); // This is how we'll submit the meetup submissions from whatever the player chooses (yes or maybe is all it is).
 router.get("/results", verifyCsrfToken, verifyAccessToken, gameController.displayEventResults);

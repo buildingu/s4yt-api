@@ -52,7 +52,7 @@ const seedDatabase = async () => {
     await Answer.insertMany(answersData);
     await RafflePartnerModel.insertMany(rafflePartnerData);
     await RaffleItemModel.insertMany(raffleItemData);
-    console.log('User seed data inserted successfully.');
+    console.log('Seed data inserted successfully.');
   } catch (err) {
     console.error('Error seeding database:', err);
   } finally {
