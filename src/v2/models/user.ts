@@ -22,12 +22,12 @@ const userSchema = new Schema<User>({
   school: { type: String, default: null },
   password: { type: String, required: true },
   country: { type: String, default: null },
-  region: {
+  region: { type: String, default: null },
+  city: {
     type: String,
     default: null,
-    maxlength: [50, 'Region name is too long. Maximum length is 50 characters.']
+    maxlength: [50, 'City name is too long. Maximum length is 50 characters.']
   },
-  city: { type: String, default: null },
   chests_submitted: { type: Map, of: Number },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },
