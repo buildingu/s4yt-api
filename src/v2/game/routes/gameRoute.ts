@@ -36,6 +36,4 @@ router.post('/raffle/items', verifyCsrfToken, verifyTokens.verifyAccessToken, ga
 router.get('/raffle/winners', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.selectRaffleWinners);
 router.get('/raffle/winners/fetch', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.sendRaffleWinners);
 
-router.delete('/raffle/winners', verifyCsrfToken, verifyTokens.verifyAccessToken, gameController.deleteRaffleWinners)
-
 export default router;

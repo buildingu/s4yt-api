@@ -259,7 +259,7 @@ export const getRaffleWinners = async (): Promise<RaffleWinners[]> => {
         partner_name: partner.name,
         image_src: item.image_src,
         logo: partner?.logo,
-        winners: await UserModel.find({ "_id": { $in: item.winners } }, 'name education region country').lean()
+        winners: await UserModel.find({ "_id": { $in: item.winners } }, 'name education region country -_id').lean()
       };
     }));
 
@@ -267,24 +267,6 @@ export const getRaffleWinners = async (): Promise<RaffleWinners[]> => {
     throw new Error(`Error fetching raffle winners: ${error.message}`);
   }
 };
-
-export const deleteRaffleWinners = async (): Promise<string> => {
-  try {
-    const raffleItems = await RaffleItem.find({})
-
-    await Promise.all(raffleItems.map(async (item) => {
-      await RaffleItem.updateOne(
-        { _id: item._id },
-        { $set: { winners: [] } }
-      ).then(() => {console.log("DELETED")})
-    }))
-
-    return "Deleted Successfully"
-
-  } catch (error: any) {
-    throw new Error(`Error deleting raffle winners: ${error.message}`)
-  }
-}
 
 
 export const getAllRafflePartners = async () => {
