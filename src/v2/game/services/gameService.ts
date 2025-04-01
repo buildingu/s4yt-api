@@ -187,9 +187,6 @@ export const selectRaffleWinners = async (): Promise<RaffleItemWinner[]> => {
     // Keep track of user ids that have already won
     const usedUserIds = new Set<string>();
 
-    // store winners
-    const winnersArray: RaffleItemWinner[] = [];
-
 
     const winners = raffleItems.map( async (item): Promise<RaffleItemWinner[] | null> => {
       const itemWinners: RaffleItemWinner[] = [];
@@ -223,7 +220,6 @@ export const selectRaffleWinners = async (): Promise<RaffleItemWinner[]> => {
 
             item?.winners.push(entry.user);
             itemWinners.push(winner);
-            winnersArray.push(winner);
             
             break;
           }
