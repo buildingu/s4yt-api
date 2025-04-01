@@ -11,8 +11,10 @@ const raffleItemSchema = new Schema<RaffleItem>({
   image_src: { type: String, required: true },
   stock: { type: Number, required: true },
   entries: [{
+    _id: false,
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     coins: { type: Number, required: true }
+    
   }],
   winners: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 });
