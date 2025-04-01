@@ -9,7 +9,12 @@ const userSchema = new Schema<User>({
     required: true,
     unique: true
   },
-  name: { type: String, default: null, minlength: 2, maxlength: 128 },
+  name: {
+    type: String,
+    default: null,
+    minlength: [2, 'Name is too short. Minimum length is 2 characters.'],
+    maxlength: [128, 'Name is too long. Maximum length is 128 characters.']
+  },
   education: {
     type: String,
     enum: userEducation
@@ -18,7 +23,11 @@ const userSchema = new Schema<User>({
   password: { type: String, required: true },
   country: { type: String, default: null },
   region: { type: String, default: null },
-  city: { type: String, default: null },
+  city: {
+    type: String,
+    default: null,
+    maxlength: [50, 'City name is too long. Maximum length is 50 characters.']
+  },
   chests_submitted: { type: Map, of: Number },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },
