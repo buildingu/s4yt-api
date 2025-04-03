@@ -108,37 +108,12 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
   }
 }
 
-
-// export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
-//   try {
-//     const raffleItems = await RaffleItem.find({});
-
-//     const winners = raffleItems.map((item): { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } | null => {
-//       // FIXME
-//       //const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
-//       //let randomPoint = Math.random() * totalStakes;
-//       /*for (const stake of item.stake) {
-//         randomPoint -= stake.coin_staked;
-//         if (randomPoint <= 0) {
-//           return { raffleItemId: item._id, winnerUserId: stake.user };
-//         }
-//       }*/
-//       return null;
-//     }).filter((winner): winner is { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } => winner !== null);
-
-//     return winners;
-//   } catch (error: any) {
-//     throw new Error(`Error determining raffle winners: ${error.message}`);
-//   }
-// };
-
 export const selectRaffleWinners = async (): Promise<RaffleItemWinner[]> => {
   try { 
     const raffleItems = await RaffleItem.find({});
 
     // Keep track of user ids that have already won
     const usedUserIds = new Set<string>();
-
 
     const winners = raffleItems.map( async (item): Promise<RaffleItemWinner[] | null> => {
       const itemWinners: RaffleItemWinner[] = [];
@@ -188,7 +163,6 @@ export const selectRaffleWinners = async (): Promise<RaffleItemWinner[]> => {
     // filter nulls
     const finalWinners = awaitedWinners.filter((winner): winner is RaffleItemWinner[] => winner !== null);
     
-
     // save all
     await Promise.all(raffleItems.map(item => {
       item.save()
