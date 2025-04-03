@@ -18,6 +18,5 @@ router.get("/raffle/items", verifyCsrfToken, verifyAccessToken, gameController.g
 router.post("/raffle/items", verifyCsrfToken, verifyAccessToken, gameController.updateStakedCoins);
 router.get('/raffle/winners', verifyCsrfToken, verifyAccessToken, gameController.selectRaffleWinners);
 router.get('/raffle/winners/fetch', verifyCsrfToken, verifyAccessToken, gameController.sendRaffleWinners);
-router.delete('/raffle/winners', verifyCsrfToken, verifyAccessToken, gameController.deleteRaffleWinners);
 
 export default router;
