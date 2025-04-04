@@ -1,6 +1,5 @@
 import UserModel from "../../models/user";
 import User from "../../typings/User";
-import UserCredentials from "../../typings/UserCredentials";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -10,7 +9,7 @@ import {
 } from "../services/emailService";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoTimestamps } from "../../configs/timestamps";
-import { HydratedDocument } from "mongoose";
+import { Error, HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
 import { awardCoinsToUser } from "../../utils/coins";
 import { createUserCredentials } from "../utils/userCredentials";
@@ -124,12 +123,7 @@ export const register = async (userData: any) => {
     });
 
     // Check if User is valid before handling coin award, referral, verification email, and saving to DB
-    const validationResults = newUser.validateSync();
-    
-    if (validationResults?.errors) {
-      const errorMessage = Object.values(validationResults.errors).join('\n');
-      throw new HttpError(errorMessage, 400);
-    }
+    await newUser.validate();
 
     awardCoinsToUser(newUser, 3, 'register', false);
     await handleReferralBonus(newUser, inviterReferralCode, 5);
@@ -142,7 +136,12 @@ export const register = async (userData: any) => {
 
     return newUser;
   } catch (error) {
-    throw resolveErrorHandler(error);
+    if (error instanceof Error.ValidationError) {
+      const errorMessage = Object.values(error.errors).join('\n');
+      throw new HttpError(errorMessage, 400);
+    } else {
+      throw resolveErrorHandler(error);
+    }
   }
 };
 
