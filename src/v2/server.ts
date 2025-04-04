@@ -11,7 +11,6 @@
 
 import express from "express";
 import dotenv from "dotenv";
-// import { redisClient } from "./configs/redisConfig";
 
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -32,6 +31,7 @@ import authRouter from "./authentication/routes/authRoute";
 import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
 import locationRouter from "./location/routes/locationRoutes";
+import { scheduleRaffleDrawing } from "./utils/scheduler";
 
 // Connect DB
 const app = express();
@@ -92,4 +92,5 @@ const server = app.listen(PORT, process.env.HOST as string, () =>
   )
 );
 
+scheduleRaffleDrawing();
 initializeSocket(server);

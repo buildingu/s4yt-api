@@ -8,7 +8,7 @@ import {
   sendResetPasswordEmail,
 } from "../services/emailService";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
-import { isoTimestamps } from "../../configs/timestamps";
+import { isoGameTimestamps } from "../../configs/timestamps";
 import { Error, HydratedDocument } from "mongoose";
 import { AcceptedReferralModel } from "../../models/acceptedReferrals";
 import { awardCoinsToUser } from "../../utils/coins";
@@ -22,7 +22,7 @@ const passwordMaxLength = 32;
 const passwordPattern =
   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,32}$/;
 
-const preGameTimeMs = new Date(isoTimestamps.pre_game).getTime();
+const preGameTimeMs = new Date(isoGameTimestamps.pre_game).getTime();
 
 export const csrf = async () => {
   try {
@@ -214,7 +214,7 @@ export const login = async (loginData: { email: string; password: string }) => {
     const resTimestamps =
       preGameTimeMs > Date.now()
         ? "The game has not started yet"
-        : isoTimestamps;
+        : isoGameTimestamps;
 
     return {
       user: userCredentials,

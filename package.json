@@ -55,6 +55,7 @@
     "@types/mailgun-js": "^0.22.18",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.10.4",
+    "@types/node-schedule": "^2.1.7",
     "@types/nodemailer": "^6.4.14",
     "cross-env": "^7.0.3",
     "esm": "^3.2.25",

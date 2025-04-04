@@ -36,15 +36,6 @@ export const updateStakedCoins = async (req: UpdateStakedCoinsDto, res: Response
   }
 }
 
-export const selectRaffleWinners = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await gameService.selectRaffleWinners();
-    res.status(200).json({ message: "Raffle winners selected", "result": result });
-  } catch (error: any) {
-    next(error);
-  }
-}
-
 // Controller to send raffle winners
 export const sendRaffleWinners = async (
   req: Request,
