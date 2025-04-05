@@ -192,6 +192,8 @@ The following collections will be *cleared* and seeded with test data:
 - Users
 - Businesses
 - Challenges
+- Multiple Choices
+- Chests
 - Answers
 - Raffle Items
 - Raffle Partners
