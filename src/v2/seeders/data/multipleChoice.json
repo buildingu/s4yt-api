@@ -43,5 +43,143 @@
       "correct": "c",
       "explanation": "Bet this one surprised you. Wetsuits and neoprene cast offs are seriously stacking up—around 16 million pounds of neoprene gets ditched every year. That’s more than 5 million wetsuits clogging up landfills—pretty gnarly for the planet!"
     }
+  },
+
+  {
+    "_id": "d584b86577885a1baf42f1d8",
+    "business_id": null,
+    "chest_id": "cc1e4c74e0883a526a493bce",
+    "question": "Why is it so hard to keep a satellite’s camera cool in space?",
+    "answers": {
+      "choices": {
+        "a": "There is no air in space to carry heat away, so heat stays trapped.",
+        "b": "The satellite is always facing towards the Sun.",
+        "c": "Space is too cold for cooling systems to work."
+      },
+      "correct": "a",
+      "explanation": "On Earth, heat can move through air — like how a fan cools you down. But space is a vacuum, which means heat has no air to travel through. So once something heats up, it stays hot unless you have a way to release that heat using special systems."
+    }
+  },
+  {
+    "_id": "0396d6ad0d91409f39f23a53",
+    "business_id": null,
+    "chest_id": "cc1e4c74e0883a526a493bce",
+    "question": "Which materials would be BEST for protecting your satellite’s camera from heat?",
+    "answers": {
+      "choices": {
+        "a": "Transparent glass shields.",
+        "b": "Reflective materials like silver-coated foil.",
+        "c": "Thick plastic layers surrounding it."
+      },
+      "correct": "b",
+      "explanation": "Space engineers often use shiny, reflective materials, like silver or gold foil, because they bounce sunlight away from the satellite. This helps keep the inside of the satellite from heating up too quickly when exposed to the Sun.3. Why might your satellite’s camera still overheat even if it’s protected from the Sun’s heat? a. The camera keeps producing heat while it's taking pictures. (Correct) b. The protective material around it starts to melt in space. c. The satellite isn’t moving fast enough. Explanation: Cameras and electronics generate their own heat while working — especially when taking lots of pictures or processing data. That means even without sunlight, parts inside the satellite can overheat unless that heat is removed."
+    }
+  },
+  {
+    "_id": "51acb1b7fbf9c05f2b035ec9",
+    "business_id": null,
+    "chest_id": "cc1e4c74e0883a526a493bce",
+    "question": "Why might your satellite’s camera still overheat even if it’s protected from the Sun’s heat?",
+    "answers": {
+      "choices": {
+        "a": "The camera keeps producing heat while it's taking pictures.",
+        "b": "The protective material around it starts to melt in space. ",
+        "c": "The satellite isn’t moving fast enough. "
+      },
+      "correct": "a",
+      "explanation": "Cameras and electronics generate their own heat while working — especially when taking lots of pictures or processing data. That means even without sunlight, parts inside the satellite can overheat unless that heat is removed."
+    }
+  },
+
+  {
+    "_id": "40d7da4892bfdac6f2a6d0b0",
+    "business_id": null,
+    "chest_id": "46c8ef01f5c9518b68b7cf82",
+    "question": "What does soil health encompass?",
+    "answers": {
+      "choices": {
+        "a": "The presence of living organisms, nutrient cycling, water retention, soil structure and minimal contaminants.",
+        "b": "How much fertilizers and pesticides are used to increase crop yield.",
+        "c": "The soil’s capacity to allow water to run off its surface quickly."
+      },
+      "correct": "a",
+      "explanation": "Soil health matters as healthy soils lead to better crop growth, less fertilizers, good soil structure to withstand erosion, living roots and organic matter to help capture and store carbon and helps with reclaiming disturbed or salty soils impacted by historical oil and gas activity."
+    }
+  },
+  {
+    "_id": "d7ec9607122c34fe6efffa10",
+    "business_id": null,
+    "chest_id": "46c8ef01f5c9518b68b7cf82",
+    "question": "What regenerative practices could help restore disturbed soils on Oil and Gas Sites?",
+    "answers": {
+      "choices": {
+        "a": "Leaving the land to restore itself over time, naturally.",
+        "b": "Increasing the use of synthetic fertilizers.",
+        "c": "Planting deep rooted cover crops."
+      },
+      "correct": "c",
+      "explanation": "Planting cover crops adds organic matter to soil which helps rebuild microbial life increasing overall soil health."
+    }
+  },
+  {
+    "_id": "4168f6fa4478539f45217119",
+    "business_id": null,
+    "chest_id": "46c8ef01f5c9518b68b7cf82",
+    "question": "Is the Oil & Gas Industry regulated by the Federal or Provincial Governments?",
+    "answers": {
+      "choices": {
+        "a": "Provincial Governments",
+        "b": "Federal Governments",
+        "c": "Both levels of Government"
+      },
+      "correct": "c",
+      "explanation": "The provinces have primary jurisdiction over their natural resources within their borders, with their own regulatory body that oversees the industry, including setting environmental standards for stewardship of the sites and reclamation of same. The federal government regulates and"
+    }
+  },
+
+  {
+    "_id": "48ee23dd43c159d4e95601f6",
+    "business_id": null,
+    "chest_id": "1ee19a0bfd5b247c4d6a6929",
+    "question": "Are the actions of human beings irreversible?",
+    "answers": {
+      "choices": {
+        "a": "No, every act is reversible, as long as the person wants to reverse it.",
+        "b": "Yes, every act is irreversible; one cannot 'unact' an action.",
+        "c": "Some acts are reversible, and some are irreversible."
+      },
+      "correct": "b",
+      "explanation": "Anything done to 'reverse' an action would be another action, and may even be labelled a 're-action.' Sometimes this reality is expressed via the image of trying to put toothpaste back into a tube.  \"Unact\" is not found in conventional dictionaries of the English language, and \"unacted\" describes the absence of an action; an action that has not been performed, rather than an action being undone.  (More information can be found in Hanah Arendt's The Human Condition, pages 236-243 of the second edition.)"
+    }
+  },
+  {
+    "_id": "c4458430ea4d7e95084a0425",
+    "business_id": null,
+    "chest_id": "1ee19a0bfd5b247c4d6a6929",
+    "question": "What is the relationship between forgiveness and reconciliation?",
+    "answers": {
+      "choices": {
+        "a": "They are the same thing.",
+        "b": "Forgiving someone means you have to reconcile with them.",
+        "c": "You may forgive someone and choose not to reconcile with them."
+      },
+      "correct": "c",
+      "explanation": "\"Forgiveness is the act of granting a free pardon... for an offense or debt... the cost or penalty for a wrong is... borne by the forgiver and not by the one forgiven.\" (Dictionary of Scripture and Ethics, edited by Joel B. Green) Because forgiveness acts in an unexpected way, it is not merely a re-action, but a new action \"unconditioned by the act that provoked it... and frees from its consequences both the one who forgives and the one who is forgiven.\" (Hannah Arendt, as above) Reconciliation involves a resumption of relationship between the forgiver and the forgiven. Forgiveness is often needed for reconciliation to occur, but there is no requirement that reconciliation must follow after forgiveness; one may forgive and choose not to reconcile."
+    }
+  },
+  {
+    "_id": "28b01366d28d973769e93b35",
+    "business_id": null,
+    "chest_id": "1ee19a0bfd5b247c4d6a6929",
+    "question": "Which of the following statements accurately describe retributive and restorative justice?",
+    "answers": {
+      "choices": {
+        "a": "Retributive justice seeks to punish wrongdoing by imposing penalties; restorative justice seeks to repair harm and promote reconciliation.",
+        "b": "Retributive justice takes an adversarial approach; restorative justice takes a collaborative approach.",
+        "c": "Both of the statements are accurate descriptions."
+      },
+      "correct": "c",
+      "explanation": "Both types of justice seek to deter further wrongdoing, but they go about it very differently.  With retributive justice,  the victim's and the community's role is limited to witness and testimony. With restorative justice, the victim and the community play a much wider role through dialogue with the offender.  The goal of the dialogue is understanding and empathy, and creating an opportunity for the offender to be accountable for their actions, to make amends, and to rejoin the community."
+    }
   }
 ]

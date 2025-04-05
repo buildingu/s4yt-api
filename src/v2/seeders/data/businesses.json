@@ -14,6 +14,51 @@
     "awarded_total": 0,
     "deleted": false
   },
+  {
+    "_id": "e8fa30959b2361f907207aec",
+    "admin_business_id": "316255530857918c9d812f64",
+    "name": "Emaad Paracha",
+    "logo": "https://fastly.picsum.photos/id/757/300/300.jpg?hmac=FNPB7HNtB37n2Phx2wLfYmHdFFfxHX18YwQZV-bdWuA",
+    "link": "https://www.emaadparacha.com/",
+    "description": "An experienced Cloud Solution Architect and Machine Learning and AI specialist with extensive experience in designing and building cloud-based solutions and leveraging artificial intelligence to drive business improvements.",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "d4035e88742726a605c0cbf2",
+    "winners": [],
+    "award_limit": 500,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "5dabe3d026c553bdcfd3257f",
+    "admin_business_id": "316255530857918c9d812f64",
+    "name": "Goodlands Environmental",
+    "logo": "https://fastly.picsum.photos/id/164/300/300.jpg?hmac=1gjcXwsC3304oN3K4brJnU3uhQS6_kR6_zWOHolbBNM",
+    "link": "https://goodlandsenviro.com/",
+    "description": "Good Lands Environmental Inc. is a thriving environmental consulting firm offering timely, professional, and practical environmental solutions for the oil and gas industry in southwest Manitoba and southeast Saskatchewan.",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "eaaf72bd7a9292c534fc2b80",
+    "winners": [],
+    "award_limit": 500,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "f3b5d2d0402aa1575cdf83e5",
+    "admin_business_id": "316255530857918c9d812f64",
+    "name": "Dr. Rene Schreiner",
+    "logo": "https://fastly.picsum.photos/id/757/300/300.jpg?hmac=FNPB7HNtB37n2Phx2wLfYmHdFFfxHX18YwQZV-bdWuA",
+    "link": "https://google.ca/",
+    "description": "Dr. Rene Schreiner",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "3b7cc6198fd695594aed7e04",
+    "winners": [],
+    "award_limit": 500,
+    "awarded_total": 0,
+    "deleted": false
+  },
 
   {
     "_id": "5ad8a13e8d3f43ed7ac838bf",

@@ -6,6 +6,27 @@
     "business": "711c9d87283c2bfdc3d91061",
     "deleted": false
   },
+  {
+    "_id": "d4035e88742726a605c0cbf2",
+    "title": "Keeping a Satellite’s Camera Cool in Space!",
+    "description": "Imagine you're an engineer designing a satellite with a powerful camera to take highquality pictures of distant galaxies! But there’s a huge problem... space is full of extreme temperatures!\n\nDesign a cooling system that will keep the camera and electronics at the perfect temperature for clear, sharp images.\n\nThink about:\n• What parts of your satellite get hot? From the camera itself to other computers, electronics, and batteries.\n• Where does the heat come from? The Sun, any electronics, anything else?\n• How will you keep things cool? What materials will you use, how will you get rid of the excess heat, and how will you plan for sudden temperature changes?",
+    "business": "e8fa30959b2361f907207aec",
+    "deleted": false
+  },
+  {
+    "_id": "eaaf72bd7a9292c534fc2b80",
+    "title": "Goodlands Environmental",
+    "description": "We depend on our rich Canadian Prairie soils to produce the food we eat to live. We also depend on hydrocarbons to run our farm equipment and to power our vehicles, especially in the Prairies where we may live 100 km or more from a major centre. What do you think could change in the Oil and Gas Industry to ensure the soils are preserved for the next generations, while still producing oil and gas in a sustainable Manner?",
+    "business": "5dabe3d026c553bdcfd3257f",
+    "deleted": false
+  },
+  {
+    "_id": "3b7cc6198fd695594aed7e04",
+    "title": "Dr. Rene Schreiner",
+    "description": "Is forgiveness necessary for the peaceful coexistence of human beings? Why or why not?",
+    "business": "f3b5d2d0402aa1575cdf83e5",
+    "deleted": false
+  },
 
   {
     "_id": "153ca04a2348e2d8e86a9adb",
