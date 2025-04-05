@@ -1,0 +1,47 @@
+[
+  {
+    "_id": "68e253c74f494a5363d0305f",
+    "business_id": null,
+    "chest_id": "6cf5c027e4379348b4dbdb79",
+    "question": "Neoprene, or wetsuit material, is exceptionally bad for the environment because:",
+    "answers": {
+      "choices": {
+        "a": "It's very expensive to make and thus consumer-unfriendly.",
+        "b": "There are artificial polymers in neoprene, making it non-biodegradable and non-compostable.",
+        "c": "It's made in a factory overseas."
+      },
+      "correct": "b",
+      "explanation": "Bummer, but even when a neoprene product rides its last wave, it still wreaks havoc on the environment. Made with synthetic polymers, neoprene doesn’t break down or compost, taking up to 100 years to eventually break down and releasing toxic chemicals into landfills—it can linger in landfills for centuries. Additionally, Neoprene is made from chloroprene, a petrochemical compound, which means its production depends on petroleum—a non-renewable resource."
+    }
+  },
+  {
+    "_id": "f9c2f29c77a9abac1c9b518e",
+    "business_id": null,
+    "chest_id": "6cf5c027e4379348b4dbdb79",
+    "question": "Which of the following is true?",
+    "answers": {
+      "choices": {
+        "a": "Upcycling = Recycling.",
+        "b": "Sustainability = Burning Trash.",
+        "c": "Recycling happens only at the Recycling Center."
+      },
+      "correct": "a",
+      "explanation": "Upcycling, and thus re-using the already existing materials,  is actually considered the best form of Recycling there is because it involves the least amount of processing and re-manufacturing. Fewer pollutants and least waste combined with promoting a circular economy is the way to be!"
+    }
+  },
+  {
+    "_id": "a3c6300cb3780b51857a056e",
+    "business_id": null,
+    "chest_id": "6cf5c027e4379348b4dbdb79",
+    "question": "How many wetsuits are tossed into the garbage each year?",
+    "answers": {
+      "choices": {
+        "a": "55,000",
+        "b": "500,000",
+        "c": "5,000,000"
+      },
+      "correct": "c",
+      "explanation": "Bet this one surprised you. Wetsuits and neoprene cast offs are seriously stacking up—around 16 million pounds of neoprene gets ditched every year. That’s more than 5 million wetsuits clogging up landfills—pretty gnarly for the planet!"
+    }
+  }
+]

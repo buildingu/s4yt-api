@@ -143,7 +143,7 @@ export const getChests = async () => {
     const chests = await ChestModel.find({}, '-_id -__v')
       .populate({
          path: 'group',
-         select: '-_id -__v'
+         select: '-_id -__v -business_id'
       });
     return chests;
   } catch (error) {

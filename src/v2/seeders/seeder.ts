@@ -9,6 +9,8 @@ import UserModel from '../models/user.js';
 import Business from '../models/business.js';
 import ChallengeModel from '../models/challenge.js';
 import Answer from '../models/answer.js';
+import MultipleChoiceModel from '../models/multipleChoice.js';
+import ChestModel from '../models/chest.js';
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ const seedDatabase = async () => {
     const answersFilePath = path.join(__dirname, 'data/answers.json');
     const businessFilePath = path.join(__dirname, 'data/businesses.json');
     const challengeFilePath = path.join(__dirname, 'data/challenges.json');
+    const multipleChoiceFilePath = path.join(__dirname, 'data/multipleChoice.json');
+    const chestFilePath = path.join(__dirname, 'data/chest.json');
     const rafflePartnerFilePath = path.join(__dirname, 'data/rafflePartners.json');
     const raffleItemFilePath = path.join(__dirname, 'data/raffleItems.json');
     const userFilePath = path.join(__dirname, 'data/users.json');
@@ -32,6 +36,8 @@ const seedDatabase = async () => {
     const answersData = JSON.parse(fs.readFileSync(answersFilePath, 'utf-8'));
     const businessData = JSON.parse(fs.readFileSync(businessFilePath, 'utf-8'));
     const challengeData = JSON.parse(fs.readFileSync(challengeFilePath, 'utf-8'));
+    const multipleChoiceData = JSON.parse(fs.readFileSync(multipleChoiceFilePath, 'utf-8'));
+    const chestData = JSON.parse(fs.readFileSync(chestFilePath, 'utf-8'));
     const rafflePartnerData = JSON.parse(fs.readFileSync(rafflePartnerFilePath, 'utf-8'));
     const raffleItemData = JSON.parse(fs.readFileSync(raffleItemFilePath, 'utf-8'));
     const userData = JSON.parse(fs.readFileSync(userFilePath, 'utf-8'));
@@ -40,6 +46,8 @@ const seedDatabase = async () => {
     await Answer.deleteMany({});
     await Business.deleteMany({});
     await ChallengeModel.deleteMany({});
+    await MultipleChoiceModel.deleteMany({});
+    await ChestModel.deleteMany({});
     await RafflePartnerModel.deleteMany({});
     await RaffleItemModel.deleteMany({});
     await UserModel.deleteMany({});
@@ -49,6 +57,8 @@ const seedDatabase = async () => {
     await UserModel.insertMany(userData);
     await Business.insertMany(businessData);
     await ChallengeModel.insertMany(challengeData);
+    await MultipleChoiceModel.insertMany(multipleChoiceData);
+    await ChestModel.insertMany(chestData);
     await Answer.insertMany(answersData);
     await RafflePartnerModel.insertMany(rafflePartnerData);
     await RaffleItemModel.insertMany(raffleItemData);
