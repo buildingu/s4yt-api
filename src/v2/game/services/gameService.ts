@@ -120,14 +120,14 @@ export const assignCoinsToUser = async (
       throw new HttpError('User not found', 404);
     }
 
-    const { chestId } = payload;
+    const { chest_id } = payload;
 
     // Check if chest has already been submitted, to prevent potential abuse
-    if (user.chests_submitted.has(chestId)) {
+    if (user.chests_submitted.has(chest_id)) {
       throw new HttpError('Chest has already been submitted', 409);
     }
 
-    user.chests_submitted.set(chestId, count);
+    user.chests_submitted.set(chest_id, count);
 
     awardCoinsToUser(user, count, source, true);
     await user.save();
