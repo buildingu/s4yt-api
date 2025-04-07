@@ -23,6 +23,16 @@
     "winners": []
   },
   {
+    "item_id": "02f3ac92-3dc8-477c-b219-e54564b11beb",
+    "raffle_partner": "BD0E80D09F7874BB32716E97",
+    "name": "Coat",
+    "description": "Comfy Coat",
+    "image_src": "https://fastly.picsum.photos/id/182/300/300.jpg?hmac=D8OzC7jdktO56z0Mycvi3UrYLm68DWUPtIAipwNjd2I",
+    "stock": 1,
+    "entries": [],
+    "winners": []
+  },
+  {
     "item_id": "c1fd3a96-8d89-4695-bc1a-ca209a5321c3",
     "raffle_partner": "14FD10C6B0EB4A54F9445632",
     "name": "Soap 4 Life",

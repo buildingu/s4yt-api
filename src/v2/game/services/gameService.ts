@@ -66,7 +66,7 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
       }
 
     
-      const raffleItem = await RaffleItem.findById(item_id);
+      const raffleItem = await RaffleItem.findOne({ item_id });
 
       if (!raffleItem) {
         continue;
