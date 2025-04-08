@@ -68,10 +68,10 @@ export const socketEmit = {
 
       // Send the payload to the event the client will be listening on 
       io.to(socketId).emit(event, payload);
-      console.log(`Data sent to client ${target}:`, payload);
+      console.log(`Event data ${event} sent to client ${target}:`, payload);
     } else {
       io.emit(event, payload);
-      console.log('Data broadcast to all clients:', payload);
+      console.log(`Event data ${event} broadcast to all clients:`, payload);
     }
   },
 };
