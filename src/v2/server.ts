@@ -1,10 +1,10 @@
 /* s4yt-api Version 2
  *
- * @App Creation Date: February 22st, 2024
- * @Last Updated: February 22st, 2024
+ * @App Creation Date: February 22nd, 2024
+ * @Last Updated: April 9, 2025
  *
  * @Author Krzysztof Garbos
- * @contributors David Bishop, Krzysztof Garbos
+ * @Contributors David Bishop, Krzysztof Garbos, Jonathan Lam, Shema Dabiri, Siddhanth Subramanian, Soham Desai, Akpevwen Sebastian Gbudje  
  *
  * @Description This is the special event/'game', called Dollars for Your Thoughts ($4YT), back-end REST API for Building-u.
  */

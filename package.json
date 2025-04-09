@@ -4,7 +4,12 @@
   "author": "Krzysztof Garbos",
   "contributors": [
     "David Bishop",
-    "Krzysztof Garbos"
+    "Krzysztof Garbos",
+    "Jonathan Lam",
+    "Soham Desai",
+    "Shema Dabiri",
+    "Siddhanth Subramanian",
+    "Akpevwen Sebastian Gbudje"
   ],
   "description": "This is the special event/'game', called Dollars for Your Thoughts ($4YT), back-end REST API for Building-u.",
   "repository": {
