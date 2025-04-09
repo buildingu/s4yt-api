@@ -27,9 +27,9 @@ export const getRaffleItemsTransformed = async (
 
 export const updateStakedCoins = async (req: UpdateStakedCoinsDto, res: Response, next: NextFunction) => {
   try {
-    const { staked_items } = req.body;
+    const { staked_items, total_coins } = req.body;
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
-    const result = await gameService.updateStakedCoins(staked_items, userId);
+    const result = await gameService.updateStakedCoins(staked_items, userId, total_coins);
     res.json(result);
   } catch (error: any) {
     next(error);
@@ -82,6 +82,7 @@ export const getChests = async (
   next: NextFunction
 ) => {
   try {
+    // TODO: Create chests
     const chests = await gameService.getChests();
     res.status(200).json(chests);
   } catch (error: any) {

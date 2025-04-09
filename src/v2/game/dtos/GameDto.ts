@@ -25,6 +25,7 @@ export interface UpdateStakedCoinsDto extends Request {
   body: {
     staked_items: [
       UpdateStakedCoins
-    ]
+    ],
+    total_coins: number
   }
 }

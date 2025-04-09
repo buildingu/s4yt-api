@@ -51,11 +51,17 @@ export const getRaffleItemsTransformed = async (userId: string | undefined) => {
   }
 };
 
-export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId: string | undefined) => {
+export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId: string | undefined, totalCoins: number) => {
   try {
-    if (!userId) {
-      throw new Error(`User not found`);
+
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      throw new HttpError('User not found', 404);
     }
+
+    user.coins = totalCoins;
+    await user.save();
 
     const goldSilverUpdates = [];
 
@@ -65,7 +71,6 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
         continue;
       }
 
-    
       const raffleItem = await RaffleItem.findOne({ item_id });
 
       if (!raffleItem) {
@@ -102,9 +107,10 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
 
     return {
       message: 'Coins updated successfully.',
+      total_coins: totalCoins,
     };
   } catch (error: any) {
-    throw new Error(`Error updating staked coins: ${error.message}`);
+    throw resolveErrorHandler(error);
   }
 }
 
