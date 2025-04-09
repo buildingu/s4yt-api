@@ -3,8 +3,6 @@ import { Server } from "socket.io";
 let io: Server;
 const clients: Map<string, string> = new Map();
 
-type SocketEventData = string | boolean | Array<any>;
-
 export const initializeSocket = (server: any): Server => {
   io = new Server(server, {
     cors: {
@@ -19,21 +17,22 @@ export const initializeSocket = (server: any): Server => {
   io.on("connection", (socket) => {
     console.log(`Client connected: ${socket.id}`);
 
-    socket.on("register", (clientId: string) => {
-      if (clients.has(clientId)) {
-        console.log(`Client ${clientId} is already registered.`);
+    socket.on("register", (email: string, callback: (message: string) => void) => {
+      if (clients.has(email)) {
+        console.log(`User ${email} already has a registered socket connection.`);
       } else {
-        clients.set(clientId, socket.id);
-        console.log(`Registered client: ${clientId} with socket ID: ${socket.id}`);
+        clients.set(email, socket.id);
+        console.log(`Registered user: ${email} with socket ID: ${socket.id}`);
       }
+      callback("success");
     });
 
     socket.on("disconnect", () => {
       console.log(`Client disconnected: ${socket.id}`);
-      clients.forEach((id, clientId) => {
+      clients.forEach((id, email) => {
         if (id === socket.id) {
-          clients.delete(clientId);
-          console.log(`Client ${clientId} removed from map`);
+          clients.delete(email);
+          console.log(`User ${email} removed from socket client map.`);
         }
       });
     });
