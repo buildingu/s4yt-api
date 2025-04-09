@@ -10,7 +10,7 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 import { BusinessChallengeWinners } from "../../typings/Challenge";
-import { UpdateStakedCoins, RaffleItemWinner, RaffleWinners, Winner } from "../../typings/RaffleItem";
+import { UpdateStakedCoins, RaffleWinners } from "../../typings/RaffleItem";
 import { socketEmit } from "../../utils/socket-emitter";
 
 export const getRaffleItemsTransformed = async (userId: string | undefined) => {

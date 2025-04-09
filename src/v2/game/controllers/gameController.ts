@@ -82,7 +82,6 @@ export const getChests = async (
   next: NextFunction
 ) => {
   try {
-    // TODO: Create chests
     const chests = await gameService.getChests();
     res.status(200).json(chests);
   } catch (error: any) {

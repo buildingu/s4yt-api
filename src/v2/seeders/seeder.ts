@@ -28,7 +28,6 @@ const seedDatabase = async () => {
     const businessFilePath = path.join(__dirname, 'data/businesses.json');
     const challengeFilePath = path.join(__dirname, 'data/challenges.json');
     const multipleChoiceFilePath = path.join(__dirname, 'data/multipleChoice.json');
-    const chestFilePath = path.join(__dirname, 'data/chest.json');
     const rafflePartnerFilePath = path.join(__dirname, 'data/rafflePartners.json');
     const raffleItemFilePath = path.join(__dirname, 'data/raffleItems.json');
     const userFilePath = path.join(__dirname, 'data/users.json');
@@ -37,7 +36,6 @@ const seedDatabase = async () => {
     const businessData = JSON.parse(fs.readFileSync(businessFilePath, 'utf-8'));
     const challengeData = JSON.parse(fs.readFileSync(challengeFilePath, 'utf-8'));
     const multipleChoiceData = JSON.parse(fs.readFileSync(multipleChoiceFilePath, 'utf-8'));
-    const chestData = JSON.parse(fs.readFileSync(chestFilePath, 'utf-8'));
     const rafflePartnerData = JSON.parse(fs.readFileSync(rafflePartnerFilePath, 'utf-8'));
     const raffleItemData = JSON.parse(fs.readFileSync(raffleItemFilePath, 'utf-8'));
     const userData = JSON.parse(fs.readFileSync(userFilePath, 'utf-8'));
@@ -58,7 +56,6 @@ const seedDatabase = async () => {
     await Business.insertMany(businessData);
     await ChallengeModel.insertMany(challengeData);
     await MultipleChoiceModel.insertMany(multipleChoiceData);
-    await ChestModel.insertMany(chestData);
     await Answer.insertMany(answersData);
     await RafflePartnerModel.insertMany(rafflePartnerData);
     await RaffleItemModel.insertMany(raffleItemData);
