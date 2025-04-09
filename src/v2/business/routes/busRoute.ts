@@ -5,7 +5,7 @@ import verifyCsrfToken from '../../csrf/middleware/verifyCsrfToken';
 
 const router = Router();
 
-router.get("/info", verifyCsrfToken, verifyAccessToken, businessController.sendBusinessesInfo);
+router.get('/info', verifyCsrfToken, verifyAccessToken, businessController.sendBusinessesInfo);
 router.get('/:businessId/award', verifyAccessToken, businessController.getAwardDetails);
 router.get('/:businessId/event-results', verifyAccessToken, businessController.getEventResults);
 

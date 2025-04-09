@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 import * as businessService from '../services/busService';
 import { GetEventResultsRequestDto, GetAwardRequestDto } from '../dtos/BusinessDto';
-import { CustomJwtPayload } from "../../typings/express/Request";
-import { HttpError } from "../../middleware/errorHandler";
+import { CustomJwtPayload } from '../../typings/express/Request';
+import { HttpError } from '../../middleware/errorHandler';
 
 export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {

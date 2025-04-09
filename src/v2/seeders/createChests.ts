@@ -16,7 +16,7 @@ const createChests = async () => {
     const newChests = [];
 
     for (const business of businesses) {
-      const chestExists = await ChestModel.exists({ business_id: business._id }).lean();
+      const chestExists = await ChestModel.exists({ business_id: business._id });
       if (chestExists) {
         console.log(`Chest for Business ${business._id} already exists.`);
         continue;

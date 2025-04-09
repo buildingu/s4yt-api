@@ -15,9 +15,7 @@ export const getRaffleItemsTransformed = async (
   next: NextFunction
 ) => {
   try {
-    // console.log(userId)
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
-    // console.log("userId", userId);
     const raffleItems = await gameService.getRaffleItemsTransformed(userId);
     res.json(raffleItems);
   } catch (error: any) {
