@@ -58,5 +58,65 @@
     "award_limit": 500,
     "awarded_total": 0,
     "deleted": false
+  },
+
+  {
+    "_id": "5ad8a13e8d3f43ed7ac838bf",
+    "admin_business_id": "316255530857918c9d812f64",
+    "name": "Oceanic Airlines", 
+    "logo": "https://fastly.picsum.photos/id/1067/300/300.jpg?hmac=RWGvJaQWQ82pFjo24Ww3k0ccaUdbSJZSuDRM13YcdM0",
+    "link": "https://en.wikipedia.org/wiki/Oceanic_Airlines",
+    "description": "That airline you see in movies",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "153ca04a2348e2d8e86a9adb",
+    "winners": [
+      {
+        "user_id": "07aff947d30cd81a0f0dddf2",
+        "award": 1
+      }
+    ],
+    "award_limit": 500,
+    "awarded_total": 1,
+    "deleted": false
+  },
+  {
+    "_id": "7ad42b71b705c8786925b8aa",
+    "admin_business_id": "41837840e9829791deda91e9",
+    "name": "Rick Rollers", 
+    "logo": "https://fastly.picsum.photos/id/757/300/300.jpg?hmac=FNPB7HNtB37n2Phx2wLfYmHdFFfxHX18YwQZV-bdWuA",
+    "link": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "description": "Never gonna give you up",
+    "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "video_title": "Totally Not a Rick Roll",
+    "challenge_question": "f01596275f33283341853209",
+    "winners": [],
+    "award_limit": 250,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "b7f8c55408fb411ae5a38cfe",
+    "admin_business_id": "8b9da878b4c90dacfdf4fe84",
+    "name": "Aperture Science", 
+    "logo": "https://fastly.picsum.photos/id/164/300/300.jpg?hmac=1gjcXwsC3304oN3K4brJnU3uhQS6_kR6_zWOHolbBNM",
+    "link": "https://www.foundry10.org/resources/portal2",
+    "description": "We do what we must because we can",
+    "video_url": "https://www.youtube.com/embed/Y6ljFaKRTrI",
+    "video_title": "Cake",
+    "challenge_question": "759460f4d4a1373591056842",
+    "winners": [
+      {
+        "user_id": "db854a2890cff8d13dbd88a4",
+        "award": 10
+      },
+      {
+        "user_id": "f53de04a0505b0daefad53aa",
+        "award": 20
+      }
+    ],
+    "award_limit": 150,
+    "awarded_total": 30,
+    "deleted": false
   }
 ]
