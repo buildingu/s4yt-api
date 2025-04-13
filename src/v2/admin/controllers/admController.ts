@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
 import { CreateChestRequestDto } from '../dtos/AdminDto';
 
@@ -58,13 +58,11 @@ export const editBusinessChallenge = async (req: Request, res: Response) => {
   }
 };
 
-export const createChests = async (req: CreateChestRequestDto, res: Response) => {
+export const getRSVPedUsers = async(req: Request, res: Response, next: NextFunction) => {
   try {
-    for (const chestGroupData of req.body) {
-      await superAdminService.createChest(chestGroupData);
-    }
-    res.status(200).send('Chests created successfully');
-  } catch (error: any) {
-    res.status(500).send(error.message);
+    const emails = await superAdminService.getRSVPedUsers();
+    res.status(200).json(emails);
+  } catch (error) {
+    next(error);
   }
-};
+}
