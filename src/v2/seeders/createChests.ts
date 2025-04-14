@@ -24,7 +24,7 @@ const createChests = async () => {
 
       const { admin_business_id } = business;
       console.log(`Creating chest for Business ${business._id} (AdminBusiness id: ${admin_business_id})...`);
-      const multipleChoices = await MultipleChoiceModel.find({ business_id: admin_business_id }, '_id');
+      const multipleChoices = await MultipleChoiceModel.find({ business_id: admin_business_id, deleted: false }, '_id');
       if (multipleChoices.length === 0) {
         console.log(`No MultipleChoices found for AdminBusiness ${admin_business_id}.`);
         continue;
