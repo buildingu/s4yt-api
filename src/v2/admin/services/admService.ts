@@ -6,6 +6,8 @@ import MultipleChoiceModel from '../../models/multipleChoice';
 import { LoginResponse } from '../dtos/AdminDto';
 import { compare } from "bcrypt";
 import jwt from 'jsonwebtoken';
+import UserModel from '../../models/user';
+import { resolveErrorHandler } from '../../middleware/errorHandler';
 
 export const loginAdmin = async (email: string, password: string): Promise<LoginResponse> => {
   const user = await User.findOne({ email });
@@ -97,4 +99,15 @@ export const createChest = async (chestGroupData: any) => {
 
   await chest.save();
   return chest;
+}
+
+export const getRSVPedUsers = async () => {
+  try {
+    const attendingUsers = await UserModel.find({ attend_meeting: true }, '-_id email').lean();
+    const emails = attendingUsers.map(user => user.email);
+
+    return { attending_users: emails };
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
 }

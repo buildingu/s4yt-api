@@ -12,6 +12,7 @@ export const createUserCredentials = (user: User): UserCredentials => {
     chests_submitted: Object.fromEntries(user.chests_submitted),
     region: user.region || null,
     role: user.role || null,
-    school: user.school || null
+    school: user.school || null,
+    attend_meeting: user.attend_meeting
   };
 }

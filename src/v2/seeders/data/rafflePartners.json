@@ -1,0 +1,35 @@
+[
+  {
+    "_id": "BD0E80D09F7874BB32716E97",
+    "name": "Foo Shirts",
+    "description": "Makes shirts",
+    "logo": "https://fastly.picsum.photos/id/525/200/200.jpg?hmac=_RnAIjIviTYNBh6qG-zjQg_m2UBgAnnh96jDb8ZDKSI",
+    "resource_logo": "https://fastly.picsum.photos/id/858/200/200.jpg?hmac=G9GRV3ekW4ntHO3WGxZOEAwT5chu9kPdCSt4evx7n6A",
+    "resource_name": "Foo Shirts Program",
+    "resource_link": "https://example.com",
+    "resource_category": "programs",
+    "deleted": false
+  },
+  {
+    "_id": "14FD10C6B0EB4A54F9445632",
+    "name": "Bar Soaps",
+    "description": "Makes sustainable soaps",
+    "logo": "https://fastly.picsum.photos/id/551/200/200.jpg?hmac=vxRitsvMJEbK15DKl4ZRj7NQWF6RTfzBvievdi9q96s",
+    "resource_logo": "https://fastly.picsum.photos/id/200/200/200.jpg?hmac=mk1Tu6dXHQvpaA8RfxlDUZjbWG23krNkiB9kyYoEmO8",
+    "resource_name": "Bar Soap Carving Contest",
+    "resource_link": "https://example.com",
+    "resource_category": "contests",
+    "deleted": false
+  },
+  {
+    "_id": "5C11037FCE0A02E3304C0592",
+    "name": "Baz Trinkets",
+    "description": "Makes trinkets",
+    "logo": "https://fastly.picsum.photos/id/576/200/200.jpg?hmac=pkNsIvSErgVpup1XYfj_NAE5ySK9YL7DmYlGGTTjScw",
+    "resource_logo": "https://fastly.picsum.photos/id/586/200/200.jpg?hmac=qCQKBciYy8H3AxcVxnTZLYwXw02r33F5_3E4UmlB8H4",
+    "resource_name": "Opportunities for Trinkets",
+    "resource_link": "https://example.com",
+    "resource_category": "opportunities",
+    "deleted": false
+  }
+]

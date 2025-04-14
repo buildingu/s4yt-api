@@ -12,10 +12,14 @@ const answerSchema = new Schema<Answer>({
     ref: 'Challenge', 
     required: true 
   },
-  rating: Number,
-  submission_link: String,
-  timestamp: Date,
-  deleted: { type: Boolean, default: false }
+  rating: { type: Number, default: 0 },
+    submission_link: String,
+    deleted: { type: Boolean, default: false }
+  }, {
+  timestamps: {
+    createdAt: 'timestamp',
+    updatedAt: false
+  }
 });
 
 const Answer = model('Answer', answerSchema);

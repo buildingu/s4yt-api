@@ -5,6 +5,5 @@ export interface Answer {
   challenge_id: Types.ObjectId;
   rating?: number;
   submission_link?: string;
-  timestamp?: Date;
   deleted: boolean;
 }

@@ -1,95 +1,118 @@
 import Business from "../../models/business";
 import Challenge from "../../models/challenge";
 import RaffleItem from "../../models/raffleItem";
-import { RafflePartner } from "../../typings/RafflePartner";
-import { RafflePartnerModel } from "../../models/rafflePartner";
 import mongoose from "mongoose";
 import User from "../../models/user";
-import { Types } from "mongoose";
 import Answer from "../../models/answer";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import UserModel from "../../models/user";
 import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
+import { BusinessChallengeWinners } from "../../typings/Challenge";
+import { UpdateStakedCoins, RaffleWinners } from "../../typings/RaffleItem";
+import { socketEmit } from "../../utils/socket-emitter";
 
-// FIXME: Fix raffle related services to conform to new RaffleSchema
-
-export const getRaffleItems = async () => {
+export const getRaffleItemsTransformed = async (userId: string | undefined) => {
   try {
-    const raffleItems = await RaffleItem.find({});
+    if (!userId) {
+      throw new HttpError('User not found', 404);
+    };
+
+    const raffleItems = await RaffleItem.find({})
+      .populate({
+        path: 'raffle_partner',
+        select: '-_id -__v -deleted -description',
+      })
+      .lean();
+
+      return raffleItems.map(item => {
+        const userEntry = item.entries?.find(entry => 
+          entry.user.toString() === userId
+        );
+      
+        const anyCoinsStaked = item.entries?.some(entry => entry.coins > 0);
+      
+        return {
+          item_id: item.item_id,
+          raffle_partner: item.raffle_partner,
+          name: item.name,
+          description: item.description,
+          image_src: item.image_src,
+          stock: item.stock,
+          coins: userEntry ? userEntry.coins : 0,
+          silver: !anyCoinsStaked,
+        };
+      });
+            
     
-    return raffleItems;
   } catch (error: any) {
-    throw new Error(`Error retrieving raffle items: ${error.message}`);
+    throw new Error(`Error retrieving transformed raffle items: ${error.message}`);
   }
 };
 
-// TODO: The gold and sliver coins is going to be a socket, you emit to me and I'll be listen to silver and gold coin changes.
-// { item_id: string, silver: bool }
-/*export const getRaffleIndicatorCoins = async () => {
+export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId: string | undefined, totalCoins: number) => {
   try {
-    const raffleItems = await RaffleItem.find().populate('stake.user');
-    const indicators = raffleItems.map(item => ({
-      itemId: item._id,
-      //goldCoin: item.stake.some(stake => stake.coin_staked > 0),
-      //silverCoin: item.stake.every(stake => stake.coin_staked === 0)
-    }));
-    return indicators;
+
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      throw new HttpError('User not found', 404);
+    }
+
+    user.coins = totalCoins;
+    await user.save();
+
+    const goldSilverUpdates = [];
+
+    for (const stake of raffle) { 
+      const { item_id, coins } = stake;
+      if (!item_id) {
+        continue;
+      }
+
+      const raffleItem = await RaffleItem.findOne({ item_id });
+
+      if (!raffleItem) {
+        continue;
+      }
+
+      const entryIndex = raffleItem.entries.findIndex(
+        entry => entry.user.toString() === userId
+      );
+
+      if (entryIndex !== -1) {
+        raffleItem.entries[entryIndex].coins = coins;
+      } else {
+        raffleItem?.entries.push({
+          user: new mongoose.Types.ObjectId(userId),
+          coins: coins
+        });
+      }
+
+      await raffleItem.save();
+
+      // Record updated gold/silver state of raffle item
+      goldSilverUpdates.push({
+        item_id: raffleItem.item_id,
+        silver: raffleItem.entries.reduce((total, entry) => total + entry.coins, 0) === 0
+      });
+    }
+
+    socketEmit.send({
+      target: 'all',
+      event: 'raffle_gold_silver',
+      data: goldSilverUpdates
+    });
+
+    return {
+      message: 'Coins updated successfully.',
+      total_coins: totalCoins,
+    };
   } catch (error: any) {
-    throw new Error(`Error retrieving raffle coin indicators: ${error.message}`);
-  }
-};*/
-
-export const getRaffleWinners = async (): Promise<Array<{ raffleItemId: mongoose.Types.ObjectId, winnerUserId: mongoose.Types.ObjectId }>> => {
-  try {
-    const raffleItems = await RaffleItem.find({});
-
-    const winners = raffleItems.map((item): { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } | null => {
-      // FIXME
-      //const totalStakes = item.stake.reduce((acc, stake) => acc + stake.coin_staked, 0);
-      //let randomPoint = Math.random() * totalStakes;
-      /*for (const stake of item.stake) {
-        randomPoint -= stake.coin_staked;
-        if (randomPoint <= 0) {
-          return { raffleItemId: item._id, winnerUserId: stake.user };
-        }
-      }*/
-      return null;
-    }).filter((winner): winner is { raffleItemId: mongoose.Types.ObjectId; winnerUserId: mongoose.Types.ObjectId } => winner !== null);
-
-    return winners;
-  } catch (error: any) {
-    throw new Error(`Error determining raffle winners: ${error.message}`);
-  }
-};
-
-export const getAllRafflePartners = async () => {
-  try {
-    const partners = await RafflePartnerModel.find();
-    return partners;
-  } catch (error) {
     throw resolveErrorHandler(error);
   }
-};
-
-export const getRafflePartner = async (id: string) => {
-  try {
-    const partner = await RafflePartnerModel.findById(id)
-    if (!partner) {
-      throw new HttpError('Raffle partner not found.', 404);
-    }
-    return partner;
-  } catch (error) {
-    throw resolveErrorHandler(error, [
-      {
-        errorName: 'CastError',
-        errorMessage: 'Raffle partner not found.',
-        httpStatusCode: 404
-      }
-    ]);
-  }
-};
+}
 
 export const assignCoinsToUser = async (
   userId: string,
@@ -103,14 +126,14 @@ export const assignCoinsToUser = async (
       throw new HttpError('User not found', 404);
     }
 
-    const { chestId } = payload;
+    const { chest_id } = payload;
 
     // Check if chest has already been submitted, to prevent potential abuse
-    if (user.chests_submitted.has(chestId)) {
+    if (user.chests_submitted.has(chest_id)) {
       throw new HttpError('Chest has already been submitted', 409);
     }
 
-    user.chests_submitted.set(chestId, count);
+    user.chests_submitted.set(chest_id, count);
 
     awardCoinsToUser(user, count, source, true);
     await user.save();
@@ -126,7 +149,7 @@ export const getChests = async () => {
     const chests = await ChestModel.find({}, '-_id -__v')
       .populate({
          path: 'group',
-         select: '-_id -__v'
+         select: '-_id -__v -business_id'
       });
     return chests;
   } catch (error) {
@@ -134,169 +157,136 @@ export const getChests = async () => {
   }
 }
 
-export const sendBusinessesInfo = async () => {
-  // FIXME: This is old code, needs to be checked and maybe updated
+export const saveAnswer = async (challengeId: string, userId: string, submissionLink: string) => {
   try {
-    const allBus = await Business.find({}, '-_v -admin_business_id -challenge -chests -winners', { lean: true });
-    if (!allBus) {
-      throw new Error('Businesses not found');
+    const challenge = await Challenge.exists({ _id: challengeId });
+    if (!challenge) {
+      throw new HttpError('Challenge not found', 404);
     }
 
-    // Count the number of submitted answers to all business challenges
-    const results = [];
-    for (const business of allBus) {
-      const numAnswers = await Answer.countDocuments({ business: business._id, status: 'Submitted'});
-
-      const busInfo = {
-        ...business,
-        numAnswers
-      };
-
-      results.push(busInfo);
+    const user = await User.exists({ _id: userId });
+    if (!user) {
+      throw new HttpError('User not found', 404);
     }
-  
-    return results;
-  } catch (error: any) {
-    throw new Error(
-      "sendBusinessesInfo service error; getting businesses info:\n" +
-        error.message
+
+    if (!submissionLink) {
+      throw new HttpError('Submission link is required', 400);
+    }
+
+    await Answer.updateOne(
+      { challenge_id: challengeId, user: userId },
+      { submission_link: submissionLink },
+      { upsert: true }
     );
+
+    const answerCount = await Answer.countDocuments({ challenge_id: challengeId });
+
+    socketEmit.send({
+      target: 'all',
+      event: 'business_challenge_submitted',
+      data: {
+        challenge_id: challengeId,
+        answers_count: answerCount
+      }
+    });
+  } catch (error) {
+    throw resolveErrorHandler(error);
   }
-};
-
-export const saveAnswer = async (challengeId: string, userId: string, text: string) => {
-  const challenge = await Challenge.findById(challengeId);
-  if (!challenge) {
-    throw new Error('Challenge not found');
-  }
-
-  const { business } = challenge;
-  if (!business) {
-    throw new Error('Challenge is not associated with any Business');
-  }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  if (!text) {
-    throw new Error('Answer text is required');
-  }
-
-  const answer = new Answer({
-    challenge,
-    business,
-    user,
-    text
-  });
-
-  await answer.save();
-
-  const responseObj = {
-    _id: answer.id,
-    challenge: challenge.id,
-    business,
-    user: user._id,
-    text
-  }
-
-  return responseObj;
-} 
-
-export const updateAnswer = async (answerId: string, text: string) => {
-  const updateData = {
-    text
-  };
-
-  const answer = await Answer.findByIdAndUpdate(answerId, updateData, { new: true });
-  if (!answer) {
-    throw new Error('Answer not found');
-  }
-
-  const responseObj = {
-    ...answer.toObject(),
-    __v: undefined
-  }
-
-  return responseObj;
 }
   
-export const addMeetUp = async (businessId: string, userId: string, rsvpType: string) => {
+export const rsvpMeetUp = async (userId: string, attendMeeting: boolean) => {
   try {
-    const business = await Business.findById(businessId);
-    if (!business) {
-      throw new Error('Business not found');
-    }
-
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    if (rsvpType === 'Confirm') {
-      // TODO: "user" is giving an Error
-      //business.meetMembersConfirmed.push(user);
-      await business.save();
-    }
-
-    return null;
-  } catch (error: any) {
-    throw new Error(
-      "addMeetUp service error; adding meetup answer to the user:\n" +
-        error.message
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { attend_meeting: attendMeeting },
+      { new: true, lean: true, projection: '-_id attend_meeting' }
     );
+    if (!updatedUser) {
+      throw new HttpError('User not found', 404);
+    }
+
+    return updatedUser;
+  } catch (error) {
+    throw resolveErrorHandler(error);
   }
 };
 
-export const sendBusinessChallengeWinners = async () => {
+// RETURN RAFFLE WINNERS
+export const getRaffleWinners = async (): Promise<RaffleWinners[] | null> => {
   try {
-    return null;
-  } catch (error: any) {
-    throw new Error(
-      "sendBusinessChallengeWinners service error; getting business challenge winners:\n" +
-        error.message
-    );
-  }
-};
+    const raffleItems = await RaffleItem.find({}, "image_src winners")
+      .populate("raffle_partner", "name logo")
+      .lean();
 
-  export const getEventResults = async () => {
-    const allBus = await Business.find({});
-    if (!allBus) {
-      throw new Error('Businesses not found');
-    }
-
-    // FIXME
-    /*let results = [];
-    for (const business of allBus) {
-      let businessResults = [];
-      const challenges = business.challenges;
-
-      for (const challengeId of challenges) {
-        const challenge = await Challenge.findById(challengeId);
-
-        if (!challenge) continue;
-
-        for (const prize of challenge.prize_allocation) {
-          const user = await User.findById(prize.winner);
-          if (!user) continue;
-
-          let award = {
-            place: prize.place,
-            amount: prize.amount,
-            winner_name: user.name,
-            winner_region: user.region,
-            winner_country: user.country,
-          };
-          businessResults.push(award);
-        }
-        
+    const results = await Promise.all(raffleItems.map(async (item): Promise<RaffleWinners | null> => {
+      if (!item.winners || item.winners.length === 0) {
+        return null;
       }
-      
-      results.push(businessResults)
+      const partner = item.raffle_partner as {name?: string; logo?: string}
+      return {
+        partner_name: partner.name,
+        image_src: item.image_src,
+        logo: partner?.logo,
+        winners: await UserModel.find({ "_id": { $in: item.winners } }, 'name education region country -_id').lean()
+      };
+    }))
+
+    return results.filter((result): result is RaffleWinners => result !== null);
+
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+};
+
+const getChallengeWinners = async (): Promise<BusinessChallengeWinners[]> => {
+  try {
+    const businesses = await Business.find({}, 'name logo winners')
+      .lean()
+      .populate({
+        path: 'winners',
+        populate: {
+          path: 'user_id',
+          model: 'User',
+          select: '-_id name education region country',
+        },
+      });
+
+    return businesses.map(business => {
+      const winners = business.winners.map(winner => {
+        const user = winner.user_id;
+        return {
+          award: winner.award,
+          name: user.name,
+          education: user.education,
+          region: user.region,
+          country: user.country,
+        }
+      });
+
+      return {
+        business_name: business.name,
+        logo: business.logo,
+        winners
+      };
+    });
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+}
+
+export const getEventResults = async () => {
+  try {
+    const challengeWinners = await getChallengeWinners();
+    const raffleWinners = await getRaffleWinners();
+
+    return {
+      raffle_winners: raffleWinners,
+      challenge_winners: challengeWinners
     }
-    return results;*/
-  };
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+};
 
 export const getCoinsGainedHistory = async (userId: string): Promise<CoinTransaction[]> => {
   try {

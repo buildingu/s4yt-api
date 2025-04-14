@@ -6,6 +6,7 @@ const businessSchema = new Schema<Business>({
   admin_business_id: { type: Schema.Types.ObjectId, ref: 'AdminBusiness' },
   name: { type: String, required: true },
   logo: { type: String, default: null },
+  link: { type: String, default: null },
   description: { type: String, default: null },
   video_url: { type: String, default: null },
   video_title: { type: String, default: null },
