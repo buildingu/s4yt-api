@@ -13,8 +13,8 @@ const answerSchema = new Schema<Answer>({
     required: true 
   },
   rating: { type: Number, default: 0 },
-    submission_link: String,
-    deleted: { type: Boolean, default: false }
+  submission_link: String,
+  deleted: { type: Boolean, default: false }
   }, {
   timestamps: {
     createdAt: 'timestamp',

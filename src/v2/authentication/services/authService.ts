@@ -23,6 +23,7 @@ const passwordPattern =
   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,32}$/;
 
 const preGameTimeMs = new Date(isoGameTimestamps.pre_game).getTime();
+const gameStartTimeMs = new Date(isoGameTimestamps.game_start).getTime();
 
 export const csrf = async () => {
   try {
@@ -126,7 +127,11 @@ export const register = async (userData: any) => {
     await newUser.validate();
 
     awardCoinsToUser(newUser, 3, 'register', false);
-    await handleReferralBonus(newUser, inviterReferralCode, 5);
+
+    // Only reward referral coins before game start
+    if (gameStartTimeMs > Date.now()) {
+      await handleReferralBonus(newUser, inviterReferralCode, 5);
+    }
 
     await newUser.save();
 
