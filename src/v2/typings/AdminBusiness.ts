@@ -1,29 +1,32 @@
-import { Types } from "mongoose";
 import { Challenge } from "./Challenge";
 import { AdminUser } from "./AdminUser";
+import User from "./User";
 
 export interface AdminBusiness {
   business_user_id: AdminUser,
-  business_name: String,
-  description: String,
-  question_main: String,
+  business_name: string,
+  description: string,
+  question_main: string,
   questions_learn_earn: [{
-    question: String,
-    optionA: String,
-    optionB: String,
-    optionC: String,
-    explanation: String,
-    correct: String
+    question: string,
+    optionA: string,
+    optionB: string,
+    optionC: string,
+    explanation: string,
+    correct: string
   }],
   challenge_question: Challenge,
-  link: String,
-  video_title: String,
-  video_url: String,
-  title: String,
-  logo: String,
-  winners: [{user: Types.ObjectId, award: Number}],
-  attendance_confirm: Boolean,
-  award_limit: Number,
-  awarded_total: Number,
-  deleted: Boolean
+  link: string,
+  video_title: string,
+  video_url: string,
+  title: string,
+  logo: string,
+  winners: {
+    user: User;
+    award: number;
+  }[],
+  attendance_confirm: boolean,
+  award_limit: number,
+  awarded_total: number,
+  deleted: boolean
 }
