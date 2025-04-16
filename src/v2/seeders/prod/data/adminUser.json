@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "67f7f2ca470f3eb9c9199c6e",
+    "email": "reneschreiner915@gmail.com",
+    "password": "$2b$10$lOAh.UWpvSQ.QdluGtHE0uCBvti5gL4a84nxCUlGcrMjUTF1HPWQq",
+    "roles": [
+      "business"
+    ],
+    "deleted": false
+  },
+  {
+    "_id": "67f7fe4406fa479656d42252",
+    "email": "hollylipro@gmail.com",
+    "password": "$2b$10$hfIbMKRYFAEnEaCD4KT7Zex/iuy4lAACqErW7RDQ8o4emZFh/tFM6",
+    "roles": [
+      "business"
+    ],
+    "deleted": false
+  },
+  {
+    "_id": "67f8190ce3b6fb4a7ab9ead9",
+    "email": "cindy@goodlandsenviro.com",
+    "password": "$2b$10$bK0xLYbH3SOfy3lQ1ie4Luo1gSohRBnH8rRrRdtTibdWY.20AwQZO",
+    "roles": [
+      "business"
+    ],
+    "deleted": false
+  },
+  {
+    "_id": "67f823d3728f8dd65b0c0271",
+    "email": "emaadparacha@gmail.com",
+    "password": "$2b$10$sZxBjY7jl2F2wcRlHGep.uwJWGHKBxL2lseVFfOc1YPKsgP6fhaMG",
+    "roles": [
+      "business"
+    ],
+    "deleted": false
+  }
+]

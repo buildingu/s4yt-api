@@ -1,0 +1,182 @@
+[
+  {
+    "_id": "67f7f52a6dbec6b143250dd7",
+    "business_id": "67f7f2ca470f3eb9c9199c6f",
+    "question": "Are the actions of human beings irreversible?",
+    "answers": {
+      "choices": {
+        "A": "No, every act is reversible, as long as the person wants to reverse it.",
+        "B": "Yes, every act is irreversible; one cannot 'unact' an action.",
+        "C": "Some acts are reversible, and some are irreversible. "
+      },
+      "correct": "B",
+      "explanation": "Anything done to 'reverse' an action would be another action, and may even be labelled a 're-action.' Sometimes this reality is expressed via the image of trying to put toothpaste back into a tube.  \"Unact\" is not found in conventional dictionaries of the English language, and \"unacted\" describes the absence of an action; an action that has not been performed, rather than an action being undone.  (More information can be found in Hanah Arendt's The Human Condition, pages 236-243 of the second edition.)"
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f7f5b36dbec6b143250ddb",
+    "business_id": "67f7f2ca470f3eb9c9199c6f",
+    "question": "What is the relationship between forgiveness and reconciliation?",
+    "answers": {
+      "choices": {
+        "A": "They are the same thing.",
+        "B": "Forgiving someone means you have to reconcile with them.",
+        "C": "You may forgive someone and choose not to reconcile with them."
+      },
+      "correct": "C",
+      "explanation": "\"Forgiveness is the act of granting a free pardon... for an offense or debt... the cost or penalty for a wrong is... borne by the forgiver and not by the one forgiven.\" (Dictionary of Scripture and Ethics, edited by Joel B. Green) Because forgiveness acts in an unexpected way, it is not merely a re-action, but a new action \"unconditioned by the act that provoked it... and frees from its consequences both the one who forgives and the one who is forgiven.\" (Hannah Arendt, as above) Reconciliation involves a resumption of relationship between the forgiver and the forgiven. Forgiveness is often needed for reconciliation to occur, but there is no requirement that reconciliation must follow after forgiveness; one may forgive and choose not to reconcile. "
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f7f6806dbec6b143250ddf",
+    "business_id": "67f7f2ca470f3eb9c9199c6f",
+    "question": " Which of the following statements accurately describe retributive and restorative justice?",
+    "answers": {
+      "choices": {
+        "A": "Retributive justice seeks to punish wrongdoing by imposing penalties; restorative justice seeks to repair harm and promote reconciliation.",
+        "B": "Retributive justice takes an adversarial approach; restorative justice takes a collaborative approach.",
+        "C": "Both of the statements are accurate descriptions."
+      },
+      "correct": "C",
+      "explanation": "Both types of justice seek to deter further wrongdoing, but they go about it very differently.  With retributive justice,  the victim's and the community's role is limited to witness and testimony. With restorative justice, the victim and the community play a much wider role through dialogue with the offender.  The goal of the dialogue is understanding and empathy, and creating an opportunity for the offender to be accountable for their actions, to make amends, and to rejoin the community. "
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f7fffd06fa479656d42261",
+    "business_id": "67f7fe4406fa479656d42253",
+    "question": "Neoprene, or wetsuit material, is exceptionally bad for the environment because:",
+    "answers": {
+      "choices": {
+        "A": "It's very expensive to make and thus consumer-unfriendly.",
+        "B": "There are artificial polymers in neoprene, making it non-biodegradable and non-compostable.",
+        "C": "It's made in a factory overseas."
+      },
+      "correct": "B",
+      "explanation": "Bummer, but even when a neoprene product rides its last wave, it still wreaks havoc on the environment. Made with synthetic polymers, neoprene doesn’t break down or compost, taking up to 100 years to eventually break down and releasing toxic chemicals into landfills—it can linger in landfills for centuries. Additionally, Neoprene is made from chloroprene, a petrochemical compound, which means its production depends on petroleum—a non-renewable resource."
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f80e182667a76b32d24046",
+    "business_id": "67f7fe4406fa479656d42253",
+    "question": "Which of the following is FALSE?  ",
+    "answers": {
+      "choices": {
+        "A": "Upcycling = Recycling",
+        "B": "Neoprene is a user-friendly material.",
+        "C": "Wetsuits keep you dry."
+      },
+      "correct": "C",
+      "explanation": "Upcycling, or re-using the already existing materials, is considered the best form of Recycling. And Neoprene is lightweight, flexible and durable - making it very user-friendly and easy to work with. Neoprene wetsuits, maybe surprisingly?< are not designed to keep you dry. They work by trapping a thin layer of water, which your body then heats up, providing insulation and warmth."
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f810ebf5248766ca5aa02b",
+    "business_id": "67f7fe4406fa479656d42253",
+    "question": "How many wetsuits are tossed into the garbage each year?",
+    "answers": {
+      "choices": {
+        "A": "55,000",
+        "B": "500,000",
+        "C": "5,000,000"
+      },
+      "correct": "C",
+      "explanation": "Bet this one surprised you. Wetsuits and neoprene cast offs are seriously stacking up—around 16 million pounds of neoprene gets ditched every year. That’s more than 5 million wetsuits clogging up landfills—pretty gnarly for the planet!"
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f82225728f8dd65b0c0265",
+    "business_id": "67f8190ce3b6fb4a7ab9eada",
+    "question": "What does soil health encompass?",
+    "answers": {
+      "choices": {
+        "A": "The presence of living organisms, nutrient cycling, water retention, soil structure and minimal contaminants.",
+        "B": " The ammount of fertilizers and pesticides used to increase crop yield.",
+        "C": "The capacity ofthe soil to allow water to run off its surface quickly."
+      },
+      "correct": "A",
+      "explanation": "Soil health matters as healthy soils lead to better    crop growth, less fertilizers, good soil structure to withstand    erosion, living roots and organic matter to help capture and    store carbon and helps with reclaiming disturbed or salty soils    impacted by historical oil and gas activity."
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f822a4728f8dd65b0c0269",
+    "business_id": "67f8190ce3b6fb4a7ab9eada",
+    "question": "What regenerative practices could help restore disturbed soils on Oil and Gas Sites?",
+    "answers": {
+      "choices": {
+        "A": "Leaving the land to restore itself over time, naturally.",
+        "B": "Increasing the use of synthetic fertilizers.",
+        "C": "Planting deep rooted cover crops."
+      },
+      "correct": "C",
+      "explanation": "Planting cover crops adds organic matter to soil   which helps rebuild microbial life increasing overall soil health."
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f8234c728f8dd65b0c026d",
+    "business_id": "67f8190ce3b6fb4a7ab9eada",
+    "question": "Is the Oil & Gas Industry regulated by the Federal or Provincial Governments?",
+    "answers": {
+      "choices": {
+        "A": "Provincial Governments",
+        "B": "Federal Governments",
+        "C": "Both levels of Government"
+      },
+      "correct": "C",
+      "explanation": "The provinces have primary jurisdiction over their natural resources within their borders, with their own regulatory body that oversees the industry, including setting environmental standards for stewardship of the sites and reclamation of same. The federal government regulates and"
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f824fcf82390f509aeab91",
+    "business_id": "67f823d3728f8dd65b0c0272",
+    "question": " Why is it so hard to keep a satellite’s camera cool in space? ",
+    "answers": {
+      "choices": {
+        "A": "There is no air in space to carry heat away, so heat stays trapped.",
+        "B": "The satellite is always facing towards the Sun.",
+        "C": "Space is too cold for cooling systems to work."
+      },
+      "correct": "A",
+      "explanation": "On Earth, heat can move through air — like how a fan cools you down. But space is a vacuum, which means heat has no air to travel through. So once something heats up, it stays hot unless you have a way to release that heat using special systems."
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f82583f82390f509aeab95",
+    "business_id": "67f823d3728f8dd65b0c0272",
+    "question": "Which materials would be BEST for protecting your satellite’s camera from heat? ",
+    "answers": {
+      "choices": {
+        "A": "Transparent glass shields.",
+        "B": "Reflective materials like silver-coated foil.",
+        "C": "Thick plastic layers surrounding it. "
+      },
+      "correct": "B",
+      "explanation": " Space engineers often use shiny, reflective materials, like silver or gold foil, because they bounce sunlight away from the satellite. This helps keep the inside of the satellite from heating up too quickly when exposed to the Sun.3. Why might your satellite’s camera still overheat even if it’s protected from the Sun’s heat? a. The camera keeps producing heat while it's taking pictures. (Correct) b. The protective material around it starts to melt in space. c. The satellite isn’t moving fast enough. Explanation: Cameras and electronics generate their own heat while working — especially when taking lots of pictures or processing data. That means even without sunlight, parts inside the satellite can overheat unless that heat is removed."
+    },
+    "deleted": false
+  },
+  {
+    "_id": "67f82612f82390f509aeab99",
+    "business_id": "67f823d3728f8dd65b0c0272",
+    "question": " Why might your satellite’s camera still overheat even if it’s protected from the Sun’s heat? ",
+    "answers": {
+      "choices": {
+        "A": "The camera keeps producing heat while it's taking pictures.",
+        "B": "The protective material around it starts to melt in space. ",
+        "C": " The satellite isn’t moving fast enough. "
+      },
+      "correct": "A",
+      "explanation": "Cameras and electronics generate their own heat while working — especially when taking lots of pictures or processing data. That means even without sunlight, parts inside the satellite can overheat unless that heat is removed."
+    },
+    "deleted": false
+  }
+]

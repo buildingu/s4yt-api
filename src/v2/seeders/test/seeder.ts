@@ -2,15 +2,15 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url'; 
 import dotenv from 'dotenv';
-import { RafflePartnerModel } from '../models/rafflePartner.js';
-import RaffleItemModel from '../models/raffleItem.js';
-import connectDB from '../db/db.js';
-import UserModel from '../models/user.js';
-import Business from '../models/business.js';
-import ChallengeModel from '../models/challenge.js';
-import Answer from '../models/answer.js';
-import MultipleChoiceModel from '../models/multipleChoice.js';
-import ChestModel from '../models/chest.js';
+import { RafflePartnerModel } from '../../models/rafflePartner.js';
+import RaffleItemModel from '../../models/raffleItem.js';
+import connectDB from '../../db/db.js';
+import UserModel from '../../models/user.js';
+import Business from '../../models/business.js';
+import ChallengeModel from '../../models/challenge.js';
+import Answer from '../../models/answer.js';
+import MultipleChoiceModel from '../../models/multipleChoice.js';
+import ChestModel from '../../models/chest.js';
 
 dotenv.config();
 

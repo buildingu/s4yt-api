@@ -5,7 +5,7 @@ import { Challenge } from '../typings/Challenge';
 const challengeSchema = new Schema<Challenge>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  business: { type: Schema.Types.ObjectId, ref: 'Business' },
+  business: { type: Schema.Types.ObjectId, ref: 'Business' }, // -> AdminBusiness
   deleted: { type: Boolean, default: false }
 });
 

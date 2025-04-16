@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "711c9d87283c2bfdc3d91061",
+    "admin_business_id": "67f7fe4406fa479656d42253",
+    "name": "NeoNeo Surf",
+    "logo": "",
+    "link": "",
+    "description": "",
+    "video_url": "",
+    "video_title": "",
+    "challenge_question": "67f7ff1c1890e560333ebda8",
+    "winners": [],
+    "award_limit": 200,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "e8fa30959b2361f907207aec",
+    "admin_business_id": "67f823d3728f8dd65b0c0272",
+    "name": "Emaad Paracha",
+    "logo": "",
+    "link": "",
+    "description": "",
+    "video_url": "",
+    "video_title": "",
+    "challenge_question": "67f8243f1890e560333ebdaa",
+    "winners": [],
+    "award_limit": 200,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "5dabe3d026c553bdcfd3257f",
+    "admin_business_id": "67f8190ce3b6fb4a7ab9eada",
+    "name": "Goodlands Environmental",
+    "logo": "",
+    "link": "",
+    "description": "",
+    "video_url": "",
+    "video_title": "",
+    "challenge_question": "67f821801890e560333ebda9",
+    "winners": [],
+    "award_limit": 200,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "f3b5d2d0402aa1575cdf83e5",
+    "admin_business_id": "67f7f2ca470f3eb9c9199c6f",
+    "name": "Dr. Rene Schreiner",
+    "logo": "",
+    "link": "",
+    "description": "",
+    "video_url": "",
+    "video_title": "",
+    "challenge_question": "67f7f47f1890e560333ebda7",
+    "winners": [],
+    "award_limit": 200,
+    "awarded_total": 0,
+    "deleted": false
+  }
+]

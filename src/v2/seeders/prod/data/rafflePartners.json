@@ -1,0 +1,68 @@
+[
+  {
+    "_id": "a0a8e2b1a57fb7ae7bccb11b",
+    "name": "Save the Frogs (Kerry Kriger)",
+    "description": " ",
+    "logo": " ",
+    "resource_logo": " ",
+    "resource_name": "SAVE the FROGS!",
+    "resource_link": "https://building-u.com/funding/save-the-frogs-art-contest/",
+    "resource_category": "contests",
+    "deleted": false
+  },
+  {
+    "_id": "185e1a9b558b12010253c972",
+    "name": "University of Waterloo",
+    "description": " ",
+    "logo": " ",
+    "resource_logo": " ",
+    "resource_name": "PEACE and CONFLICT STUDIES w/ CO-OP!",
+    "resource_link": "https://building-u.com/programs/peace-and-conflict-studies/",
+    "resource_category": "programs",
+    "deleted": false
+  },
+  {
+    "_id": "72032de97a301da8aeb1adf2",
+    "name": "Kaden and Kai",
+    "description": " ",
+    "logo": " ",
+    "resource_logo": " ",
+    "resource_name": " ",
+    "resource_link": " ",
+    "resource_category": " ",
+    "deleted": false
+  },
+  {
+    "_id": "1aeab18ce365f7310c18ec60",
+    "name": "NeoNeo Surf",
+    "description": " ",
+    "logo": " ",
+    "resource_logo": " ",
+    "resource_name": "SURFRIDER BEACH CLEAN-UPS",
+    "resource_link": "https://building-u.com/opportunities/beach-clean-ups/",
+    "resource_category": "opportunities",
+    "deleted": false
+  },
+  {
+    "_id": "4ed84a69ace94611e44535ac",
+    "name": "building-U",
+    "description": " ",
+    "logo": " ",
+    "resource_logo": " ",
+    "resource_name": " ",
+    "resource_link": " ",
+    "resource_category": " ",
+    "deleted": false
+  },
+  {
+    "_id": "ae32a0c0f774fede3b26db18",
+    "name": "Emaad Paracha",
+    "description": " ",
+    "logo": " ",
+    "resource_logo": " ",
+    "resource_name": " ",
+    "resource_link": " ",
+    "resource_category": " ",
+    "deleted": false
+  }
+]
