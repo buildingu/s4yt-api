@@ -11,12 +11,10 @@ export interface Business {
   video_url?: string;
   video_title?: string;
   challenge_question: Challenge;
-  winners: [
-    {
-      user_id: User;
-      award: number;
-    }
-  ],
+  winners: {
+    user_id: User;
+    award: number;
+  }[],
   award_limit: number;
   awarded_total: number;
   deleted: boolean;

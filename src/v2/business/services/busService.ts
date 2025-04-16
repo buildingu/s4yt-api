@@ -2,7 +2,6 @@ import Business from '../../models/business';
 import Answer from '../../models/answer';
 import { HttpError } from '../../middleware/errorHandler';
 import { BusinessInfo } from '../../typings/Business';
-import { Challenge } from '../../typings/Challenge';
 
 export const sendBusinessesInfo = async (userId: string) => {
   try {
