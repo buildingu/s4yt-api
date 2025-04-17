@@ -63,7 +63,7 @@ export const register = async (
         // Emit the data based on the specific event to the specified clientId
         // The event is what the client will listen on
         socketEmit.send({
-          target: referredUser.clientId,
+          target: referredUser.clientId, // use the string 'all' to broadcast the event to all clients
           event: 'referralBonus',
           data: {
             message: "You have earned 10 coins for referring a new user!"

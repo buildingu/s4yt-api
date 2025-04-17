@@ -1,27 +1,31 @@
 import { Request } from 'express';
+import { UpdateStakedCoins } from '../../typings/RaffleItem';
 
 export interface SaveAnswerRequestDto extends Request {
   body: {
-    userId: string;
-    text: string;
-  },
-  params: {
-    challengeId: string;
+    challenge_id: string;
+    submission_link: string;
   }
 }
 
-export interface UpdateAnswerRequestDto extends Request {
+export interface RSVPMeetUpRequestDto extends Request {
   body: {
-    text: string;
-  },
-  params: {
-    answerId: string;
+    attend_meeting: boolean;
   }
 }
 
 export interface AddChestCoinsRequestDto extends Request {
   body: {
-    chestId: string;
+    chest_id: string;
     amount: string;
+  }
+}
+
+export interface UpdateStakedCoinsDto extends Request {
+  body: {
+    staked_items: [
+      UpdateStakedCoins
+    ],
+    total_coins: number
   }
 }

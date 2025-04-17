@@ -19,6 +19,8 @@ const connectDB = () => {
   connection.on('error', (error) => {
     console.error('Error connecting to MongoDB database: ', error);
   });
+
+  return connection;
 };
 
 export default connectDB;

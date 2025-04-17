@@ -1,51 +1,45 @@
 import { Request, Response, NextFunction } from "express";
 import * as gameService from "../services/gameService";
-import mongoose from "mongoose";
-import { AddChestCoinsRequestDto, SaveAnswerRequestDto, UpdateAnswerRequestDto } from "../dtos/GameDto";
+import {
+  AddChestCoinsRequestDto,
+  RSVPMeetUpRequestDto,
+  SaveAnswerRequestDto,
+  UpdateStakedCoinsDto,
+} from "../dtos/GameDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 import { HttpError } from "../../middleware/errorHandler";
 
-export const getRafflePartners = async (req: Request, res: Response, next: NextFunction) => {
+export const getRaffleItemsTransformed = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const partners = await gameService.getAllRafflePartners(); 
-    res.json(partners); 
-  } catch (error: any) {
-    next(error); 
-  }
-};
-
-export const getRafflePartner = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = req.params.id; 
-    const partner = await gameService.getRafflePartner(id);
-    res.json(partner); 
-  } catch (error: any) {
-    next(error); 
-  }
-};
-
-// Controller to send raffle items info
-export const sendRaffleInfo = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const raffleItems = await gameService.getRaffleItems();
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    const raffleItems = await gameService.getRaffleItemsTransformed(userId);
     res.json(raffleItems);
   } catch (error: any) {
     next(error);
   }
 };
 
-// Controller to send raffle coin indicators
-/*export const sendRaffleIndicatorCoins = async (req: Request, res: Response, next: NextFunction) => {
+export const updateStakedCoins = async (req: UpdateStakedCoinsDto, res: Response, next: NextFunction) => {
   try {
-    const indicators = await gameService.getRaffleIndicatorCoinsService();
-    res.json(indicators);
+    const { staked_items, total_coins } = req.body;
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    const result = await gameService.updateStakedCoins(staked_items, userId, total_coins);
+    res.json(result);
   } catch (error: any) {
     next(error);
   }
-};*/
+}
 
 // Controller to send raffle winners
-export const sendRaffleWinners = async (req: Request, res: Response, next: NextFunction) => {
+export const sendRaffleWinners = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const winners = await gameService.getRaffleWinners();
     res.json(winners);
@@ -55,15 +49,24 @@ export const sendRaffleWinners = async (req: Request, res: Response, next: NextF
 };
 
 // Controller to add "Learn and Earn" chest coins to a user's total
-export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response, next: NextFunction) => {
+export const addChestCoins = async (
+  req: AddChestCoinsRequestDto,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError("User is not authenticated", 401);
     }
-  
-    const { amount, chestId } = req.body;
-    const user = await gameService.assignCoinsToUser(userId, parseInt(amount), 'chest', { chestId });
+
+    const { amount, chest_id } = req.body;
+    const user = await gameService.assignCoinsToUser(
+      userId,
+      parseInt(amount),
+      "chest",
+      { chest_id }
+    );
 
     res.status(200).json({ chests_submitted: user.chests_submitted });
   } catch (error: any) {
@@ -71,19 +74,14 @@ export const addChestCoins = async (req: AddChestCoinsRequestDto, res: Response,
   }
 };
 
-export const getChests = async (req: Request, res: Response, next: NextFunction) => {
-  try { 
+export const getChests = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
     const chests = await gameService.getChests();
     res.status(200).json(chests);
-  } catch (error: any) {
-    next(error);
-  }
-}
-
-export const sendBusinessesInfo = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const allBusinesses = await gameService.sendBusinessesInfo();
-    res.json(allBusinesses);
   } catch (error: any) {
     next(error);
   }
@@ -91,48 +89,34 @@ export const sendBusinessesInfo = async (req: Request, res: Response, next: Next
 
 export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
-    const { challengeId } = req.params;
-    const { userId, text } = req.body;
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+    const { challenge_id, submission_link } = req.body;
 
-    const answer = await gameService.saveAnswer(challengeId, userId, text);
-    res.status(200).json(answer);
+    await gameService.saveAnswer(challenge_id, userId, submission_link);
+    res.status(200).json({ message: 'Answer submitted to challenge' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const updateAnswer = async (req: UpdateAnswerRequestDto, res: Response) => {
+export const rsvpMeetUp = async (req: RSVPMeetUpRequestDto, res: Response, next: NextFunction) => {
   try {
-    const { answerId } = req.params;
-    const { text } = req.body;
+    const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
+    if (!userId) {
+      throw new HttpError('User is not authenticated', 401);
+    }
+    const { attend_meeting } = req.body;
 
-    const answer = await gameService.updateAnswer(answerId, text);
-    res.json(answer);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const addMeetUp = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // TODO: There is only one meeting now
-    const { businessId } = req.params;
-    const { userId, rsvpType } = req.body;
-
-    const addResult = await gameService.addMeetUp(businessId, userId, rsvpType);
-    return res.status(200).json({ message: "Player added to meeting" });
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-export const sendBusinessChallengeWinners = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    return res.status(200).json({ message: "" });
+    const updatedUser = await gameService.rsvpMeetUp(userId, attend_meeting);
+    return res
+      .status(200)
+      .json({
+        message: "RSVP status updated",
+        attend_meeting: updatedUser.attend_meeting
+      });
   } catch (error: any) {
     next(error);
   }
@@ -159,7 +143,7 @@ export const sendCoinsGainedHistory = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError("User is not authenticated", 401);
     }
 
     const coinHistory = await gameService.getCoinsGainedHistory(userId);
@@ -177,7 +161,7 @@ export const sendCoinsTotal = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError("User is not authenticated", 401);
     }
 
     const coinTotal = await gameService.getCoinsTotal(userId);

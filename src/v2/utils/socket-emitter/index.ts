@@ -3,8 +3,6 @@ import { Server } from "socket.io";
 let io: Server;
 const clients: Map<string, string> = new Map();
 
-type SocketEventData = string | boolean | Array<any>;
-
 export const initializeSocket = (server: any): Server => {
   io = new Server(server, {
     cors: {
@@ -19,21 +17,22 @@ export const initializeSocket = (server: any): Server => {
   io.on("connection", (socket) => {
     console.log(`Client connected: ${socket.id}`);
 
-    socket.on("register", (clientId: string) => {
-      if (clients.has(clientId)) {
-        console.log(`Client ${clientId} is already registered.`);
+    socket.on("register", (email: string, callback: (message: string) => void) => {
+      if (clients.has(email)) {
+        console.log(`User ${email} already has a registered socket connection.`);
       } else {
-        clients.set(clientId, socket.id);
-        console.log(`Registered client: ${clientId} with socket ID: ${socket.id}`);
+        clients.set(email, socket.id);
+        console.log(`Registered user: ${email} with socket ID: ${socket.id}`);
       }
+      callback("success");
     });
 
     socket.on("disconnect", () => {
       console.log(`Client disconnected: ${socket.id}`);
-      clients.forEach((id, clientId) => {
+      clients.forEach((id, email) => {
         if (id === socket.id) {
-          clients.delete(clientId);
-          console.log(`Client ${clientId} removed from map`);
+          clients.delete(email);
+          console.log(`User ${email} removed from socket client map.`);
         }
       });
     });
@@ -55,19 +54,23 @@ export const socketEmit = {
       throw new Error("Socket.io is not initialized. Call initializeSocket first.");
     }
 
-    const socketId = clients.get(target);
-    console.log(socketId);
-    if (!socketId) {
-      console.error(`Client ${target} is not connected`);
-      return;
-    }
-
     // If you need to perform some computational or any logic on the data before
     // sending it, you can use the transformData callback for that.    
-     const payload = transformData ? transformData(data) : data;
+    const payload = transformData ? transformData(data) : data;
 
-    // Send the payload to the event the client will be listening on 
-    io.to(socketId).emit(event, payload);
-    console.log(`Data sent to client ${target}:`, payload);
+    if (target !== 'all') {
+      const socketId = clients.get(target);
+      if (!socketId) {
+        console.error(`Client ${target} is not connected`);
+        return;
+      }
+
+      // Send the payload to the event the client will be listening on 
+      io.to(socketId).emit(event, payload);
+      console.log(`Event data ${event} sent to client ${target}:`, payload);
+    } else {
+      io.emit(event, payload);
+      console.log(`Event data ${event} broadcast to all clients:`, payload);
+    }
   },
 };

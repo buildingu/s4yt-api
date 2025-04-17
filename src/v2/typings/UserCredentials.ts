@@ -11,4 +11,5 @@ export default interface UserCredentials {
   region?: string | null;
   role: typeof userRoles[number];
   school?: string | null;
+  attend_meeting: boolean;
 }
