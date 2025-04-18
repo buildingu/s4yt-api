@@ -64,10 +64,10 @@ app.use(hpp()); // Protects against HTTP Parameter Pollution attacks.
 
 // Rate-limiting - used to limit repeated requests.
 app.use(rateLimit({
-  windowMs: 60 * 60 * 1000, // 60 Minutes
-  max: 55, // limit each IP to 55 requests per windowMs.
+  windowMs: 15 * 60 * 1000, // 15 Minutes
+  max: 100, // limit each IP to 100 requests per windowMs.
   message:
-    "Too many requests made from this IP, please try again after an hour.",
+    "Too many requests made from this IP, please try again after 15 minutes.",
 }));
 
 // Request logger.
