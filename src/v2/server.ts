@@ -32,6 +32,7 @@ import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
 import locationRouter from "./location/routes/locationRoutes";
 import { scheduleRaffleDrawing } from "./utils/scheduler";
+import { CustomJwtPayload } from "./typings/express/Request";
 
 // Connect DB
 const app = express();
@@ -66,8 +67,10 @@ app.use(hpp()); // Protects against HTTP Parameter Pollution attacks.
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000, // 15 Minutes
   max: 100, // limit each IP to 100 requests per windowMs.
-  message:
-    "Too many requests made from this IP, please try again after 15 minutes.",
+  message: "Too many requests made from this IP, please try again after 15 minutes.",
+  keyGenerator: (req, res) => {
+    return (req.decodedClaims as CustomJwtPayload)?.userId || req.ip || "unknown";
+  }
 }));
 
 // Request logger.
