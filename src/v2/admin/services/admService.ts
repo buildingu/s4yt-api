@@ -8,6 +8,13 @@ import { compare } from "bcrypt";
 import jwt from 'jsonwebtoken';
 import UserModel from '../../models/user';
 import { resolveErrorHandler } from '../../middleware/errorHandler';
+import RaffleItemModel from '../../models/raffleItem';
+import { RaffleWinners } from '../../typings/RaffleItem';
+import { BusinessChallengeWinners } from '../../typings/Challenge';
+
+interface RaffleWinnerWithEmail extends RaffleWinners {
+  item_name: String
+}
 
 export const loginAdmin = async (email: string, password: string): Promise<LoginResponse> => {
   const user = await User.findOne({ email });
@@ -111,3 +118,78 @@ export const getRSVPedUsers = async () => {
     throw resolveErrorHandler(error);
   }
 }
+
+export const getRaffleWinners = async (): Promise<RaffleWinnerWithEmail[] | null> => {
+  try {
+    const raffleItems = await RaffleItemModel.find({}, "image_src name winners")
+      .populate("raffle_partner", "name logo")
+      .lean();
+
+    const results = await Promise.all(raffleItems.map(async (item): Promise<RaffleWinnerWithEmail | null> => {
+      if (!item.winners || item.winners.length === 0) {
+        return null;
+      }
+      const partner = item.raffle_partner as {name?: string; logo?: string}
+      return {
+        partner_name: partner.name,
+        item_name: item.name,
+        image_src: item.image_src,
+        logo: partner?.logo,
+        winners: await UserModel.find({ "_id": { $in: item.winners } }, 'name -_id email').lean()
+      };
+    }))
+
+    return results.filter((result): result is RaffleWinnerWithEmail => result !== null);
+
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+};
+
+export const getChallengeWinners = async (): Promise<BusinessChallengeWinners[]> => {
+  try {
+    const businesses = await Business.find({}, 'name logo winners')
+      .lean()
+      .populate({
+        path: 'winners',
+        populate: {
+          path: 'user_id',
+          model: 'User',
+          select: '-_id name email',
+        },
+      });
+
+    return businesses.map(business => {
+      const winners = business.winners.map(winner => {
+        const user = winner.user_id;
+        return {
+          award: winner.award,
+          name: user.name,
+          email: user.email
+        }
+      });
+
+      return {
+        business_name: business.name,
+        logo: business.logo,
+        winners
+      };
+    });
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+}
+
+export const getEventResults = async () => {
+  try {
+    const challengeWinners = await getChallengeWinners();
+    const raffleWinners = await getRaffleWinners();
+
+    return {
+      raffle_winners: raffleWinners,
+      challenge_winners: challengeWinners
+    }
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+};
