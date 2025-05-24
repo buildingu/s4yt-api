@@ -12,5 +12,6 @@ router.post('/users/kick/:userId', verifyCsrfToken, verifyAccessToken, verifySup
 router.post('/users/ban/:userId', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.banUser);
 router.get('/business', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getAllBusinesses);
 router.get('/rsvps', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getRSVPedUsers);
+router.get('/results', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getEventResults);
 
 export default router;

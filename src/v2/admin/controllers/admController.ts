@@ -58,10 +58,21 @@ export const editBusinessChallenge = async (req: Request, res: Response) => {
   }
 };
 
+// TODO: These two functions should go into the admin panel for next year
+
 export const getRSVPedUsers = async(req: Request, res: Response, next: NextFunction) => {
   try {
     const emails = await superAdminService.getRSVPedUsers();
     res.status(200).json(emails);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const getEventResults = async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const results = await superAdminService.getEventResults();
+    res.status(200).json(results);
   } catch (error) {
     next(error);
   }
