@@ -91,12 +91,12 @@ export const saveAnswer = async (req: SaveAnswerRequestDto, res: Response) => {
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError('User is not authenticated.', 401);
     }
     const { challenge_id, submission_link } = req.body;
 
     await gameService.saveAnswer(challenge_id, userId, submission_link);
-    res.status(200).json({ message: 'Answer submitted to challenge' });
+    res.status(200).json({ message: 'Answer submitted to challenge.' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -106,7 +106,7 @@ export const rsvpMeetUp = async (req: RSVPMeetUpRequestDto, res: Response, next:
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError('User is not authenticated.', 401);
     }
     const { attend_meeting } = req.body;
 
@@ -114,7 +114,7 @@ export const rsvpMeetUp = async (req: RSVPMeetUpRequestDto, res: Response, next:
     return res
       .status(200)
       .json({
-        message: "RSVP status updated",
+        message: "RSVP status updated.",
         attend_meeting: updatedUser.attend_meeting
       });
   } catch (error: any) {

@@ -1,7 +1,7 @@
 import User from '../../typings/User';
-import UserCredentials from '../../typings/UserCredentials';
+import UserDTO from '../../typings/UserDTO';
 
-export const createUserCredentials = (user: User): UserCredentials => {
+export const createUserCredentials = (user: User): UserDTO => {
   return {
     city: user.city || null,
     country: user.country || "",

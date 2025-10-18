@@ -180,6 +180,7 @@ export const updateProfile = async (
     const profileUpdates = req.body;
 
     if (!userId) {
+      // TODO: Is this used elsewhere?
       return res.status(400).json({ message: "User identifier is missing." });
     }
 
@@ -206,7 +207,7 @@ export const sendAcceptedReferrals = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError('User is not authenticated.', 401);
     }
 
     const acceptedReferrals = await authService.getAcceptedReferrals(userId);

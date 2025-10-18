@@ -10,10 +10,10 @@ import { CoinTransaction, coinSources } from "../../typings/CoinTransaction";
 import { awardCoinsToUser } from "../../utils/coins";
 import ChestModel from "../../models/chest";
 import { BusinessChallengeWinners } from "../../typings/Challenge";
-import { UpdateStakedCoins, RaffleWinners } from "../../typings/RaffleItem";
+import { UpdateStakedCoins, RaffleWinners, RaffleItemDTO } from "../../typings/RaffleItem";
 import { socketEmit } from "../../utils/socket-emitter";
 
-export const getRaffleItemsTransformed = async (userId: string | undefined) => {
+export const getRaffleItemsTransformed = async (userId: string | undefined) : Promise<RaffleItemDTO[]> => {
   try {
     if (!userId) {
       throw new HttpError('User not found', 404);
@@ -161,16 +161,16 @@ export const saveAnswer = async (challengeId: string, userId: string, submission
   try {
     const challenge = await Challenge.exists({ _id: challengeId });
     if (!challenge) {
-      throw new HttpError('Challenge not found', 404);
+      throw new HttpError('Challenge not found.', 404);
     }
 
     const user = await User.exists({ _id: userId });
     if (!user) {
-      throw new HttpError('User not found', 404);
+      throw new HttpError('User not found.', 404);
     }
 
     if (!submissionLink) {
-      throw new HttpError('Submission link is required', 400);
+      throw new HttpError('Submission link is required.', 400);
     }
 
     await Answer.updateOne(
@@ -202,7 +202,7 @@ export const rsvpMeetUp = async (userId: string, attendMeeting: boolean) => {
       { new: true, lean: true, projection: '-_id attend_meeting' }
     );
     if (!updatedUser) {
-      throw new HttpError('User not found', 404);
+      throw new HttpError('User not found.', 404);
     }
 
     return updatedUser;
