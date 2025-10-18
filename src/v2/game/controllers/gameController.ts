@@ -143,7 +143,7 @@ export const sendCoinsGainedHistory = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError("User is not authenticated", 401);
+      throw new HttpError("User is not authenticated.", 401);
     }
 
     const coinHistory = await gameService.getCoinsGainedHistory(userId);

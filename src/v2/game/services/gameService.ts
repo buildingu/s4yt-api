@@ -60,6 +60,7 @@ export const updateStakedCoins = async (raffle: Array<UpdateStakedCoins>, userId
       throw new HttpError('User not found', 404);
     }
 
+    // TODO: Frontend is dictating how many coins the user should have left, maybe backend should calculate this?
     user.coins = totalCoins;
     await user.save();
 
@@ -292,7 +293,7 @@ export const getCoinsGainedHistory = async (userId: string): Promise<CoinTransac
   try {
     const user = await UserModel.findById(userId, 'coin_transactions');
     if (!user) {
-      throw new HttpError('User not found', 404);
+      throw new HttpError('User not found.', 404);
     }
 
     return user.coin_transactions;
