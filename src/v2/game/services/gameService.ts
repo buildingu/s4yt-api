@@ -12,6 +12,7 @@ import ChestModel from "../../models/chest";
 import { BusinessChallengeWinners } from "../../typings/Challenge";
 import { UpdateStakedCoins, RaffleWinners, RaffleItemDTO } from "../../typings/RaffleItem";
 import { socketEmit } from "../../utils/socket-emitter";
+import { BusinessChestsDTO } from "../../typings/dtos/BusinessChestsDTO";
 
 export const getRaffleItemsTransformed = async (userId: string | undefined) : Promise<RaffleItemDTO[]> => {
   try {
@@ -145,13 +146,14 @@ export const assignCoinsToUser = async (
   }
 };
 
-export const getChests = async () => {
+export const getChests = async () : Promise<BusinessChestsDTO[]> => {
   try {
     const chests = await ChestModel.find({}, '-_id -__v')
       .populate({
          path: 'group',
          select: '-_id -__v -business_id'
-      });
+      })
+      .lean() as unknown as BusinessChestsDTO[];
     return chests;
   } catch (error) {
     throw resolveErrorHandler(error);

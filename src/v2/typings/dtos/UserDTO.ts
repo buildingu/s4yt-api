@@ -1,5 +1,5 @@
 
-import { userEducation, userRoles } from './User';
+import { userEducation, userRoles } from '../User';
 
 export default interface UserDTO {
   city?: string | null;

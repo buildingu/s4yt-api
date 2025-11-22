@@ -1,5 +1,5 @@
 import User from '../../typings/User';
-import UserDTO from '../../typings/UserDTO';
+import UserDTO from '../../typings/dtos/UserDTO';
 
 export const createUserCredentials = (user: User): UserDTO => {
   return {
