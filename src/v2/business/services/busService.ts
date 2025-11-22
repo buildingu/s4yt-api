@@ -15,6 +15,7 @@ export const sendBusinessesInfo = async (userId: string) => {
       });
 
     if (!allBusinesses) {
+      // Change to Challenge Partner not found
       throw new HttpError('Businesses not found', 404);
     }
 

@@ -1,6 +1,7 @@
-import { userEducation, userRoles } from './User';
 
-export default interface UserCredentials {
+import { userEducation, userRoles } from '../User';
+
+export default interface UserDTO {
   city?: string | null;
   country?: string;
   education?: typeof userEducation[number] | null;

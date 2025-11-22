@@ -37,3 +37,4 @@ export default interface User {
   banned_until?: Date;
   attend_meeting: boolean;
 }
+

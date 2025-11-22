@@ -58,7 +58,7 @@ export const validatePassword = (password: string) => {
     return {
       valid: false,
       message:
-        "Password must contain at least one number, one lowercase and one uppercase letter, and one special character",
+        "Password must contain at least one number, one lowercase and one uppercase letter, and one special character.",
     };
   }
 

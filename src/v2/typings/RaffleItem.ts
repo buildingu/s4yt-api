@@ -14,6 +14,17 @@ export interface RaffleItem {
   winners: Types.ObjectId[];
 }
 
+export interface RaffleItemDTO {
+  item_id: string;
+  raffle_partner: Types.ObjectId,
+  name: string,
+  description: string,
+  image_src: string,
+  stock: number,
+  coins: number,
+  silver: boolean,
+}
+
 export interface UpdateStakedCoins {
   item_id: string;
   coins: number;
