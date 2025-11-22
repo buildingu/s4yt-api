@@ -3,6 +3,7 @@ import User from "../../typings/User";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import registrationConfig from "../../configs/registration";
 import {
   sendVerificationEmail,
   sendResetPasswordEmail,
@@ -65,23 +66,32 @@ export const validatePassword = (password: string) => {
   return { valid: true, message: "Password is valid" };
 };
 
-const handleReferralBonus = async (newUser: HydratedDocument<User>, referralCode: string, amount: number) => {
-  const invitingUser = await UserModel.findOne({ referral_code: referralCode });
+const handleReferralBonus = async (newUser: HydratedDocument<User>) => {
+  if (!newUser.inviter_referral_code) return false;
+  console.log(`user was invited with code: ${newUser.inviter_referral_code}`);
+
+  const invitingUser = await UserModel.findOne({ referral_code: newUser.inviter_referral_code });
   if (!invitingUser) {
     return false;
   }
+  console.log(`user ${invitingUser.id} has that code!`);
 
   // Create a new accepted referral doc and save it 
   const acceptedReferral = new AcceptedReferralModel({
     invited_user: newUser,
-    coins: amount,
+    coins: registrationConfig.referralBonus.inviter,
   });
 
   await acceptedReferral.save();
   invitingUser.accepted_referrals.push(acceptedReferral._id);
+  newUser.inviter_referral_code = '';
 
   // Give and track bonus coins
-  awardCoinsToUser(invitingUser, amount, 'referral', true);
+  awardCoinsToUser(invitingUser, registrationConfig.referralBonus.inviter, 'invitedNewUser', true);
+  awardCoinsToUser(newUser, registrationConfig.referralBonus.invitee, 'invitedByExistingUser', true);
+
+  console.log(`inviting user: ${invitingUser.coins}`);
+  console.log(`new user: ${newUser.coins}`);
 
   await invitingUser.save();
 
@@ -118,6 +128,8 @@ export const register = async (userData: any) => {
       role: userData.role || 'Player',
       coin: userData.coin || 0,
       referral_code: newUserReferralCode,
+      inviter_referral_code: inviterReferralCode,
+      first_login: true,
       is_email_verified: false,
       email_verification_token: crypto.randomBytes(20).toString('hex'),
       chests_submitted: {},
@@ -127,11 +139,6 @@ export const register = async (userData: any) => {
     await newUser.validate();
 
     awardCoinsToUser(newUser, 3, 'register', false);
-
-    // Only reward referral coins before game start
-    if (gameStartTimeMs > Date.now()) {
-      await handleReferralBonus(newUser, inviterReferralCode, 5);
-    }
 
     await newUser.save();
 
@@ -189,7 +196,7 @@ export const login = async (loginData: { email: string; password: string }) => {
   try {
     const user = await UserModel.findOne(
       { email: loginData.email },
-      "city coins country education email is_email_verified name password referral_code chests_submitted region role school",
+      "city coins country education email is_email_verified name password referral_code chests_submitted region role school first_login inviter_referral_code coin_transactions",
     );
 
     if (!user) {
@@ -206,6 +213,16 @@ export const login = async (loginData: { email: string; password: string }) => {
         "Email is not verified. Please check your email to verify your account. If you lost your verification link, press Resend Verification Email above to get a new link.",
         400
       );
+    }
+
+    // Only reward referral coins on first login and before game start
+    if (user.first_login) {
+      // TODO: Remove this time limitation?
+      //if (gameStartTimeMs > Date.now()) {
+        await handleReferralBonus(user);
+      //}
+      user.first_login = false;
+      await user.save();
     }
 
     const userCredentials = createUserCredentials(user);

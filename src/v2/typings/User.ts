@@ -33,6 +33,8 @@ export default interface User {
   coin_transactions: CoinTransaction[];
   referral_code: string;
   accepted_referrals: Types.ObjectId[];
+  inviter_referral_code: string;
+  first_login: boolean;
   kicked?: boolean; 
   banned_until?: Date;
   attend_meeting: boolean;
