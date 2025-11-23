@@ -41,6 +41,8 @@ const userSchema = new Schema<User>({
   coin_transactions: [coinTransactionSchema],
   referral_code: { type: String, default: null },
   accepted_referrals: [{ type: Types.ObjectId, ref: 'AcceptedReferral' }],
+  inviter_referral_code: { type: String, default: '' },
+  first_login: { type: Boolean, default: true },
   kicked: { type: Boolean, default: false },
   banned_until: { type: Date, default: null },
   attend_meeting: { type: Boolean, default: false }
