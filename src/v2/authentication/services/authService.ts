@@ -191,7 +191,7 @@ export const login = async (loginData: { email: string; password: string }) => {
   try {
     const user = await UserModel.findOne(
       { email: loginData.email },
-      "-email_verification_token -reset_password_token -accepted_referrals -kicked -banned_until -__v -_id",
+      "-email_verification_token -reset_password_token -accepted_referrals -kicked -banned_until -__v",
     );
 
     if (!user) {
