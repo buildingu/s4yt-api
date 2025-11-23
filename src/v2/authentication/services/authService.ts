@@ -212,10 +212,7 @@ export const login = async (loginData: { email: string; password: string }) => {
 
     // Only reward referral coins on first login and before game start
     if (user.first_login) {
-      // TODO: Remove this time limitation?
-      //if (gameStartTimeMs > Date.now()) {
-        await handleReferralBonus(user);
-      //}
+      await handleReferralBonus(user);
       user.first_login = false;
       await user.save();
     }
