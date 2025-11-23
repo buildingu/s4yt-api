@@ -68,13 +68,11 @@ export const validatePassword = (password: string) => {
 
 const handleReferralBonus = async (newUser: HydratedDocument<User>) => {
   if (!newUser.inviter_referral_code) return false;
-  console.log(`user was invited with code: ${newUser.inviter_referral_code}`);
 
   const invitingUser = await UserModel.findOne({ referral_code: newUser.inviter_referral_code });
   if (!invitingUser) {
     return false;
   }
-  console.log(`user ${invitingUser.id} has that code!`);
 
   // Create a new accepted referral doc and save it 
   const acceptedReferral = new AcceptedReferralModel({
@@ -89,9 +87,6 @@ const handleReferralBonus = async (newUser: HydratedDocument<User>) => {
   // Give and track bonus coins
   awardCoinsToUser(invitingUser, registrationConfig.referralBonus.inviter, 'invitedNewUser', true);
   awardCoinsToUser(newUser, registrationConfig.referralBonus.invitee, 'invitedByExistingUser', true);
-
-  console.log(`inviting user: ${invitingUser.coins}`);
-  console.log(`new user: ${newUser.coins}`);
 
   await invitingUser.save();
 
