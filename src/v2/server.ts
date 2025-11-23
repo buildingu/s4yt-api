@@ -1,17 +1,16 @@
 /* s4yt-api Version 2
  *
- * @App Creation Date: February 22st, 2024
- * @Last Updated: February 22st, 2024
+ * @App Creation Date: February 22nd, 2024
+ * @Last Updated: April 16, 2025
  *
- * @Author Krzysztof Garbos
- * @contributors David Bishop, Krzysztof Garbos
+ * @Author Jonathan Lam
+ * @Contributors David Bishop, Krzysztof Garbos, Shema Dabiri, Siddhanth Subramanian, Soham Desai, Akpevwen Sebastian Gbudje  
  *
  * @Description This is the special event/'game', called Dollars for Your Thoughts ($4YT), back-end REST API for Building-u.
  */
 
 import express from "express";
 import dotenv from "dotenv";
-// import { redisClient } from "./configs/redisConfig";
 
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -29,10 +28,11 @@ import { initializeSocket } from "./utils/socket-emitter/index";
 
 import adminRouter from "./admin/routes/admRoute";
 import authRouter from "./authentication/routes/authRoute";
-import csrfRouter from "./csrf/routes/csrfRoute";
 import gameRouter from "./game/routes/gameRoute";
 import busRouter from "./business/routes/busRoute";
 import locationRouter from "./location/routes/locationRoutes";
+import { scheduleRaffleDrawing } from "./utils/scheduler";
+import { CustomJwtPayload } from "./typings/express/Request";
 
 // Connect DB
 const app = express();
@@ -43,25 +43,6 @@ connectDB();
 const PORT = Number(process.env.PORT) || 4000,
   baseUrl = "/api/v2";
 
-// (async () => {
-//   let retries = 5;
-
-//   while (retries) {
-//     try {
-//       await redisClient.connect();
-//       break;
-//     } catch (error) {
-//       console.log(error);
-
-//       retries -= 1;
-//       console.log(
-//         `Redis connection failed. Retrying connection; ${retries} retries left.`
-//       );
-//       await new Promise((resolve) => setTimeout(resolve, 5000));
-//     }
-//   }
-// })();
-
 // **Middleware**
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -71,9 +52,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://s4yt-staging.building-u.com",
-      "https://s4yt.building-u.com",
-    ], // I don't remember what the staging url looks like, I think that's it.
+      "https://s4yt.org"
+    ],
     credentials: true,
     exposedHeaders: ["Authorization", "x-xsrf-token"] // Expose bearer and CSRF tokens to frontend.
   })
@@ -83,15 +63,12 @@ app.use(
 app.use(helmet()); // Protects various HTTP headers that can help defend against common web hacks.
 app.use(hpp()); // Protects against HTTP Parameter Pollution attacks.
 
-// Rate-limiting - used to limit repeated requests. CHANGE THIS MAYBE?
-app.use((req, res, next) => {
-  rateLimit({
-    windowMs: 60 * 60 * 1000, // 60 Minutes
-    max: 55, // limit each IP to 55 requests per windowMs.
-    message:
-      "Too many requests made from this IP, please try again after an hour.",
-  })(req, res, next);
-});
+// Rate-limiting - used to limit repeated requests.
+/*app.use(rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 Minutes
+  max: 100, // limit each IP to 100 requests per windowMs.
+  message: "Too many requests made from this IP, please try again after 5 minutes."
+}));*/
 
 // Request logger.
 setupLogger(app);
@@ -102,7 +79,6 @@ app.use(lowercaseEmails);
 // *Router*
 app.use(`${baseUrl}/admin`, adminRouter);
 app.use(`${baseUrl}/auth`, authRouter);
-app.use(`${baseUrl}/csrf`, csrfRouter);
 app.use(`${baseUrl}/game`, gameRouter);
 app.use(`${baseUrl}/business`, busRouter);
 app.use(`${baseUrl}/location`, locationRouter);
@@ -114,4 +90,5 @@ const server = app.listen(PORT, process.env.HOST as string, () =>
   )
 );
 
+scheduleRaffleDrawing();
 initializeSocket(server);

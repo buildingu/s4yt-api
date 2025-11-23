@@ -1,29 +1,37 @@
-import { Document, model, Schema, Types } from 'mongoose';
-import User from '../typings/User';
-import { userEducation, userRoles } from '../typings/userEnums';
+import { model, Schema, Types } from 'mongoose';
+import User, { userEducation, userRoles } from '../typings/User';
 import { coinTransactionSchema } from './coinTransaction';
 
-const userSchema = new Schema<User & Document>({
-  city: { type: String, default: null },
-  country: { type: String, default: null },
+const userSchema = new Schema<User>({
   email: {
     type: String,
     lowercase: true,
     required: true,
     unique: true
   },
+  name: {
+    type: String,
+    default: null,
+    minlength: [2, 'Name is too short. Minimum length is 2 characters.'],
+    maxlength: [128, 'Name is too long. Maximum length is 128 characters.']
+  },
   education: {
     type: String,
     enum: userEducation
   },
-  name: { type: String, default: null, minlength: 2, maxlength: 128 },
+  school: { type: String, default: null },
   password: { type: String, required: true },
-  quiz_submitted: { type: Number, default: null },
+  country: { type: String, default: null },
   region: { type: String, default: null },
+  city: {
+    type: String,
+    default: null,
+    maxlength: [50, 'City name is too long. Maximum length is 50 characters.']
+  },
+  chests_submitted: { type: Map, of: Number },
   is_email_verified: { type: Boolean, default: false },
   email_verification_token: { type: String, default: null },
   reset_password_token: { type: String, default: null },
-  token_version: { type: Number, default: 0 },
   role: { 
     type: String, 
     enum: userRoles, 
@@ -35,7 +43,7 @@ const userSchema = new Schema<User & Document>({
   accepted_referrals: [{ type: Types.ObjectId, ref: 'AcceptedReferral' }],
   kicked: { type: Boolean, default: false },
   banned_until: { type: Date, default: null },
-  show_instructions: { type: Boolean, default: true },
+  attend_meeting: { type: Boolean, default: false }
 }, {
   timestamps: {
     createdAt: 'created_at', // Use `created_at` to store the created date
@@ -43,6 +51,6 @@ const userSchema = new Schema<User & Document>({
   }
 });
 
-const UserModel = model<User & Document>('User', userSchema);
+const UserModel = model('User', userSchema);
 
 export default UserModel;

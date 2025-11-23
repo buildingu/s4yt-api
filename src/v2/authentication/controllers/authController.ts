@@ -7,6 +7,7 @@ import {
   GetUserRequestDto,
   ResetPasswordRequestDto,
   ResendVerificationEmailRequestDto,
+  UpdateProfileRequestDto,
 } from "../dtos/AuthDto";
 import { CustomJwtPayload } from "../../typings/express/Request";
 
@@ -18,19 +19,6 @@ export const csrf = async (req: Request, res: Response, next: NextFunction) => {
     const csrfToken = await authService.csrf();
     res.cookie("XSRF-TOKEN", csrfToken);
     res.json({ csrfToken });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const users = await authService.getUsers();
-    res.status(200).json(users);
   } catch (error) {
     next(error);
   }
@@ -72,10 +60,12 @@ export const emailVerify = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.query.token;
-    await authService.verifyEmail(token as string);
+    const token = req.body.token;
+    const newVerification = await authService.verifyEmail(token as string);
     return res.status(200).json({
-      message: "Email was successfully verified.",
+      message: newVerification 
+        ? "Email was successfully verified."
+        : "Email was already verified. You can log into your account."
     });
   } catch (error: any) {
     next(error);
@@ -104,19 +94,27 @@ export const login = async (
 ) => {
   try {
     const { email, password } = req.body;
-    const { user, timestamps, jwtToken, csrfToken } = await authService.login({
+    const { user, coins, timestamps, jwtToken, csrfToken } = await authService.login({
       email,
-      password,
+      password
     });
 
     res.setHeader("Authorization", "Bearer " + jwtToken);
     res.setHeader("x-xsrf-token", csrfToken);
-    res.cookie("XSRF-TOKEN", csrfToken);
+    // TODO: We should probably think about a logout route to clear things, like this cookie.
+    res.cookie("XSRF-TOKEN", csrfToken, {
+      path: "/",
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year because this should last forever or however long the game lasts.
+      httpOnly: true,
+      secure: true,
+      sameSite: "none" // TODO: I think we can try sameSite strict since the server and the client is on the same domain (s4yt.org)?
+    });
 
     return res.status(200).json({
       message: "User is successfully authenticated.",
       user,
-      timestamps,
+      coins,
+      timestamps
     });
   } catch (error: any) {
     next(error);
@@ -130,14 +128,12 @@ export const updatePassword = async (
 ) => {
   try {
     const userId =
-      (req.decodedClaims as CustomJwtPayload)?.userId || req.body.userId;
-    const { oldPassword, newPassword } = req.body;
-    await authService.updatePassword(userId, oldPassword, newPassword);
+      (req.decodedClaims as CustomJwtPayload)?.userId;
+    const { old_password, password, password_confirmation } = req.body;
+    await authService.updatePassword(userId, old_password, password, password_confirmation);
     res
       .status(200)
       .json({ message: "Password updated successfully. Please log in again." });
-
-    //res.redirect("/logout");
   } catch (error: any) {
     next(error);
   }
@@ -166,8 +162,8 @@ export const resetPassword = async (
   next: NextFunction
 ) => {
   try {
-    const { token, newPassword } = req.body;
-    await authService.resetPassword(token, newPassword);
+    const { token, password, password_confirmation } = req.body;
+    await authService.resetPassword(token, password, password_confirmation);
     res.status(200).json({ message: "Password has been reset successfully." });
   } catch (error) {
     next(error);
@@ -175,7 +171,7 @@ export const resetPassword = async (
 };
 
 export const updateProfile = async (
-  req: Request,
+  req: UpdateProfileRequestDto,
   res: Response,
   next: NextFunction
 ) => {
@@ -184,6 +180,7 @@ export const updateProfile = async (
     const profileUpdates = req.body;
 
     if (!userId) {
+      // TODO: Is this used elsewhere?
       return res.status(400).json({ message: "User identifier is missing." });
     }
 
@@ -210,7 +207,7 @@ export const sendAcceptedReferrals = async (
   try {
     const userId = (req.decodedClaims as CustomJwtPayload)?.userId;
     if (!userId) {
-      throw new HttpError('User is not authenticated', 401);
+      throw new HttpError('User is not authenticated.', 401);
     }
 
     const acceptedReferrals = await authService.getAcceptedReferrals(userId);

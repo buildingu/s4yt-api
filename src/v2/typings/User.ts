@@ -1,26 +1,40 @@
 import { Types } from 'mongoose';
 import { CoinTransaction } from './CoinTransaction';
-import { userEducation, userRoles } from './userEnums';
+
+export const userRoles = [
+  'Admin',
+  'Player',
+  'Business'
+] as const;
+
+export const userEducation = [
+  'Grade 9',
+  'Grade 10',
+  'Grade 11',
+  'Grade 12',
+  'Other'
+] as const;
 
 export default interface User {
-  city?: string | null;
-  country?: string;
   email: string;
-  education?: typeof userEducation[number] | null;
   name?: string;
+  education?: typeof userEducation[number] | null;
+  school?: string | null;
   password: string;
-  quiz_submitted: number;
+  country?: string;
   region?: string | null;
+  city?: string | null;
+  chests_submitted: Map<string, number>;
   is_email_verified: boolean;
   email_verification_token: string;
   reset_password_token: string;
-  token_version: number;
   role: typeof userRoles[number];
+  coins: number;
+  coin_transactions: CoinTransaction[];
   referral_code: string;
   accepted_referrals: Types.ObjectId[];
   kicked?: boolean; 
   banned_until?: Date;
-  coins: number;
-  coin_transactions: CoinTransaction[],
-  show_instructions: boolean;
+  attend_meeting: boolean;
 }
+

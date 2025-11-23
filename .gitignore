@@ -182,6 +182,7 @@ dist
 .svelte-kit
 
 # Other
-
+src/v2/seeders/prod/data/
+docs.md
 
 # End of https://www.toptal.com/developers/gitignore/api/node

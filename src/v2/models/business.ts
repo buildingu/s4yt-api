@@ -1,17 +1,27 @@
-import mongoose from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
+import { Business } from '../typings/Business';
 
-const businessSchema = new mongoose.Schema({
+// NOTE: Businesses are Challenge Partner, *not* Raffle Partners
+const businessSchema = new Schema<Business>({
+  admin_business_id: { type: Schema.Types.ObjectId, ref: 'AdminBusiness' },
   name: { type: String, required: true },
-  logo_s4yt: { type: String, default: null },
-  logo_normal: { type: String, default: null },
+  logo: { type: String, default: null },
+  link: { type: String, default: null },
   description: { type: String, default: null },
-  meet_members_confirmed: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  meet_members_interested: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  attachment: { type: String, default: null },
-  video_urls: [{ type: String, default: null }],
-  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }]
-}, {collection : "businesses"});
+  video_url: { type: String, default: null },
+  video_title: { type: String, default: null },
+  challenge_question: { type: Schema.Types.ObjectId, ref: 'Challenge' },
+  winners: [
+    {
+      user_id: { type: Types.ObjectId, ref: 'User' },
+      award: { type: Number, default: 0, min: 0 }
+    }
+  ],
+  award_limit: { type: Number, default: 0, min: 0 },
+  awarded_total: { type: Number, default: 0, min: 0 },
+  deleted: { type: Boolean, default: false }
+}, {collection : 'businesses'});
 
-const Business = mongoose.model('Business', businessSchema);
+const Business = model('Business', businessSchema);
 
 export default Business;

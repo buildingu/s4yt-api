@@ -6,9 +6,7 @@ export interface GetUserRequestDto extends Request {
     email: string;
   }
 }
-/**
- * There is also be password_confirmation coming, just check if the password and password_confirmation equals.
- */
+
 export interface RegisterRequestDto extends Request {
   body: {
     name: string;
@@ -17,6 +15,7 @@ export interface RegisterRequestDto extends Request {
     password_confirmation: string;
     referral_code: string;
     education: string;
+    school: string;
     country: string;
     region: string;
     city: string;
@@ -31,7 +30,7 @@ export interface LoginRequestDto extends Request {
 }
 
 export interface EmailVerificationRequestDto extends Request {
-  query: {
+  body: {
     token: string;
   }
 }
@@ -42,17 +41,31 @@ export interface ResendVerificationEmailRequestDto extends Request {
   }
 }
 
+export interface UpdateProfileRequestDto extends Request {
+  body: {
+    name: string;
+    email: string;
+    education: string;
+    school: string;
+    country: string;
+    region: string;
+    city: string;
+  }
+}
+
 export interface UpdatePasswordRequestDto extends Request {
   body: {
-    userId: string;
-    oldPassword: string;
-    newPassword: string;
+    old_password: string;
+    password: string;
+    password_confirmation: string;
   }
 }
 
 export interface ResetPasswordRequestDto extends Request {
   body: {
     token: string;
-    newPassword: string;
+    old_password: string;
+    password: string;
+    password_confirmation: string;
   }
 }

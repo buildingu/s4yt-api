@@ -1,0 +1,122 @@
+[
+  {
+    "_id": "711c9d87283c2bfdc3d91061",
+    "admin_business_id": "3906d8d73650035145761f6d",
+    "name": "NeoNeo Surf",
+    "logo": "https://fastly.picsum.photos/id/1067/300/300.jpg?hmac=RWGvJaQWQ82pFjo24Ww3k0ccaUdbSJZSuDRM13YcdM0",
+    "link": "https://www.neoneosurf.com/",
+    "description": "Surf accessories made from recycled wetsuits",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "b271c6b34e2bd8da1f20f014",
+    "winners": [],
+    "award_limit": 500,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "e8fa30959b2361f907207aec",
+    "admin_business_id": "7d70c38602f06b2409e96156",
+    "name": "Emaad Paracha",
+    "logo": "https://fastly.picsum.photos/id/757/300/300.jpg?hmac=FNPB7HNtB37n2Phx2wLfYmHdFFfxHX18YwQZV-bdWuA",
+    "link": "https://www.emaadparacha.com/",
+    "description": "An experienced Cloud Solution Architect and Machine Learning and AI specialist with extensive experience in designing and building cloud-based solutions and leveraging artificial intelligence to drive business improvements.",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "d4035e88742726a605c0cbf2",
+    "winners": [],
+    "award_limit": 500,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "5dabe3d026c553bdcfd3257f",
+    "admin_business_id": "56a3e9476a1f608305824abb",
+    "name": "Goodlands Environmental",
+    "logo": "https://fastly.picsum.photos/id/164/300/300.jpg?hmac=1gjcXwsC3304oN3K4brJnU3uhQS6_kR6_zWOHolbBNM",
+    "link": "https://goodlandsenviro.com/",
+    "description": "Good Lands Environmental Inc. is a thriving environmental consulting firm offering timely, professional, and practical environmental solutions for the oil and gas industry in southwest Manitoba and southeast Saskatchewan.",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "eaaf72bd7a9292c534fc2b80",
+    "winners": [],
+    "award_limit": 500,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "f3b5d2d0402aa1575cdf83e5",
+    "admin_business_id": "2a35bcbd6b374adfedb0f094",
+    "name": "Dr. Rene Schreiner",
+    "logo": "https://fastly.picsum.photos/id/757/300/300.jpg?hmac=FNPB7HNtB37n2Phx2wLfYmHdFFfxHX18YwQZV-bdWuA",
+    "link": "https://google.ca/",
+    "description": "Dr. Rene Schreiner",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "3b7cc6198fd695594aed7e04",
+    "winners": [],
+    "award_limit": 500,
+    "awarded_total": 0,
+    "deleted": false
+  },
+
+  {
+    "_id": "5ad8a13e8d3f43ed7ac838bf",
+    "admin_business_id": "316255530857918c9d812f64",
+    "name": "Oceanic Airlines", 
+    "logo": "https://fastly.picsum.photos/id/1067/300/300.jpg?hmac=RWGvJaQWQ82pFjo24Ww3k0ccaUdbSJZSuDRM13YcdM0",
+    "link": "https://en.wikipedia.org/wiki/Oceanic_Airlines",
+    "description": "That airline you see in movies",
+    "video_url": "https://www.youtube.com/embed/0l38ZGkkBlg",
+    "video_title": "Oceanic Airlines Commercial",
+    "challenge_question": "153ca04a2348e2d8e86a9adb",
+    "winners": [
+      {
+        "user_id": "07aff947d30cd81a0f0dddf2",
+        "award": 1
+      }
+    ],
+    "award_limit": 500,
+    "awarded_total": 1,
+    "deleted": false
+  },
+  {
+    "_id": "7ad42b71b705c8786925b8aa",
+    "admin_business_id": "41837840e9829791deda91e9",
+    "name": "Rick Rollers", 
+    "logo": "https://fastly.picsum.photos/id/757/300/300.jpg?hmac=FNPB7HNtB37n2Phx2wLfYmHdFFfxHX18YwQZV-bdWuA",
+    "link": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "description": "Never gonna give you up",
+    "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "video_title": "Totally Not a Rick Roll",
+    "challenge_question": "f01596275f33283341853209",
+    "winners": [],
+    "award_limit": 250,
+    "awarded_total": 0,
+    "deleted": false
+  },
+  {
+    "_id": "b7f8c55408fb411ae5a38cfe",
+    "admin_business_id": "8b9da878b4c90dacfdf4fe84",
+    "name": "Aperture Science", 
+    "logo": "https://fastly.picsum.photos/id/164/300/300.jpg?hmac=1gjcXwsC3304oN3K4brJnU3uhQS6_kR6_zWOHolbBNM",
+    "link": "https://www.foundry10.org/resources/portal2",
+    "description": "We do what we must because we can",
+    "video_url": "https://www.youtube.com/embed/Y6ljFaKRTrI",
+    "video_title": "Cake",
+    "challenge_question": "759460f4d4a1373591056842",
+    "winners": [
+      {
+        "user_id": "db854a2890cff8d13dbd88a4",
+        "award": 10
+      },
+      {
+        "user_id": "f53de04a0505b0daefad53aa",
+        "award": 20
+      }
+    ],
+    "award_limit": 150,
+    "awarded_total": 30,
+    "deleted": false
+  }
+]

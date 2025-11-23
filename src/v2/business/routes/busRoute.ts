@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import * as businessController from '../controllers/busController';
 import { verifyAccessToken } from '../../authentication/middleware/verifyTokens';
+import verifyCsrfToken from '../../csrf/middleware/verifyCsrfToken';
 
 const router = Router();
 
-router.post('/update-info/:businessId', verifyAccessToken, businessController.updateBusinessInfo);
-router.post('/questions/:businessId', verifyAccessToken, businessController.addQuestion);
-router.patch('/questions/:questionId', verifyAccessToken, businessController.updateQuestion);
-router.get('/questions/:businessId', verifyAccessToken, businessController.getQuestions);
-router.get('/answers/:questionId', verifyAccessToken, businessController.getAnswers);
+// TODO: Should be called Challenge Partners now
+router.get('/info', verifyCsrfToken, verifyAccessToken, businessController.sendBusinessesInfo);
+router.get('/:businessId/award', verifyAccessToken, businessController.getAwardDetails);
+router.get('/:businessId/event-results', verifyAccessToken, businessController.getEventResults);
 
 export default router;
