@@ -191,7 +191,7 @@ export const login = async (loginData: { email: string; password: string }) => {
   try {
     const user = await UserModel.findOne(
       { email: loginData.email },
-      "city coins country education email is_email_verified name password referral_code chests_submitted region role school first_login inviter_referral_code coin_transactions",
+      "-email_verification_token -reset_password_token -accepted_referrals -kicked -banned_until -__v -_id",
     );
 
     if (!user) {
