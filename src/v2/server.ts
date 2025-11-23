@@ -84,10 +84,9 @@ app.use(`${baseUrl}/business`, busRouter);
 app.use(`${baseUrl}/location`, locationRouter);
 app.use(routeErrorHandler);
 
-// TODO: process.env.PROTOCOL is not actually needed for the app to function
-const server = app.listen(PORT, process.env.HOST as string, () =>
+const server = app.listen(PORT, () =>
   console.log(
-    `Server is running on ${process.env.PROTOCOL}${process.env.HOST}:${PORT}; Ctrl-C to terminate...`
+    `Server is running on port ${PORT}; Ctrl-C to terminate...`
   )
 );
 
