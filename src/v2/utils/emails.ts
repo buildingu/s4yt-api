@@ -2,7 +2,11 @@ import fs from 'fs';
 import path from 'path';
 
 export const loadEmailTemplate = (filename: string) => {
- return fs.readFileSync(path.resolve(import.meta.dirname, '../emailTemplates', filename), 'utf8');
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+    return fs.readFileSync(path.resolve(import.meta.dirname, 'emailTemplates', filename), 'utf8');
+  } else {
+    return fs.readFileSync(path.resolve(import.meta.dirname, '../emailTemplates', filename), 'utf8');
+  }
 }
 
 export const fillTemplate = (html: string, substitutions: [string, string][]) => {
