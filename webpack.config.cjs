@@ -1,3 +1,4 @@
+const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
@@ -13,6 +14,13 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'], 
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'src/v2/emailTemplates'), to: path.resolve(__dirname, 'build/emailTemplates') }
+      ]
+    })
+  ],
   module: {
     rules: [
       {
