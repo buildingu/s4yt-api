@@ -1,6 +1,7 @@
 export const coinSources = [
   'register',
-  'referral',
+  'invitedNewUser',
+  "invitedByExistingUser",
   'chest'
 ] as const;
 
