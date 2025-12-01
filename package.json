@@ -29,7 +29,6 @@
     "generateTestCodes": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/v2/seeders/utils.ts",
     "build": "webpack --config webpack.config.cjs",
     "serve": "cross-env NODE_ENV=production node ./build/server.cjs",
-    "start": "cross-env NODE_ENV=staging node ./build/server.cjs",
     "clean": "rm -rf node_modules"
   },
   "dependencies": {
