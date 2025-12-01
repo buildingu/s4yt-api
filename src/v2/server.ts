@@ -52,7 +52,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://s4yt.org"
+      "https://s4yt.org",
+      "https://s4yt-client-staging-a32ea9800a5e.herokuapp.com"
     ],
     credentials: true,
     exposedHeaders: ["Authorization", "x-xsrf-token"] // Expose bearer and CSRF tokens to frontend.
