@@ -20,6 +20,8 @@
       "count": 5
     }],
     "referral_code": "56df7846aebfe1f46ec6",
+    "inviter_referral_code": "4eb18bf615fbda18f159",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -46,6 +48,8 @@
       "count": 5
     }],
     "referral_code": "4eb18bf615fbda18f159",
+    "inviter_referral_code": "84715d878170d82d8ab6",
+    "first_login": false,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -72,6 +76,8 @@
       "count": 5
     }],
     "referral_code": "84715d878170d82d8ab6",
+    "inviter_referral_code": "",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -98,6 +104,8 @@
       "count": 5
     }],
     "referral_code": "a0c4b65e302e3a6e9788",
+    "inviter_referral_code": "",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -124,6 +132,8 @@
       "count": 5
     }],
     "referral_code": "a0c4b65e302e3a6e9788",
+    "inviter_referral_code": "",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -150,6 +160,8 @@
       "count": 5
     }],
     "referral_code": "a0c4b65e302e3a6e9788",
+    "inviter_referral_code": "",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -176,6 +188,8 @@
       "count": 5
     }],
     "referral_code": "a0c4b65e302e3a6e9788",
+    "inviter_referral_code": "",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -202,6 +216,8 @@
       "count": 5
     }],
     "referral_code": "a0c4b65e302e3a6e9788",
+    "inviter_referral_code": "",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
@@ -228,6 +244,8 @@
       "count": 5
     }],
     "referral_code": "a0c4b65e302e3a6e9788",
+    "inviter_referral_code": "",
+    "first_login": true,
     "accepted_referrals": [],
     "kicked": false,
     "banned_until": null,
