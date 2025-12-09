@@ -24,13 +24,14 @@ const seedDatabase = async () => {
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.join(path.dirname(__filename), 'data');
+    const __commonDirname = path.join(path.dirname(__filename), '..', 'common', 'data');
 
     // Load seed data
     const answersFilePath = path.join(__dirname, 'answers.json');
     const businessFilePath = path.join(__dirname, 'businesses.json');
     const challengeFilePath = path.join(__dirname, 'challenges.json');
-    const regionsFilePath = path.join(__dirname, 'regions.json');
-    const countriesFilePath = path.join(__dirname, 'countries.json');
+    const regionsFilePath = path.join(__commonDirname, 'regions.json');
+    const countriesFilePath = path.join(__commonDirname, 'countries.json');
     const multipleChoiceFilePath = path.join(__dirname, 'multipleChoice.json');
     const rafflePartnerFilePath = path.join(__dirname, 'rafflePartners.json');
     const raffleItemFilePath = path.join(__dirname, 'raffleItems.json');
