@@ -11,6 +11,8 @@ import MultipleChoiceModel from '../../models/multipleChoice.js';
 import ChestModel from '../../models/chest.js';
 import AdminUserModel from '../../models/adminUser.js';
 import AdminBusinessModel from '../../models/adminBusiness.js';
+import Country from '../../models/countries.js';
+import Regions from '../../models/region.js';
 
 dotenv.config();
 
@@ -21,21 +23,26 @@ const addGameData = async () => {
     dbConnection = connectDB();
 
     const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
+    const __dirname = path.join(path.dirname(__filename), 'data');
+    const __commonDirname = path.join(path.dirname(__filename), '..', 'common', 'data');
 
     // Load seed data
-    const adminUserFilePath = path.join(__dirname, 'data/adminUser.json');
-    const adminBusinessFilePath = path.join(__dirname, 'data/adminBusiness.json');
-    const businessFilePath = path.join(__dirname, 'data/businesses.json');
-    const challengeFilePath = path.join(__dirname, 'data/challenges.json');
-    const multipleChoiceFilePath = path.join(__dirname, 'data/multipleChoice.json');
-    const rafflePartnerFilePath = path.join(__dirname, 'data/rafflePartners.json');
-    const raffleItemFilePath = path.join(__dirname, 'data/raffleItems.json');
+    const adminUserFilePath = path.join(__dirname, 'adminUser.json');
+    const adminBusinessFilePath = path.join(__dirname, 'adminBusiness.json');
+    const businessFilePath = path.join(__dirname, 'businesses.json');
+    const challengeFilePath = path.join(__dirname, 'challenges.json');
+    const regionsFilePath = path.join(__commonDirname, 'regions.json');
+    const countriesFilePath = path.join(__commonDirname, 'countries.json');
+    const multipleChoiceFilePath = path.join(__dirname, 'multipleChoice.json');
+    const rafflePartnerFilePath = path.join(__dirname, 'rafflePartners.json');
+    const raffleItemFilePath = path.join(__dirname, 'raffleItems.json');
 
     const adminUserData = JSON.parse(fs.readFileSync(adminUserFilePath, 'utf-8'));
     const adminBusinessData = JSON.parse(fs.readFileSync(adminBusinessFilePath, 'utf-8'));
     const businessData = JSON.parse(fs.readFileSync(businessFilePath, 'utf-8'));
     const challengeData = JSON.parse(fs.readFileSync(challengeFilePath, 'utf-8'));
+    const regionsData = JSON.parse(fs.readFileSync(regionsFilePath, 'utf-8'));
+    const countriesData = JSON.parse(fs.readFileSync(countriesFilePath, 'utf-8'));
     const multipleChoiceData = JSON.parse(fs.readFileSync(multipleChoiceFilePath, 'utf-8'));
     const rafflePartnerData = JSON.parse(fs.readFileSync(rafflePartnerFilePath, 'utf-8'));
     const raffleItemData = JSON.parse(fs.readFileSync(raffleItemFilePath, 'utf-8'));
@@ -44,6 +51,8 @@ const addGameData = async () => {
     await AdminUserModel.deleteMany({});
     await AdminBusinessModel.deleteMany({});
     await Business.deleteMany({});
+    await Country.deleteMany({});
+    await Regions.deleteMany({});
     await ChallengeModel.deleteMany({});
     await MultipleChoiceModel.deleteMany({});
     await ChestModel.deleteMany({});
@@ -56,6 +65,8 @@ const addGameData = async () => {
     await AdminBusinessModel.insertMany(adminBusinessData);
     await Business.insertMany(businessData);
     await ChallengeModel.insertMany(challengeData);
+    await Country.insertMany(countriesData);
+    await Regions.insertMany(regionsData);
     await MultipleChoiceModel.insertMany(multipleChoiceData);
     await RafflePartnerModel.insertMany(rafflePartnerData);
     await RaffleItemModel.insertMany(raffleItemData);
