@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
 
 const verificationEmail = loadEmailTemplate('verification.html');
 const resetPasswordEmail = loadEmailTemplate('resetPassword.html');
+const welcomeEmail = loadEmailTemplate('welcome.html');
 
 export const sendVerificationEmail = async (to: string, verificationToken: string) => {
   const verificationUrl = `${process.env.FRONTEND_URL}/register/verify-email/verify?token=${verificationToken}`;
@@ -56,5 +57,22 @@ export const sendResetPasswordEmail = async (to: string, resetToken: string) => 
   } catch (error) {
     console.error(`Error sending reset password email to ${to}: ${error}`);
     throw new Error('Error sending reset password email');
+  }
+};
+
+export const sendWelcomeEmail = async (to: string) => {
+  const mailOptions = {
+    from: process.env.FROM_EMAIL as string,
+    to,
+    subject: 'Dollars for Your Thoughts ($4YT) - Welcome!',
+    html: welcomeEmail 
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Welcome email sent to: ${to}`);
+  } catch (error) {
+    console.error(`Error sending welcome email to ${to}: ${error}`);
+    throw new Error('Error sending welcome email');
   }
 };
