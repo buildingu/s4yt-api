@@ -18,7 +18,6 @@ import cors from "cors";
 
 import helmet from "helmet";
 import hpp from "hpp";
-import rateLimit from "express-rate-limit";
 
 import connectDB from "./db/db";
 import lowercaseEmails from "./middleware/lowercaseEmails";
