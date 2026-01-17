@@ -16,8 +16,7 @@ router.patch("/password", authController.resetPassword); // Resets password if t
 router.patch("/player/password", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.updatePassword); // Updates their password when they're logged in (this is located in the profile and you should log them out when it's a success).
 
 router.patch("/player/profile", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.updateProfile); // Updates everything on their profile expect the password, if they update their clear their token.
-// TODO: verifyCsrfToken for referrals?
-router.get("/player/referrals", verifyTokens.verifyAccessToken, authController.sendAcceptedReferrals); // Gets their referral history, so anyone who used their referral.
+router.get("/player/referrals", verifyCsrfToken, verifyTokens.verifyAccessToken, authController.sendAcceptedReferrals); // Gets their referral history, so anyone who used their referral.
 
 // Unused Routes
 // router.post("/logout", verifyCsrfToken, authController.logout); // We didn't actually have a logout route, but it makes sense.

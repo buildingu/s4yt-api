@@ -7,6 +7,7 @@ import registrationConfig from "../../configs/registration";
 import {
   sendVerificationEmail,
   sendResetPasswordEmail,
+  sendWelcomeEmail,
 } from "../services/emailService";
 import { HttpError, resolveErrorHandler } from "../../middleware/errorHandler";
 import { isoGameTimestamps } from "../../configs/timestamps";
@@ -257,6 +258,7 @@ export const verifyEmail = async (token: string) => {
 
     user.is_email_verified = true;
     await user.save();
+    await sendWelcomeEmail(user.email);
     return true;
   } catch (error) {
     throw resolveErrorHandler(error);
