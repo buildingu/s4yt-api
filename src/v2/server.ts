@@ -12,13 +12,11 @@
 import express from "express";
 import dotenv from "dotenv";
 
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import helmet from "helmet";
 import hpp from "hpp";
-import rateLimit from "express-rate-limit";
 
 import connectDB from "./db/db";
 import lowercaseEmails from "./middleware/lowercaseEmails";
@@ -44,8 +42,8 @@ const PORT = Number(process.env.PORT) || 4000,
   baseUrl = "/api/v2";
 
 // **Middleware**
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cookieParser());
 
 app.use(
