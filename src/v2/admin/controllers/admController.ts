@@ -11,9 +11,19 @@ export const adminLogin = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 }
+
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await superAdminService.retrieveAllUsers();
+    res.json(users);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAllEmails = async (req: Request, res: Response) => {
+  try {
+    const users = await superAdminService.getEmails();
     res.json(users);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

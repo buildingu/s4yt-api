@@ -119,6 +119,17 @@ export const getRSVPedUsers = async () => {
   }
 }
 
+export const getEmails = async () => {
+  try {
+    const users = await UserModel.find({}, 'email').lean();
+    const emails = users.map(user => user.email);
+
+    return emails;
+  } catch (error) {
+    throw resolveErrorHandler(error);
+  }
+}
+
 export const getRaffleWinners = async (): Promise<RaffleWinnerWithEmail[] | null> => {
   try {
     const raffleItems = await RaffleItemModel.find({}, "image_src name winners")
