@@ -8,6 +8,7 @@ import { verifyApiKey } from '../middleware/verifyKey';
 const router = Router();
 router.post('/login', verifyApiKey, superAdminController.adminLogin);
 router.get('/users', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getAllUsers);
+router.get('/emails', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getAllEmails);
 router.post('/users/kick/:userId', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.kickUser);
 router.post('/users/ban/:userId', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.banUser);
 router.get('/business', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getAllBusinesses);
