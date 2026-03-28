@@ -44,8 +44,8 @@
     "mongoose": "8.13.2",
     "morgan": "1.10.1",
     "node-schedule": "2.1.1",
-    "nodemailer": "7.0.11",
-    "socket.io": "4.8.1",
+    "nodemailer": "8.0.4",
+    "socket.io": "4.8.3",
     "uuidv4": "6.2.13",
     "winston": "3.17.0",
     "winston-daily-rotate-file": "5.0.0"
@@ -62,14 +62,14 @@
     "@types/node": "22.14.0",
     "@types/node-schedule": "2.1.7",
     "@types/nodemailer": "6.4.17",
-    "copy-webpack-plugin": "13.0.1",
+    "copy-webpack-plugin": "14.0.0",
     "esm": "3.2.25",
     "nodemon": "^3.1.14",
     "path": "0.12.7",
-    "ts-loader": "9.5.2",
+    "ts-loader": "9.5.4",
     "ts-node": "10.9.2",
     "typescript": "5.3.3",
-    "webpack": "^5.105.2",
+    "webpack": "^5.105.4",
     "webpack-cli": "6.0.1",
     "webpack-node-externals": "3.0.0"
   }
