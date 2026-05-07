@@ -51,6 +51,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://s4yt.org",
+      "http://164.90.254.35", //remove this when ip is connected to domain
       "https://s4yt-client-staging-a32ea9800a5e.herokuapp.com"
     ],
     credentials: true,

@@ -12,57 +12,27 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
-      - name: Set up Node.js
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' 
-          
+          node-version: '22'
+
       - name: Verify Node.js Version
         run: node -v
 
-      - name: Deploy to VPS
-        env:
-          HOST: ${{ secrets.HOSTINGER_IP}} 
-          USER: ${{ secrets.HOSTINGER_USER}} 
-          PORT: ${{ secrets.PORT}}
-          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Server
+        run: npm run build
+
+      - name: Create Environment File
         run: |
-          # Add SSH key
-          echo "${PRIVATE_KEY}" | sed 's/\r$//' > private_key
-          chmod 600 private_key
-          ssh -i private_key -o StrictHostKeyChecking=no $USER@$HOST -p $PORT << 'EOF'
-
-          cd /var/www/s4yt/server/s4yt-api/ || exit
-
-          # force reinstall nvm and node to use correct version
-          export NVM_DIR="$HOME/.nvm"
-          if [ ! -d "$NVM_DIR" ]; then
-            echo "Installing NVM..."
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-            source ~/.bashrc
-          fi
-
-          # Load NVM
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-          # Force install Node.js 22.11.0
-          nvm install 22.11.0
-          nvm use 22.11.0
-          nvm alias default 22.11.0
-          node -v
-
-          # Clean untracked files (removes .env and package-lock.json)
-          pm2 stop s4yt-api
-          git clean -f .env 
-          git pull origin main
-          npm i
-          npm run build
-
           echo "MONGODB_URI=${{ secrets.MONGODB_URI}}" > .env
-          echo "EMAIL_HOST=${{secrets.EMAIL_HOST}}" >> .env
-          echo "EMAIL_PORT=${{secrets.EMAIL_PORT}}" >> .env
-          echo "EMAIL_PASSWORD=${{secrets.EMAIL_PASSWORD}}" >> .env
+          echo "EMAIL_HOST=${{ secrets.EMAIL_HOST}}" >> .env
+          echo "EMAIL_PORT=${{ secrets.EMAIL_PORT}}" >> .env
+          echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD}}" >> .env
           echo "SEND_EMAILS=${{ secrets.SEND_EMAILS }}" >> .env
           echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
@@ -74,5 +44,50 @@ jobs:
           echo "PORT=${{ secrets.SERVER_PORT }}" >> .env
           echo "PROTOCOL=${{ secrets.PROTOCOL }}" >> .env
           echo "HOST=${{ secrets.SERVER_HOST }}" >> .env
-          
-          pm2 start s4yt-api
+
+      - name: Setup SSH
+        env:
+          PRIVATE_KEY: ${{ secrets.DIGITAL_OCEAN_PRIVATE_KEY }}
+        run: |
+          echo "${PRIVATE_KEY}" | sed 's/\r$//' > private_key
+          chmod 600 private_key
+
+      - name: Ensure Target Directory Exists
+        env:
+          HOST: ${{ secrets.DIGITAL_OCEAN_IP }}
+          USER: ${{ secrets.DIGITAL_OCEAN_USER }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          ssh -i private_key -p $PORT -o StrictHostKeyChecking=no $USER@$HOST "
+            mkdir -p /var/www/s4yt/s4yt-api/build
+          "
+
+      - name: Deploy Server Files
+        env:
+          HOST: ${{ secrets.DIGITAL_OCEAN_IP }}
+          USER: ${{ secrets.DIGITAL_OCEAN_USER }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i private_key -p $PORT -o StrictHostKeyChecking=no" \
+            build/ \
+            package.json \
+            package-lock.json \
+            .env \
+            $USER@$HOST:/var/www/s4yt/s4yt-api/
+
+      - name: Restart Server
+        env:
+          HOST: ${{ secrets.DIGITAL_OCEAN_IP }}
+          USER: ${{ secrets.DIGITAL_OCEAN_USER }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          ssh -i private_key -p $PORT -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+            cd /var/www/s4yt/s4yt-api/
+
+            npm install --omit=dev
+
+            pm2 restart s4yt-api || pm2 start build/server.cjs --name s4yt-api
+
+            pm2 save
+          EOF
