@@ -87,7 +87,7 @@ jobs:
 
             npm install --omit=dev
 
-            pm2 restart s4yt-api || pm2 start build/server.cjs --name s4yt-api
+            pm2 restart s4yt-api || pm2 start server.cjs --name s4yt-api
 
             pm2 save
           EOF
