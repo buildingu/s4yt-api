@@ -3,10 +3,8 @@ import * as superAdminController from '../controllers/admController';
 import verifySuperAdmin from '../middleware/verifySuperAdmin';
 import { verifyAccessToken } from '../../authentication/middleware/verifyTokens';
 import verifyCsrfToken from '../../csrf/middleware/verifyCsrfToken';
-import { verifyApiKey } from '../middleware/verifyKey';
 
 const router = Router();
-router.post('/login', verifyApiKey, superAdminController.adminLogin);
 router.get('/users', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getAllUsers);
 router.get('/emails', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.getAllEmails);
 router.post('/users/kick/:userId', verifyCsrfToken, verifyAccessToken, verifySuperAdmin, superAdminController.kickUser);

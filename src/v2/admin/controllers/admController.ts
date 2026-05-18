@@ -2,16 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import * as superAdminService from '../services/admService';
 import { CreateChestRequestDto } from '../dtos/AdminDto';
 
-export const adminLogin = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-    const response = await superAdminService.loginAdmin(email, password);
-    res.status(200).json(response);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-}
-
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await superAdminService.retrieveAllUsers();
