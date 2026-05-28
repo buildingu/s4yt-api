@@ -1,21 +1,9 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import dotenv from 'dotenv';
 import { fillTemplate, loadEmailTemplate } from '../../utils/emails';
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST, 
-  port: parseInt(process.env.EMAIL_PORT as string),
-  auth: {
-    user: process.env.FROM_EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-  pool: true,
-  maxConnections: 5,
-  maxMessages: 100,
-  rateLimit: 10
-});
-
+const resend = new Resend(process.env.RESEND_API_KEY);
 const verificationEmail = loadEmailTemplate('verification.html');
 const resetPasswordEmail = loadEmailTemplate('resetPassword.html');
 const welcomeEmail = loadEmailTemplate('welcome.html');
@@ -32,7 +20,7 @@ export const sendVerificationEmail = async (to: string, verificationToken: strin
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await resend.emails.send(mailOptions);
     console.log(`Verification email sent to: ${to}`);
   } catch (error) {
     console.error(`Error sending verification email to ${to}: ${error}`);
@@ -52,7 +40,7 @@ export const sendResetPasswordEmail = async (to: string, resetToken: string) => 
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await resend.emails.send(mailOptions);
     console.log(`Reset password email sent to: ${to}`);
   } catch (error) {
     console.error(`Error sending reset password email to ${to}: ${error}`);
@@ -69,7 +57,7 @@ export const sendWelcomeEmail = async (to: string) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await resend.emails.send(mailOptions);
     console.log(`Welcome email sent to: ${to}`);
   } catch (error) {
     console.error(`Error sending welcome email to ${to}: ${error}`);
