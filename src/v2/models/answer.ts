@@ -22,6 +22,6 @@ const answerSchema = new Schema<Answer>({
   }
 });
 
-const Answer = model('Answer', answerSchema);
+const AnswerModel = model('Answer', answerSchema);
 
-export default Answer;
+export default AnswerModel;
