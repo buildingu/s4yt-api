@@ -9,5 +9,5 @@ const countrySchema = new Schema<Country>({
   continent: { type: String, required: true },
 });
 
-const CountryModel = model("Country", countrySchema);
-export default CountryModel;
+const Country = model("Country", countrySchema);
+export default Country;

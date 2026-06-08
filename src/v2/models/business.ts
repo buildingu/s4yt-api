@@ -22,6 +22,6 @@ const businessSchema = new Schema<Business>({
   deleted: { type: Boolean, default: false }
 }, {collection : 'businesses'});
 
-const BusinessModel = model('Business', businessSchema);
+const Business = model('Business', businessSchema);
 
-export default BusinessModel;
+export default Business;
