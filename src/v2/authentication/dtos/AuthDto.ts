@@ -69,3 +69,9 @@ export interface ResetPasswordRequestDto extends Request {
     password_confirmation: string;
   }
 }
+
+export interface DeleteUserRequestDto extends Request {
+  body: {
+    email: string;
+  }
+}
