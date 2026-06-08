@@ -88,6 +88,12 @@ jobs:
             npm --version
             cd /var/www/s4yt/s4yt-api/
 
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm use 22
+            node -v
+            npm -v
+
             npm install --omit=dev
 
             pm2 restart s4yt-api || pm2 start server.cjs --name s4yt-api
