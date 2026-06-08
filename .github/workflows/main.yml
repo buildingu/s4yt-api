@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -57,7 +57,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
         run: |
           ssh -i private_key -p $PORT -o StrictHostKeyChecking=no $USER@$HOST "
-            mkdir -p /var/www/s4yt/s4yt-api/build
+            mkdir -p /var/www/s4yt/s4yt-api/
           "
 
       - name: Deploy Server Files
@@ -81,7 +81,18 @@ jobs:
           PORT: ${{ secrets.PORT }}
         run: |
           ssh -i private_key -p $PORT -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+            whoami
+            which node
+            node --version
+            which npm
+            npm --version
             cd /var/www/s4yt/s4yt-api/
+
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm use 22
+            node -v
+            npm -v
 
             npm install --omit=dev
 
