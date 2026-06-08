@@ -57,7 +57,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
         run: |
           ssh -i private_key -p $PORT -o StrictHostKeyChecking=no $USER@$HOST "
-            mkdir -p /var/www/s4yt/s4yt-api/build
+            mkdir -p /var/www/s4yt/s4yt-api/
           "
 
       - name: Deploy Server Files
@@ -81,6 +81,11 @@ jobs:
           PORT: ${{ secrets.PORT }}
         run: |
           ssh -i private_key -p $PORT -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+            whoami
+            which node
+            node --version
+            which npm
+            npm --version
             cd /var/www/s4yt/s4yt-api/
 
             npm install --omit=dev
