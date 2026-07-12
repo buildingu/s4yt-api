@@ -1,10 +1,10 @@
 import { GameTimestamps } from '../typings/Timestamps';
 
 const gameTimestamps = {
-  pre_game: '2026-09-04T01:00:00-04:00',
+  pre_game: '2026-09-03T01:23:59-04:00',
   game_start: '2026-09-05T12:00:00-04:00',
   review_start: '2026-09-08T12:00:00-04:00',
-  review_end: '2026-09-12T14:00:00-04:00',
+  review_end: '2026-09-12T15:00:00-04:00',
   game_end: '2026-10-26T14:00:00-04:00',
 }
 
