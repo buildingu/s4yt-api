@@ -185,6 +185,7 @@ To seed the database, simply run:
 
 ```bash
 npm run seedDB
+npm run createChests
 ```
 
 The following collections will be *cleared* and seeded with test data:
