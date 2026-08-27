@@ -183,6 +183,7 @@ dist
 
 # Other
 src/v2/seeders/prod/data/
+scripts/
 docs.md
 
 # End of https://www.toptal.com/developers/gitignore/api/node
