@@ -4,11 +4,11 @@ const gameTimestamps = {
   pre_game: '2026-09-04T01:00:00-04:00',
   game_start: '2026-09-05T12:00:00-04:00',
   review_start: '2026-09-08T12:00:00-04:00',
-  review_end: '2026-09-12T14:00:00-04:00',
+  review_end: '2026-09-10T14:00:00-04:00',
   game_end: '2026-10-12T14:00:00-04:00',
 }
 
-export const raffleDrawingTimestamp = '2026-09-12T12:00:00-04:00';
+export const raffleDrawingTimestamp = '2026-09-11T19:00:00-04:00';
 
 // Convert game timestamps into ISO strings
 export const isoGameTimestamps: GameTimestamps = Object.entries(gameTimestamps).reduce(
